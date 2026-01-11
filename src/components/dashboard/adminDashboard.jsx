@@ -34,6 +34,16 @@ const AdminDashboard = () => {
   const [totalStudentsCount, setTotalStudentsCount] = useState(0);
   const [studentPostsCount, setStudentPostsCount] = useState(0);
   const [teacherPostsCount, setTeacherPostsCount] = useState(0);
+  const [paidTeacherSubscriptionsCount, setPaidTeacherSubscriptionsCount] =
+    useState(0);
+  const [totalTeacherSubscriptionsCount, setTotalTeacherSubscriptionsCount] =
+    useState(0);
+  const [paidStudentSubscriptionsCount, setPaidStudentSubscriptionsCount] =
+    useState(0);
+  const [totalStudentSubscriptionsCount, setTotalStudentSubscriptionsCount] =
+    useState(0);
+  const [newsletterSubscribersCount, setNewsletterSubscribersCount] =
+    useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [error, setError] = useState(null);
@@ -127,7 +137,7 @@ const AdminDashboard = () => {
         })) || [];
       setStudentSubscriptions(formattedStudents);
 
-      // Fetch dashboard metrics from new endpoint
+      // Fetch dashboard metrics from new endpoint (single API call for all metrics)
       try {
         const metricsResponse = await adminService.getDashboardMetrics();
         const metrics = metricsResponse?.data || metricsResponse;
@@ -137,6 +147,15 @@ const AdminDashboard = () => {
         setTotalStudentsCount(metrics.totalStudents || 0);
         setStudentPostsCount(metrics.studentPosts || 0);
         setTeacherPostsCount(metrics.teacherPosts || 0);
+        setPaidTeacherSubscriptionsCount(metrics.paidTeacherSubscriptions || 0);
+        setTotalTeacherSubscriptionsCount(
+          metrics.totalTeacherSubscriptions || 0
+        );
+        setPaidStudentSubscriptionsCount(metrics.paidStudentSubscriptions || 0);
+        setTotalStudentSubscriptionsCount(
+          metrics.totalStudentSubscriptions || 0
+        );
+        setNewsletterSubscribersCount(metrics.newsletterSubscribers || 0);
       } catch (err) {
         console.error("Error fetching dashboard metrics:", err);
         // Set defaults on error
@@ -145,6 +164,11 @@ const AdminDashboard = () => {
         setTotalStudentsCount(0);
         setStudentPostsCount(0);
         setTeacherPostsCount(0);
+        setPaidTeacherSubscriptionsCount(0);
+        setTotalTeacherSubscriptionsCount(0);
+        setPaidStudentSubscriptionsCount(0);
+        setTotalStudentSubscriptionsCount(0);
+        setNewsletterSubscribersCount(0);
       }
 
       setIsLoading(false);
@@ -168,15 +192,14 @@ const AdminDashboard = () => {
     fetchData();
   };
 
-  // Calculate statistics
+  // Calculate statistics (using API metrics instead of filtering arrays)
   const stats = {
     totalUsers:
-      subscriptionEmails.length +
-      teacherSubscriptions.length +
-      studentSubscriptions.length,
+      newsletterSubscribersCount +
+      totalTeacherSubscriptionsCount +
+      totalStudentSubscriptionsCount,
     paidSubscriptions:
-      teacherSubscriptions.filter((t) => t.isPaid).length +
-      studentSubscriptions.filter((s) => s.isPaid).length,
+      paidTeacherSubscriptionsCount + paidStudentSubscriptionsCount,
     pendingApprovals: pendingTeachersCount,
     totalTeachers: totalTeachersCount,
   };
@@ -213,7 +236,7 @@ const AdminDashboard = () => {
           id: "teachers",
           label: "Premium Subscriptions",
           icon: "star",
-          badge: teacherSubscriptions.filter((t) => t.isPaid).length,
+          badge: paidTeacherSubscriptionsCount,
         },
         {
           id: "teacher-posts",
@@ -236,7 +259,7 @@ const AdminDashboard = () => {
           id: "students",
           label: "Premium Subscriptions",
           icon: "mortarboard",
-          badge: studentSubscriptions.filter((s) => s.isPaid).length,
+          badge: paidStudentSubscriptionsCount,
         },
         {
           id: "student-posts",
@@ -253,7 +276,7 @@ const AdminDashboard = () => {
           id: "emails",
           label: "Newsletter Subscribers",
           icon: "envelope-check",
-          badge: subscriptionEmails.length,
+          badge: newsletterSubscribersCount,
         },
         {
           id: "profile",
