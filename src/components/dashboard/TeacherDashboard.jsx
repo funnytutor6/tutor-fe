@@ -743,6 +743,24 @@ const TeacherDashboard = () => {
   // Update the handlePurchaseContact function in your TeacherDashboard component
 
   const handlePurchaseContact = async (requestId) => {
+    // Check if teacher has active subscription
+    const hasActiveSubscription =
+      subscriptionStatus?.isActive || teacherPremiumStatus?.isPaid;
+
+    // If teacher has active subscription, contact should already be revealed
+    // This function should only be called for non-subscribed teachers
+    if (hasActiveSubscription) {
+      toast.success(
+        "Contact information is available with your Premium subscription!",
+        {
+          id: "purchase-contact",
+        }
+      );
+      // Refresh requests to get updated contact info
+      fetchRequests();
+      return;
+    }
+
     const confirmed = await showConfirmToast({
       title: "Purchase Contact Information",
       message: "Purchase student contact information for $7.00?",
@@ -766,8 +784,6 @@ const TeacherDashboard = () => {
       setLoading(true);
       toast.loading("Processing payment...", { id: "purchase-contact" });
 
-      const stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
-
       const teacherId = user?.teacherId || user?.id;
 
       const body = {
@@ -778,6 +794,18 @@ const TeacherDashboard = () => {
         body
       );
       const session = response.data;
+
+      // Check if free access was granted (subscription)
+      if (session.freeAccess) {
+        toast.success("Contact information revealed (Premium subscription)!", {
+          id: "purchase-contact",
+        });
+        fetchRequests();
+        return;
+      }
+
+      // Otherwise, proceed with Stripe payment
+      const stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
 
       const result = await stripe.redirectToCheckout({
         sessionId: session.id,
@@ -1873,27 +1901,71 @@ const TeacherDashboard = () => {
                           <div className="col-md-4">
                             <div className="request-actions">
                               {request.status === "pending" && (
-                                <div className="action-buttons">
-                                  <button
-                                    className="btn btn-success mb-2"
-                                    onClick={() =>
-                                      handlePurchaseContact(request.id)
-                                    }
-                                    disabled={loading}
-                                  >
-                                    <i className="bi bi-credit-card me-2"></i>
-                                    Purchase Contact ($7.00)
-                                  </button>
-                                  <button
-                                    className="btn btn-outline-primary btn-sm"
-                                    onClick={() =>
-                                      handleViewRequestDetails(request)
-                                    }
-                                  >
-                                    <i className="bi bi-eye me-1"></i>
-                                    View Details
-                                  </button>
-                                </div>
+                                <>
+                                  {/* Check if teacher has active subscription - show contact directly */}
+                                  {subscriptionStatus?.isActive ||
+                                  teacherPremiumStatus?.isPaid ||
+                                  request.hasFreeAccess ? (
+                                    <div className="contact-info">
+                                      <h6 className="contact-title">
+                                        <i className="bi bi-star-fill me-2 text-warning"></i>
+                                        Contact Information
+                                        <span
+                                          className="badge bg-success ms-2"
+                                          style={{ fontSize: "0.65rem" }}
+                                        >
+                                          Premium
+                                        </span>
+                                      </h6>
+                                      <div className="contact-details">
+                                        <p className="contact-item">
+                                          <i className="bi bi-envelope me-2"></i>
+                                          <a
+                                            href={`mailto:${request.studentEmail}`}
+                                          >
+                                            {request.studentEmail}
+                                          </a>
+                                        </p>
+                                        {request.studentPhone && (
+                                          <p className="contact-item">
+                                            <i className="bi bi-telephone me-2"></i>
+                                            <a
+                                              href={`tel:${request.studentPhone}`}
+                                            >
+                                              {request.studentPhone}
+                                            </a>
+                                          </p>
+                                        )}
+                                        <small className="text-success">
+                                          <i className="bi bi-check-circle me-1"></i>
+                                          Free access with Premium subscription
+                                        </small>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="action-buttons">
+                                      <button
+                                        className="btn btn-success mb-2"
+                                        onClick={() =>
+                                          handlePurchaseContact(request.id)
+                                        }
+                                        disabled={loading}
+                                      >
+                                        <i className="bi bi-credit-card me-2"></i>
+                                        Purchase Contact ($7.00)
+                                      </button>
+                                      <button
+                                        className="btn btn-outline-primary btn-sm"
+                                        onClick={() =>
+                                          handleViewRequestDetails(request)
+                                        }
+                                      >
+                                        <i className="bi bi-eye me-1"></i>
+                                        View Details
+                                      </button>
+                                    </div>
+                                  )}
+                                </>
                               )}
 
                               {request.status === "purchased" && (
@@ -1901,6 +1973,16 @@ const TeacherDashboard = () => {
                                   <h6 className="contact-title">
                                     <i className="bi bi-check-circle-fill me-2"></i>
                                     Contact Information
+                                    {request.paymentStatus ===
+                                      "free_subscription" && (
+                                      <span
+                                        className="badge bg-success ms-2"
+                                        style={{ fontSize: "0.65rem" }}
+                                      >
+                                        <i className="bi bi-star-fill me-1"></i>
+                                        Premium
+                                      </span>
+                                    )}
                                   </h6>
                                   <div className="contact-details">
                                     <p className="contact-item">
@@ -1920,10 +2002,20 @@ const TeacherDashboard = () => {
                                       </p>
                                     )}
                                     <small className="purchase-date">
-                                      Purchased:{" "}
-                                      {new Date(
-                                        request.purchaseDate
-                                      ).toLocaleDateString()}
+                                      {request.paymentStatus ===
+                                      "free_subscription" ? (
+                                        <>
+                                          <i className="bi bi-star-fill me-1 text-warning"></i>
+                                          Free access with Premium subscription
+                                        </>
+                                      ) : (
+                                        <>
+                                          Purchased:{" "}
+                                          {new Date(
+                                            request.purchaseDate
+                                          ).toLocaleDateString()}
+                                        </>
+                                      )}
                                     </small>
                                   </div>
                                 </div>
