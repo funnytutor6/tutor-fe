@@ -42,7 +42,10 @@ export const subscriptionService = {
   /**
    * Cancel student subscription
    */
-  cancelStudentSubscription: async (studentEmail, cancelAtPeriodEnd = false) => {
+  cancelStudentSubscription: async (
+    studentEmail,
+    cancelAtPeriodEnd = false
+  ) => {
     const response = await api.post(ENDPOINTS.CANCEL_STUDENT_SUBSCRIPTION, {
       studentEmail,
       cancelAtPeriodEnd,
@@ -64,7 +67,9 @@ export const subscriptionService = {
    * Get student invoice history
    */
   getStudentInvoiceHistory: async (studentEmail) => {
-    const response = await api.get(ENDPOINTS.GET_STUDENT_INVOICE_HISTORY(studentEmail));
+    const response = await api.get(
+      ENDPOINTS.GET_STUDENT_INVOICE_HISTORY(studentEmail)
+    );
     return response.data;
   },
 };

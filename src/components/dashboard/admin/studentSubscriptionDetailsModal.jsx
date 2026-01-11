@@ -97,7 +97,9 @@ const StudentSubscriptionDetailsModal = ({
   const handleReactivateSubscription = async () => {
     setLoading(true);
     try {
-      await subscriptionService.reactivateStudentSubscription(subscription.email);
+      await subscriptionService.reactivateStudentSubscription(
+        subscription.email
+      );
       toast.success("Subscription reactivated successfully");
       if (onUpdate) {
         onUpdate();
@@ -420,4 +422,3 @@ const StudentSubscriptionDetailsModal = ({
 };
 
 export default StudentSubscriptionDetailsModal;
-
