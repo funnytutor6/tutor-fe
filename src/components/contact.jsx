@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Contact = () => {
-    useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
-    console.log('Form submitted:', formData);
   };
 
   return (
@@ -35,19 +36,23 @@ const Contact = () => {
             <div className="col-lg-6">
               <h1 className="display-4 fw-bold mb-4">Get in Touch</h1>
               <p className="lead mb-4">
-                Have questions about our platform? We're here to help! Reach out to us and we'll get back to you as soon as possible.
+                Have questions about our platform? We're here to help! Reach out
+                to us and we'll get back to you as soon as possible.
               </p>
               <div className="d-flex gap-3">
                 <Link to="/" className="btn btn-primary">
                   <i className="bi bi-house-door me-2"></i>
                   Back to Home
                 </Link>
-               
               </div>
             </div>
             <div className="col-lg-6">
               <div className="contact-image">
-                <img src="https://applytourism.org/dubai/img/contact-us.jpg" alt="Contact Us" className="img-fluid" />
+                <img
+                  src="https://applytourism.org/dubai/img/contact-us.jpg"
+                  alt="Contact Us"
+                  className="img-fluid"
+                />
               </div>
             </div>
           </div>
@@ -65,7 +70,9 @@ const Contact = () => {
                   <div className="row g-3">
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="name" className="form-label">Your Name</label>
+                        <label htmlFor="name" className="form-label">
+                          Your Name
+                        </label>
                         <input
                           type="text"
                           className="form-control"
@@ -79,7 +86,9 @@ const Contact = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="email" className="form-label">Email Address</label>
+                        <label htmlFor="email" className="form-label">
+                          Email Address
+                        </label>
                         <input
                           type="email"
                           className="form-control"
@@ -93,7 +102,9 @@ const Contact = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-group">
-                        <label htmlFor="subject" className="form-label">Subject</label>
+                        <label htmlFor="subject" className="form-label">
+                          Subject
+                        </label>
                         <input
                           type="text"
                           className="form-control"
@@ -107,7 +118,9 @@ const Contact = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-group">
-                        <label htmlFor="message" className="form-label">Message</label>
+                        <label htmlFor="message" className="form-label">
+                          Message
+                        </label>
                         <textarea
                           className="form-control"
                           id="message"
@@ -143,7 +156,14 @@ const Contact = () => {
                   <i className="bi bi-geo-alt"></i>
                 </div>
                 <h3>Our Location</h3>
-                <p>1, Beechwood Road,<br />Dudley,<br /> DY2 7QA<br />United Kingdom</p>
+                <p>
+                  1, Beechwood Road,
+                  <br />
+                  Dudley,
+                  <br /> DY2 7QA
+                  <br />
+                  United Kingdom
+                </p>
               </div>
             </div>
             <div className="col-md-4">
@@ -152,7 +172,14 @@ const Contact = () => {
                   <i className="bi bi-telephone"></i>
                 </div>
                 <h3>Message us at:</h3>
-                <p>+1 (555) 123-4567<br /><br />+447949053333<br /><br /></p>
+                <p>
+                  +1 (555) 123-4567
+                  <br />
+                  <br />
+                  +447949053333
+                  <br />
+                  <br />
+                </p>
               </div>
             </div>
             <div className="col-md-4">
@@ -161,7 +188,15 @@ const Contact = () => {
                   <i className="bi bi-envelope"></i>
                 </div>
                 <h3>Email Address</h3>
-                <p>support@edulink.com<br />info@edulink.com<br />funnystudynetwork@gmail.com<br /><br /></p>
+                <p>
+                  support@edulink.com
+                  <br />
+                  info@edulink.com
+                  <br />
+                  funnystudynetwork@gmail.com
+                  <br />
+                  <br />
+                </p>
               </div>
             </div>
           </div>
@@ -284,4 +319,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default Contact;

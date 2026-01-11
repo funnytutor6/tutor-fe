@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     try {
-      console.log("Login function called with userData:", userData);
       // Store user data directly (no API call needed since TeacherAuth handles that)
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
@@ -39,14 +38,14 @@ export const AuthProvider = ({ children }) => {
       // Registration is handled by auth components, this is just for storing
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
-      
+
       // Store additional IDs for backward compatibility
       if (userData.role === "student") {
         localStorage.setItem("studentId", userData.studentId?.toString());
       } else if (userData.role === "teacher") {
         localStorage.setItem("teacherId", userData.teacherId?.toString());
       }
-      
+
       return userData;
     } catch (error) {
       throw error.response?.data || { message: "Registration failed" };

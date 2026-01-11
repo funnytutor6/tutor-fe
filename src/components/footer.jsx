@@ -101,7 +101,6 @@ const Footer = () => {
         );
         setMessageType("success");
         setEmail(""); // Clear the input
-        console.log("Subscription successful:", result);
       } else {
         // Handle different error responses
         const errorData = await response.json();
@@ -139,7 +138,6 @@ const Footer = () => {
     }
   }, [message]);
 
-  console.log(path);
   return (
     <footer
       className="footer"

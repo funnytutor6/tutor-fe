@@ -289,7 +289,6 @@ const StudentDashboard = () => {
     try {
       setPostsLoading(true);
       const response = await api.get(`${API_BASE_URL}/api/posts/student`);
-      console.log("My posts:", response?.data?.data);
       setMyPosts(response?.data?.data || []);
     } catch (error) {
       console.error("Error fetching my posts:", error);

@@ -118,7 +118,6 @@ const AdminDashboard = () => {
       const studentResponse = await api.get(
         ENDPOINTS.STUDENT_PREMIUM_SUBSCRIPTIONS
       );
-      console.log("studentResponse", studentResponse);
       const formattedStudents =
         studentResponse?.data?.items?.map((item) => ({
           id: item.id,

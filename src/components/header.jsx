@@ -13,10 +13,8 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  console.log("user", user);
 
   useEffect(() => {
-    console.log(user);
     const handleScroll = () => {
       setIsScrolled(true);
     };

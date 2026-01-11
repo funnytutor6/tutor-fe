@@ -153,8 +153,6 @@ const TeacherDashboard = () => {
         localStorage.removeItem("pendingPremiumContent");
       }
     }
-
-    console.log("teacherPremiumStatus", teacherPremiumStatus);
   }, [teacherPremiumStatus, subscriptionStatus]);
 
   // Load Google Maps API
@@ -229,10 +227,8 @@ const TeacherDashboard = () => {
       // Fetch premium status
       const premiumResponse = await premiumService.checkTeacherPremiumStatus();
       const premiumData = premiumResponse?.data || premiumResponse;
-      console.log("Premium data:", premiumData);
 
       if (premiumData.hasPremium) {
-        console.log("Has premium", premiumData);
         setTeacherPremiumStatus(premiumData);
       } else {
         setTeacherPremiumStatus(null);
@@ -245,7 +241,6 @@ const TeacherDashboard = () => {
         const subscriptionData =
           subscriptionResponse?.data || subscriptionResponse;
         setSubscriptionStatus(subscriptionData);
-        console.log("Subscription data:", subscriptionData);
       } catch (error) {
         console.error("Error fetching subscription status:", error);
         // Subscription status is optional, don't fail if it doesn't exist
@@ -271,7 +266,6 @@ const TeacherDashboard = () => {
 
       try {
         const response = await api.get(`${ENDPOINTS.GET_TEACHER_POSTS}`);
-        console.log("Posts:", response);
         setPosts(response?.data?.data || []);
         return;
       } catch (mainError) {
@@ -304,7 +298,6 @@ const TeacherDashboard = () => {
       setLoading(true);
       const teacherId = user?.teacherId || user?.id;
       const response = await api.get(`${ENDPOINTS.GET_CONNECTION_REQUESTS}`);
-      console.log("Requests:", response?.data);
       setRequests(response?.data?.data || []);
     } catch (error) {
       console.error("Error fetching requests:", error);
@@ -435,7 +428,6 @@ const TeacherDashboard = () => {
   };
 
   const handlePremiumSubmit = async () => {
-    console.log("premiumData", premiumData);
     if (!validatePremiumForm()) {
       return;
     }
@@ -487,8 +479,6 @@ const TeacherDashboard = () => {
         JSON.stringify(premiumContentData)
       );
 
-      console.log("Session:", session);
-
       const result = await stripe.redirectToCheckout({
         sessionId: session.data.id,
       });
@@ -513,8 +503,6 @@ const TeacherDashboard = () => {
         return;
       }
 
-      console.log("Submitting content data:", contentData);
-
       if (contentData.link_or_video === true) {
         // Submit with YouTube links via backend
         const payload = {
@@ -527,8 +515,6 @@ const TeacherDashboard = () => {
           },
         };
 
-        console.log("Sending payload to backend:", payload);
-
         const response = await fetch(`${API_BASE_URL}/update-premium-content`, {
           method: "POST",
           headers: {
@@ -538,10 +524,8 @@ const TeacherDashboard = () => {
         });
 
         const responseData = await response.json();
-        console.log("Backend response:", responseData);
 
         if (response.ok) {
-          console.log("Premium content with links submitted successfully");
           toast.success("Premium content submitted successfully!");
           fetchPremiumStatus();
         } else {
@@ -552,9 +536,6 @@ const TeacherDashboard = () => {
           toast.error(`Error: ${responseData.error || "Unknown error"}`);
         }
       } else {
-        // Submit with video files directly to PocketBase
-        console.log("Uploading videos directly to PocketBase");
-
         try {
           // First get the existing record ID
           const encodedEmail = encodeURIComponent(teacherEmail);
@@ -574,32 +555,22 @@ const TeacherDashboard = () => {
           }
 
           const checkData = await checkResponse.json();
-          console.log("Check data:", checkData);
 
           if (checkData.items && checkData.items.length > 0) {
             const recordId = checkData.items[0].id;
-            console.log("Found record ID:", recordId);
 
             // Prepare FormData
             const formData = new FormData();
             formData.append("link_or_video", "false"); // PocketBase expects string
 
             if (contentData.video1) {
-              console.log("Adding video1:", contentData.video1.name);
               formData.append("video1", contentData.video1);
             }
             if (contentData.video2) {
-              console.log("Adding video2:", contentData.video2.name);
               formData.append("video2", contentData.video2);
             }
             if (contentData.video3) {
-              console.log("Adding video3:", contentData.video3.name);
               formData.append("video3", contentData.video3);
-            }
-
-            // Log FormData contents for debugging
-            for (let [key, value] of formData.entries()) {
-              console.log(`FormData: ${key}:`, value);
             }
 
             const uploadResponse = await fetch(
@@ -616,10 +587,8 @@ const TeacherDashboard = () => {
             );
 
             const uploadData = await uploadResponse.json();
-            console.log("Upload response:", uploadData);
 
             if (uploadResponse.ok) {
-              console.log("Premium content with videos submitted successfully");
               toast.success(
                 "Premium content with videos submitted successfully!"
               );
@@ -1042,16 +1011,14 @@ const TeacherDashboard = () => {
     // Upload to Cloudinary
     setUploadingImage(true);
     try {
-      console.log("📤 Uploading profile image to Cloudinary...");
       const result = await uploadImageToCloudinary(file, "teacher-profiles");
 
       setProfileForm((prev) => ({
         ...prev,
         profilePhoto: file,
-        profilePhotoUrl: result.url, // Store Cloudinary URL
+        profilePhotoUrl: result?.data?.url, // Store Cloudinary URL
       }));
 
-      console.log("✅ Profile image uploaded successfully:", result.url);
       toast.success("Profile photo uploaded successfully!");
     } catch (error) {
       console.error("❌ Error uploading image:", error);
@@ -1084,8 +1051,8 @@ const TeacherDashboard = () => {
         updateData.profilePhotoUrl = profileForm.profilePhotoUrl;
       }
 
-      const response = await axios.put(
-        `${API_BASE_URL}/teachers/${user.teacherId}`,
+      const response = await api.put(
+        `${ENDPOINTS.UPDATE_TEACHER(user.teacherId)}`,
         updateData,
         {
           headers: { "Content-Type": "application/json" },

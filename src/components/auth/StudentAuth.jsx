@@ -140,7 +140,6 @@ const StudentAuth = () => {
   // Auto-navigate when user state changes
   useEffect(() => {
     if (user && user.role === "student") {
-      console.log("User logged in, navigating to dashboard...");
       navigate("/dashboard/student", { replace: true });
     }
   }, [user, navigate]);
@@ -342,7 +341,6 @@ const StudentAuth = () => {
     // Upload to Cloudinary
     setUploadingImage(true);
     try {
-      console.log("📤 Uploading image to Cloudinary...");
       const result = await uploadService.uploadImage(file, "student-profiles");
 
       setFormData((prev) => ({
@@ -351,7 +349,6 @@ const StudentAuth = () => {
         profilePhotoUrl: result.url, // Store Cloudinary URL
       }));
 
-      console.log("✅ Image uploaded successfully:", result.url);
       toast.success("Profile photo uploaded successfully!");
     } catch (error) {
       console.error("❌ Error uploading image:", error);
@@ -580,15 +577,9 @@ const StudentAuth = () => {
 
     try {
       if (isLogin) {
-        console.log("Attempting student login...");
         await handleStudentLogin();
-        console.log("Login successful, AuthContext will update user state");
       } else {
-        console.log("Attempting student registration...");
         await handleStudentRegister();
-        console.log(
-          "Registration successful, AuthContext will update user state"
-        );
       }
     } catch (error) {
       console.error("Auth error:", error);

@@ -24,7 +24,6 @@ const AdminAuth = () => {
   // Auto-navigate when user state changes
   useEffect(() => {
     if (user && user.role === "admin") {
-      console.log("Admin logged in, navigating to admin panel...");
       navigate("/admin", { replace: true });
     }
   }, [user, navigate]);

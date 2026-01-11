@@ -352,9 +352,6 @@ const StudentPosts = () => {
       return;
     }
 
-    console.log("Purchase attempt for post:", post); // Debug log
-    console.log("Current user:", currentUser); // Debug log
-
     setPurchaseLoading((prev) => ({ ...prev, [post.id]: true }));
 
     try {
@@ -363,8 +360,6 @@ const StudentPosts = () => {
         teacherId: currentUser.teacherId,
         studentId: post.studentId, // Make sure this exists in the post object
       };
-
-      console.log("Sending purchase data:", purchaseData); // Debug log
 
       // Validate data before sending
       if (
@@ -387,8 +382,6 @@ const StudentPosts = () => {
         setPurchaseLoading((prev) => ({ ...prev, [post.id]: false }));
         return;
       }
-
-      console.log("Checkout session created:", data);
 
       // Check if free access was granted (premium subscription)
       if (data.freeAccess) {

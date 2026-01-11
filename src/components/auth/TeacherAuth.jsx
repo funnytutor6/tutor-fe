@@ -202,13 +202,9 @@ const TeacherAuth = () => {
       !autocompleteRef.current &&
       !isLogin
     ) {
-      console.log("Attempting to initialize city autocomplete...");
-
       const initTimer = setTimeout(() => {
         if (cityInputRef.current && window.google?.maps?.places?.Autocomplete) {
           try {
-            console.log("Creating city autocomplete instance...");
-
             autocompleteRef.current =
               new window.google.maps.places.Autocomplete(cityInputRef.current, {
                 types: ["(cities)"],
@@ -222,7 +218,6 @@ const TeacherAuth = () => {
 
             autocompleteRef.current.addListener("place_changed", () => {
               const place = autocompleteRef.current.getPlace();
-              console.log("City place selected:", place);
 
               if (place && (place.name || place.formatted_address)) {
                 let cityName = place.name || place.formatted_address;
@@ -252,15 +247,12 @@ const TeacherAuth = () => {
                   }
                 }
 
-                console.log("Setting city name:", cityName);
                 setFormData((prev) => ({
                   ...prev,
                   cityOrTown: cityName,
                 }));
               }
             });
-
-            console.log("City autocomplete initialized successfully");
           } catch (error) {
             console.error("Error creating city autocomplete:", error);
           }
@@ -378,7 +370,6 @@ const TeacherAuth = () => {
     // Upload to Cloudinary
     setUploadingImage(true);
     try {
-      console.log("📤 Uploading image to Cloudinary...");
       const result = await uploadService.uploadImage(file, "teacher-profiles");
 
       setFormData((prev) => ({
@@ -387,7 +378,6 @@ const TeacherAuth = () => {
         profilePhotoUrl: result?.url, // Store Cloudinary URL
       }));
 
-      console.log("✅ Image uploaded successfully:", result);
       toast.success("Profile photo uploaded successfully!");
     } catch (error) {
       console.error("❌ Error uploading image:", error);
@@ -451,8 +441,6 @@ const TeacherAuth = () => {
         formData.email,
         formData.password
       );
-
-      console.log("Response:", response);
 
       const userData = {
         id: response?.teacher.id,

@@ -24,8 +24,6 @@ const FindTeachers = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
-  console.log("selectedTeacher", selectedTeacher);
-
   // New states for connection requests
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -34,7 +32,6 @@ const FindTeachers = () => {
   const [userType, setUserType] = useState(null);
   const [requestStatuses, setRequestStatuses] = useState({});
 
-  console.log("currentUser", currentUser);
   // New states for video functionality
   const [teacherVideos, setTeacherVideos] = useState([]);
   const [loadingVideos, setLoadingVideos] = useState(false);
@@ -82,8 +79,6 @@ const FindTeachers = () => {
 
     loadGoogleMapsAPI();
   }, []);
-
-  console.log("selectedTeacher", selectedTeacher);
 
   // Initialize Google Places Autocomplete
   useEffect(() => {
@@ -173,30 +168,21 @@ const FindTeachers = () => {
     const checkUserAuth = () => {
       const userData = localStorage.getItem("user");
 
-      console.log("Raw userData from localStorage:", userData);
-
       if (userData) {
         try {
           const user = JSON.parse(userData);
-          console.log("Parsed user object:", user);
           setCurrentUser(user);
 
           if (user.role === "teacher") {
-            console.log("User detected as TEACHER");
             setUserType("teacher");
           } else if (user.role === "student") {
-            console.log("User detected as STUDENT");
             setUserType("student");
           } else {
-            console.log("No role found, checking fallback properties...");
             if (user.teacherId) {
-              console.log("User has teacherId, setting as TEACHER");
               setUserType("teacher");
             } else if (user.studentId) {
-              console.log("User has studentId, setting as STUDENT");
               setUserType("student");
             } else {
-              console.log("No identifying properties found, setting as null");
               setUserType(null);
             }
           }
@@ -206,7 +192,6 @@ const FindTeachers = () => {
           setUserType(null);
         }
       } else {
-        console.log("No user data found in localStorage");
         setCurrentUser(null);
         setUserType(null);
       }
@@ -226,7 +211,6 @@ const FindTeachers = () => {
     try {
       setLoading(true);
       setError("");
-      console.log("Fetching posts...");
       const response = await api.get(ENDPOINTS.GET_ALL_TEACHER_POSTS);
       setPosts(response.data?.data);
     } catch (error) {
@@ -279,14 +263,12 @@ const FindTeachers = () => {
     if (!currentUser || userType !== "student") return;
 
     const studentId = currentUser.studentId || currentUser.id;
-    console.log("Checking request statuses for student ID:", studentId);
 
     try {
       const statusPromises = filteredPosts.map((post) =>
         axios
           .get(`${API_BASE_URL}/posts/${post.id}/request-status/${studentId}`)
           .then((response) => {
-            console.log(`Status for post ${post.id}:`, response.data);
             return { postId: post.id, ...response.data };
           })
           .catch((error) => {
@@ -301,7 +283,6 @@ const FindTeachers = () => {
         return acc;
       }, {});
 
-      console.log("Request statuses map:", statusMap);
       setRequestStatuses(statusMap);
     } catch (error) {
       console.error("Error checking request statuses:", error);
@@ -312,14 +293,11 @@ const FindTeachers = () => {
   const fetchTeacherVideos = async (teacherEmail) => {
     try {
       setLoadingVideos(true);
-      console.log("Fetching videos for teacher email:", teacherEmail);
 
       // Filter by teacher email
       const response = await axios.get(
         `${API_BASE_URL}/collections/findtutor_premium_teachers/records?filter=(mail='${teacherEmail}')`
       );
-
-      console.log("PocketBase response:", response.data);
 
       if (
         response.data &&
@@ -327,7 +305,6 @@ const FindTeachers = () => {
         response.data.items.length > 0
       ) {
         const teacherData = response.data.items[0];
-        console.log("Teacher premium data:", teacherData);
 
         // Check if teacher has videos/links
         if (teacherData.link_or_video && teacherData.ispaid) {
@@ -362,14 +339,11 @@ const FindTeachers = () => {
           }
 
           setTeacherVideos(videos);
-          console.log("Videos found:", videos);
         } else {
           setTeacherVideos([]);
-          console.log("No videos available for this teacher");
         }
       } else {
         setTeacherVideos([]);
-        console.log("Teacher not found in premium collection");
       }
     } catch (error) {
       console.error("Error fetching teacher videos:", error);
@@ -432,8 +406,6 @@ const FindTeachers = () => {
         isConnected,
       };
 
-      console.log("Teacher data:", teacherData);
-
       setSelectedTeacher(teacherData);
       setShowProfileModal(true);
       setSelectedPost(post);
@@ -488,7 +460,6 @@ const FindTeachers = () => {
       return;
     }
 
-    console.log("Opening request modal for post:", post);
     setSelectedPost(post);
     setShowRequestModal(true);
   };
@@ -540,7 +511,6 @@ const FindTeachers = () => {
   };
 
   const getConnectButtonText = (post) => {
-    console.log("requestStatuses", post);
     if (!currentUser) {
       return "Login to Connect";
     }
@@ -620,7 +590,6 @@ const FindTeachers = () => {
   };
 
   const getUniqueSubjects = () => {
-    console.log("posts", posts);
     const subjects = [
       ...new Set(posts?.map((post) => post.subject).filter(Boolean)),
     ];

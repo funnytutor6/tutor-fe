@@ -1,4 +1,6 @@
 import axios from "axios";
+import api from "../api/axiosConfig";
+import { ENDPOINTS } from "../api/endpoints";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -17,24 +19,12 @@ export const uploadImageToCloudinary = async (
     formData.append("image", file);
     formData.append("folder", folder);
 
-    console.log("📤 Uploading image to Cloudinary...", {
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type,
-      folder: folder,
+    const response = await api.post(ENDPOINTS.UPLOAD_IMAGE, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
-    const response = await axios.post(
-      `${API_BASE_URL}/upload-image`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    console.log("✅ Image uploaded successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error("❌ Error uploading image:", error);
@@ -56,14 +46,11 @@ export const uploadImageDirectly = async (file, cloudName, uploadPreset) => {
     formData.append("file", file);
     formData.append("upload_preset", uploadPreset);
 
-    console.log("📤 Uploading image directly to Cloudinary...");
-
     const response = await axios.post(
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       formData
     );
 
-    console.log("✅ Image uploaded successfully:", response.data);
     return {
       url: response.data.secure_url,
       publicId: response.data.public_id,
@@ -84,13 +71,10 @@ export const uploadImageDirectly = async (file, cloudName, uploadPreset) => {
  */
 export const deleteImageFromCloudinary = async (publicId) => {
   try {
-    console.log("🗑️ Deleting image from Cloudinary...", publicId);
-
-    const response = await axios.post(`${API_BASE_URL}/delete-image`, {
+    const response = await api.post(ENDPOINTS.DELETE_IMAGE, {
       publicId,
     });
 
-    console.log("✅ Image deleted successfully");
     return response.data;
   } catch (error) {
     console.error("❌ Error deleting image:", error);

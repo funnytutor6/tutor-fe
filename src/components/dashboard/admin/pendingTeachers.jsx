@@ -51,7 +51,6 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
 
   const handleStatusUpdate = async (teacherId, status) => {
     try {
-      console.log("teacherId", teacherId);
       setProcessing(true);
       await adminService.updateTeacherStatus(teacherId, status);
       toast.success(`Teacher ${status} successfully`);

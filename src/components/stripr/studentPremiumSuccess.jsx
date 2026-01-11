@@ -19,19 +19,12 @@ const StudentPremiumSuccess = () => {
 
   const checkPremiumStatus = async (studentEmail, attempt = 1) => {
     try {
-      console.log(
-        `Checking premium status (attempt ${attempt}):`,
-        studentEmail
-      );
-
       // Check student premium status using your MySQL API
       const premiumResponse = await axios.get(
         `${STRIPE_SERVER_URL}/check-student-premium-status/${encodeURIComponent(
           studentEmail
         )}`
       );
-
-      console.log("Premium status response:", premiumResponse.data);
 
       if (premiumResponse.data.hasPremium && premiumResponse.data.isPaid) {
         setPremiumData(premiumResponse.data.premiumData);
@@ -56,16 +49,12 @@ const StudentPremiumSuccess = () => {
     paymentData
   ) => {
     try {
-      console.log("🔧 Creating premium record directly via API...");
-
       // Get full session details from Stripe
       const sessionResponse = await axios.get(
         `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
       );
       const sessionData = sessionResponse.data;
       const metadata = sessionData.metadata || {};
-
-      console.log("Session metadata:", metadata);
 
       // Prepare the premium record data
       const premiumData = {
@@ -80,15 +69,12 @@ const StudentPremiumSuccess = () => {
         paymentAmount: 29.0, // Default student premium amount
       };
 
-      console.log("Creating record with data:", premiumData);
-
       // Use your MySQL API endpoint to create the record
       const createResponse = await axios.post(
         `${STRIPE_SERVER_URL}/api/collections/findtitor_premium_student/records`,
         premiumData
       );
 
-      console.log("✅ Direct creation successful:", createResponse.data);
       return createResponse.data;
     } catch (error) {
       console.error("❌ Direct creation failed:", error);
@@ -105,8 +91,6 @@ const StudentPremiumSuccess = () => {
 
   const manualWebhookTrigger = async (sessionId) => {
     try {
-      console.log("🎣 Attempting to manually trigger webhook processing...");
-
       // Create a test endpoint to manually process the webhook
       const triggerResponse = await axios.post(
         `${STRIPE_SERVER_URL}/manual-webhook-trigger`,
@@ -116,7 +100,6 @@ const StudentPremiumSuccess = () => {
         }
       );
 
-      console.log("Manual webhook trigger response:", triggerResponse.data);
       return triggerResponse.data.success;
     } catch (error) {
       console.error("Manual webhook trigger failed:", error);
@@ -140,18 +123,10 @@ const StudentPremiumSuccess = () => {
       }
 
       try {
-        console.log(
-          "🎓 Processing student premium payment for session:",
-          sessionId,
-          "email:",
-          studentEmail
-        );
-
         // Verify the payment status with Stripe
         const paymentResponse = await axios.get(
           `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
         );
-        console.log("Payment response:", paymentResponse.data);
 
         if (paymentResponse?.data?.data?.paymentStatus !== "paid") {
           setError("Payment not completed");
@@ -160,7 +135,6 @@ const StudentPremiumSuccess = () => {
         }
 
         // Initial wait for webhook processing
-        console.log("⏳ Waiting for webhook to process...");
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Start checking premium status with retries
@@ -180,10 +154,6 @@ const StudentPremiumSuccess = () => {
         }
 
         if (!isActivated) {
-          console.log(
-            "🚨 Webhook processing failed, attempting manual recovery..."
-          );
-
           try {
             // Step 1: Try manual webhook trigger
             const webhookTriggered = await manualWebhookTrigger(sessionId);
@@ -196,10 +166,6 @@ const StudentPremiumSuccess = () => {
 
             // Step 2: If webhook trigger didn't work, create record directly
             if (!isActivated) {
-              console.log(
-                "🔧 Manual webhook trigger failed, creating record directly..."
-              );
-
               const createdRecord = await createPremiumRecordDirectly(
                 sessionId,
                 studentEmail,
@@ -207,7 +173,6 @@ const StudentPremiumSuccess = () => {
               );
 
               if (createdRecord) {
-                console.log("✅ Direct creation successful");
                 setPremiumData(createdRecord);
                 setSuccess(true);
                 setLoading(false);

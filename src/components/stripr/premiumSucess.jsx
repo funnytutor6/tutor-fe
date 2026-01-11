@@ -46,7 +46,6 @@ const PremiumSuccess = () => {
         const paymentResponse = await axios.get(
           `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
         );
-        console.log("Payment response:", paymentResponse);
         if (paymentResponse.data.data.paymentStatus !== "paid") {
           setError("Payment not completed");
           setLoading(false);
