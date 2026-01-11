@@ -37,6 +37,14 @@ const TeacherDashboard = () => {
     pendingRequests: 0,
     purchasedRequests: 0,
   });
+
+  // Teacher metrics state
+  const [teacherMetrics, setTeacherMetrics] = useState({
+    postsCount: 0,
+    totalRequests: 0,
+    pendingRequests: 0,
+    purchasedRequests: 0,
+  });
   const [showRequestDetails, setShowRequestDetails] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
@@ -134,7 +142,7 @@ const TeacherDashboard = () => {
     // Check if there's pending premium content to submit
     const pendingContent = localStorage.getItem("pendingPremiumContent");
     const isPremiumActive =
-      subscriptionStatus?.isActive || teacherPremiumStatus?.ispaid;
+      subscriptionStatus?.isActive || teacherPremiumStatus?.isPaid;
     if (pendingContent && isPremiumActive) {
       try {
         const contentData = JSON.parse(pendingContent);
@@ -145,6 +153,8 @@ const TeacherDashboard = () => {
         localStorage.removeItem("pendingPremiumContent");
       }
     }
+
+    console.log("teacherPremiumStatus", teacherPremiumStatus);
   }, [teacherPremiumStatus, subscriptionStatus]);
 
   // Load Google Maps API
@@ -222,8 +232,8 @@ const TeacherDashboard = () => {
       console.log("Premium data:", premiumData);
 
       if (premiumData.hasPremium) {
-        console.log("Has premium", premiumData.premiumData);
-        setTeacherPremiumStatus(premiumData.premiumData);
+        console.log("Has premium", premiumData);
+        setTeacherPremiumStatus(premiumData);
       } else {
         setTeacherPremiumStatus(null);
       }
@@ -244,6 +254,16 @@ const TeacherDashboard = () => {
       console.error("Error fetching premium status:", error);
     }
   };
+
+  // Load premium status and metrics on initial mount
+  useEffect(() => {
+    if (user?.email) {
+      fetchPremiumStatus();
+    }
+    if (user?.id || user?.teacherId) {
+      fetchTeacherMetrics();
+    }
+  }, [user?.email, user?.id, user?.teacherId]);
 
   const fetchPosts = async () => {
     try {
@@ -302,6 +322,27 @@ const TeacherDashboard = () => {
       setRequestsCount(response.data);
     } catch (error) {
       console.error("Error fetching requests count:", error);
+    }
+  };
+
+  const fetchTeacherMetrics = async () => {
+    try {
+      const response = await api.get(`${ENDPOINTS.GET_TEACHER_METRICS}`);
+      const metrics = response?.data?.data || response?.data || {};
+      setTeacherMetrics({
+        postsCount: metrics.postsCount || 0,
+        totalRequests: metrics.totalRequests || 0,
+        pendingRequests: metrics.pendingRequests || 0,
+        purchasedRequests: metrics.purchasedRequests || 0,
+      });
+      // Also update requestsCount for backward compatibility
+      setRequestsCount({
+        totalRequests: metrics.totalRequests || 0,
+        pendingRequests: metrics.pendingRequests || 0,
+        purchasedRequests: metrics.purchasedRequests || 0,
+      });
+    } catch (error) {
+      console.error("Error fetching teacher metrics:", error);
     }
   };
 
@@ -621,14 +662,15 @@ const TeacherDashboard = () => {
   };
 
   const renderVideoPreview = (videoData, index) => {
-    if (!teacherPremiumStatus) return null;
+    if (!teacherPremiumStatus?.premiumData) return null;
 
-    const isPremium = teacherPremiumStatus.ispaid;
+    const isPremium = teacherPremiumStatus.isPaid;
     const isBlurred = !isPremium;
+    const premiumData = teacherPremiumStatus.premiumData;
 
-    if (teacherPremiumStatus.link_or_video) {
+    if (premiumData.link_or_video) {
       // YouTube links
-      const link = teacherPremiumStatus[`link${index + 1}`];
+      const link = premiumData[`link${index + 1}`];
       if (!link) return null;
 
       const videoId = extractYouTubeVideoId(link);
@@ -663,7 +705,7 @@ const TeacherDashboard = () => {
     } else {
       // Uploaded videos
       const videoField = `video${index + 1}`;
-      const videoUrl = teacherPremiumStatus[videoField];
+      const videoUrl = premiumData[videoField];
       if (!videoUrl) return null;
 
       return (
@@ -678,7 +720,7 @@ const TeacherDashboard = () => {
               poster="/api/placeholder/300/200"
             >
               <source
-                src={`${API_BASE_URL}/files/findtutor_premium_teachers/${teacherPremiumStatus.id}/${videoUrl}`}
+                src={`${API_BASE_URL}/files/findtutor_premium_teachers/${premiumData.id}/${videoUrl}`}
                 type="video/mp4"
               />
               Your browser does not support the video tag.
@@ -873,6 +915,7 @@ const TeacherDashboard = () => {
       setShowPostModal(false);
       resetPostForm();
       fetchPosts();
+      fetchTeacherMetrics(); // Refresh metrics after post operation
     } catch (error) {
       console.error("Error saving post:", error);
       toast.error(error.response?.data?.error || "Failed to save post", {
@@ -895,6 +938,7 @@ const TeacherDashboard = () => {
       await api.delete(`${ENDPOINTS.DELETE_TEACHER_POST(postId)}`);
       toast.success("Post deleted successfully!");
       fetchPosts();
+      fetchTeacherMetrics(); // Refresh metrics after post deletion
     } catch (error) {
       toast.error("Failed to delete post", { id: "delete-post" });
     } finally {
@@ -1120,24 +1164,54 @@ const TeacherDashboard = () => {
           </div>
           <h5>{user?.name || "Teacher Name"}</h5>
           <p className="text-muted">Teacher</p>
+          {teacherPremiumStatus?.hasPremium && teacherPremiumStatus?.isPaid && (
+            <span
+              style={{
+                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                color: "white",
+                padding: "4px 12px",
+                borderRadius: "15px",
+                fontSize: "0.75rem",
+                fontWeight: "600",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+                marginTop: "8px",
+              }}
+            >
+              <i className="bi bi-star-fill"></i>
+              Premium Member
+            </span>
+          )}
 
           {/* Quick Stats */}
           <div className="quick-stats">
-            <div className="stat-item">
-              <span className="stat-number">{posts.length}</span>
-              <span className="stat-label">Posts</span>
+            <div className="stat-item stat-item-posts">
+              <i className="bi bi-file-post stat-icon"></i>
+              <div className="stat-content">
+                <span className="stat-number">
+                  {teacherMetrics.postsCount || 0}
+                </span>
+                <span className="stat-label">Posts</span>
+              </div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number">
-                {requestsCount.pendingRequests}
-              </span>
-              <span className="stat-label">Pending</span>
+            <div className="stat-item stat-item-pending">
+              <i className="bi bi-clock-history stat-icon"></i>
+              <div className="stat-content">
+                <span className="stat-number">
+                  {teacherMetrics.pendingRequests || 0}
+                </span>
+                <span className="stat-label">Pending</span>
+              </div>
             </div>
-            <div className="stat-item">
-              <span className="stat-number">
-                {requestsCount.purchasedRequests}
-              </span>
-              <span className="stat-label">Purchased</span>
+            <div className="stat-item stat-item-purchased">
+              <i className="bi bi-check-circle stat-icon"></i>
+              <div className="stat-content">
+                <span className="stat-number">
+                  {teacherMetrics.purchasedRequests || 0}
+                </span>
+                <span className="stat-label">Purchased</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1182,11 +1256,6 @@ const TeacherDashboard = () => {
             >
               <i className="bi bi-star me-2"></i>
               Premium
-              {teacherPremiumStatus?.ispaid && (
-                <span className="badge bg-success ms-2">
-                  <i className="bi bi-check-lg"></i>
-                </span>
-              )}
             </button>
           </li>
           <li className="nav-item mt-3">
@@ -1245,7 +1314,7 @@ const TeacherDashboard = () => {
             )}
             {activeTab === "premium" &&
               !(
-                subscriptionStatus?.isActive || teacherPremiumStatus?.ispaid
+                subscriptionStatus?.isActive || teacherPremiumStatus?.isPaid
               ) && (
                 <button
                   className="btn btn-premium"
@@ -1414,12 +1483,12 @@ const TeacherDashboard = () => {
                   </div>
 
                   {/* Current Status */}
-                  {teacherPremiumStatus ? (
+                  {teacherPremiumStatus?.hasPremium ? (
                     <div className="current-status mb-5">
                       <div
                         className={`status-card ${
                           subscriptionStatus?.isActive ||
-                          teacherPremiumStatus.ispaid
+                          teacherPremiumStatus.isPaid
                             ? "premium-active"
                             : "premium-pending"
                         }`}
@@ -1429,7 +1498,7 @@ const TeacherDashboard = () => {
                             <i
                               className={`bi ${
                                 subscriptionStatus?.isActive ||
-                                teacherPremiumStatus.ispaid
+                                teacherPremiumStatus.isPaid
                                   ? "bi-check-circle-fill"
                                   : "bi-clock-fill"
                               }`}
@@ -1454,7 +1523,7 @@ const TeacherDashboard = () => {
                                     subscriptionStatus.subscription.status.slice(
                                       1
                                     )
-                                : teacherPremiumStatus.ispaid
+                                : teacherPremiumStatus.isPaid
                                 ? "Premium Active"
                                 : "Premium Pending"}
                             </h5>
@@ -1475,7 +1544,7 @@ const TeacherDashboard = () => {
                                     "canceled"
                                   ? "Your subscription has been canceled"
                                   : "Your premium subscription status"
-                                : teacherPremiumStatus.ispaid
+                                : teacherPremiumStatus.isPaid
                                 ? "Your premium subscription is active and videos are visible to students"
                                 : "Your premium request is pending approval"}
                             </p>
@@ -1606,7 +1675,7 @@ const TeacherDashboard = () => {
 
                         {/* Add Content Button for paid users */}
                         {(subscriptionStatus?.isActive ||
-                          teacherPremiumStatus.ispaid) && (
+                          teacherPremiumStatus.isPaid) && (
                           <div className="text-center mt-3">
                             <button
                               className="btn btn-outline-primary"
@@ -1614,11 +1683,18 @@ const TeacherDashboard = () => {
                                 setPremiumData((prev) => ({
                                   ...prev,
                                   mail: user?.email || "",
-                                  link1: teacherPremiumStatus.link1 || "",
-                                  link2: teacherPremiumStatus.link2 || "",
-                                  link3: teacherPremiumStatus.link3 || "",
+                                  link1:
+                                    teacherPremiumStatus?.premiumData?.link1 ||
+                                    "",
+                                  link2:
+                                    teacherPremiumStatus?.premiumData?.link2 ||
+                                    "",
+                                  link3:
+                                    teacherPremiumStatus?.premiumData?.link3 ||
+                                    "",
                                   link_or_video:
-                                    teacherPremiumStatus.link_or_video,
+                                    teacherPremiumStatus?.premiumData
+                                      ?.link_or_video,
                                 }));
                                 setShowPremiumModal(true);
                               }}
@@ -1664,7 +1740,7 @@ const TeacherDashboard = () => {
                           ) : (
                             <>
                               <i className="bi bi-credit-card me-2"></i>
-                              {teacherPremiumStatus?.ispaid
+                              {teacherPremiumStatus?.isPaid
                                 ? "Update Content"
                                 : "Pay $29 & Get Premium"}
                             </>
@@ -1986,7 +2062,7 @@ const TeacherDashboard = () => {
                         <h6 className="videos-section-title">
                           <i className="bi bi-camera-video me-2"></i>
                           Teaching Videos
-                          {teacherPremiumStatus.ispaid && (
+                          {teacherPremiumStatus.isPaid && (
                             <span className="badge bg-success ms-2">
                               Premium
                             </span>
@@ -1999,7 +2075,7 @@ const TeacherDashboard = () => {
                             </div>
                           ))}
                         </div>
-                        {!teacherPremiumStatus.ispaid && (
+                        {!teacherPremiumStatus.isPaid && (
                           <div className="upgrade-prompt mt-3">
                             <button
                               className="btn btn-premium btn-sm"
@@ -2069,14 +2145,16 @@ const TeacherDashboard = () => {
                         <div className="row text-center">
                           <div className="col-4">
                             <div className="stat-box">
-                              <h4 className="text-primary">{posts.length}</h4>
+                              <h4 className="text-primary">
+                                {teacherMetrics.postsCount || 0}
+                              </h4>
                               <small className="text-muted">Active Posts</small>
                             </div>
                           </div>
                           <div className="col-4">
                             <div className="stat-box">
                               <h4 className="text-success">
-                                {requestsCount.totalRequests}
+                                {teacherMetrics.totalRequests || 0}
                               </h4>
                               <small className="text-muted">
                                 Total Requests
@@ -2087,7 +2165,7 @@ const TeacherDashboard = () => {
                             <div className="stat-box">
                               <h4 className="text-warning">
                                 {subscriptionStatus?.isActive ||
-                                teacherPremiumStatus?.ispaid
+                                teacherPremiumStatus?.isPaid
                                   ? "Premium"
                                   : "Basic"}
                               </h4>
@@ -2913,30 +2991,71 @@ const TeacherDashboard = () => {
 
         .quick-stats {
           display: flex;
-          justify-content: space-around;
+          flex-direction: row;
+          justify-content: space-between;
+          gap: 8px;
           margin-top: 20px;
-          padding: 15px;
-          background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-          border-radius: 10px;
-          border: 1px solid #bae6fd;
+          padding: 12px;
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
         }
 
         .stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          padding: 10px 8px;
+          background: white;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          flex: 1;
           text-align: center;
+        }
+
+        .stat-item:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-item-posts .stat-icon {
+          color: #3b82f6;
+        }
+
+        .stat-item-pending .stat-icon {
+          color: #f59e0b;
+        }
+
+        .stat-item-purchased .stat-icon {
+          color: #10b981;
+        }
+
+        .stat-icon {
+          font-size: 1rem;
+          flex-shrink: 0;
+        }
+
+        .stat-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
         }
 
         .stat-number {
           display: block;
-          font-size: 1.25rem;
+          font-size: 1.1rem;
           font-weight: 700;
-          color: #1e40af;
+          color: #1f2937;
+          line-height: 1.2;
         }
 
         .stat-label {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           color: #6b7280;
+          font-weight: 500;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.3px;
         }
 
         .nav-link {
@@ -3877,13 +3996,18 @@ const TeacherDashboard = () => {
 
           .quick-stats {
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            padding: 10px;
           }
 
           .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: row;
+            padding: 8px 10px;
+            text-align: left;
+          }
+
+          .stat-content {
+            align-items: flex-start;
           }
 
           .benefit-item {

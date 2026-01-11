@@ -25,6 +25,7 @@ export const ENDPOINTS = {
   UPDATE_TEACHER: (id) => `/api/teachers/${id}`,
   DELETE_TEACHER: (id) => `/api/teachers/${id}`,
   GET_ALL_TEACHERS: "/api/teachers",
+  GET_TEACHER_METRICS: "/api/teachers/metrics",
 
   // Students
   GET_STUDENT: (id) => `/api/students/${id}`,

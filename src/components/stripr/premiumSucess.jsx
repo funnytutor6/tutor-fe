@@ -568,7 +568,7 @@ const PremiumSuccess = () => {
                         videos
                       </label>
                     </div>
-                    <div className="form-check">
+                    {/* <div className="form-check">
                       <input
                         className="form-check-input"
                         type="radio"
@@ -588,7 +588,7 @@ const PremiumSuccess = () => {
                       >
                         <strong>Upload Videos</strong> - Upload new video files
                       </label>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
