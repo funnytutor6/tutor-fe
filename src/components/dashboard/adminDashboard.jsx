@@ -87,7 +87,7 @@ const AdminDashboard = () => {
         const teacherResponse =
           await adminService.getAllTeacherSubscriptionsForAdmin({
             page: 1,
-            pageSize: 1000, // Get all for dashboard count
+            pageSize: 10, // Get all for dashboard count
             search: "",
           });
         const teacherData = teacherResponse?.data || teacherResponse;

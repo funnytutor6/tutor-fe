@@ -806,7 +806,7 @@ const FindTeachers = () => {
                   <div className="row align-items-center">
                     <div className="col-md-2">
                       <div className="teacher-image">
-                        {post.teacherPhoto ? (
+                        {post.profilePhoto ? (
                           <img
                             src={`${post.profilePhoto}`}
                             alt={post.teacherName}
@@ -1073,7 +1073,7 @@ const FindTeachers = () => {
                                     <label>Member Since:</label>
                                     <span>
                                       {new Date(
-                                        selectedTeacher.createdAt
+                                        selectedTeacher.created
                                       ).toLocaleDateString()}
                                     </span>
                                   </div>
