@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { postService } from "../api/services/postService.js";
 import { purchaseService } from "../api/services/purchaseService.js";
 import { connectionService } from "../api/services/connectionService.js";
+import { premiumService } from "../api/services/premiumService.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -35,6 +36,9 @@ const StudentPosts = () => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [purchaseLoading, setPurchaseLoading] = useState({});
+
+  // Premium status for teachers
+  const [teacherPremiumStatus, setTeacherPremiumStatus] = useState(null);
 
   // Subjects list
   const subjects = [
@@ -228,9 +232,10 @@ const StudentPosts = () => {
       fetchMyPosts(userData.studentId);
     }
 
-    // If user is a teacher, fetch their purchases
+    // If user is a teacher, fetch their purchases and premium status
     if (userData.role === "teacher" && userData.teacherId) {
       fetchTeacherPurchases(userData.teacherId);
+      fetchTeacherPremiumStatus();
     }
   }, []);
 
@@ -320,9 +325,30 @@ const StudentPosts = () => {
     }
   };
 
+  const fetchTeacherPremiumStatus = async () => {
+    try {
+      const premiumResponse = await premiumService.checkTeacherPremiumStatus();
+      const premiumData = premiumResponse?.data || premiumResponse;
+      if (premiumData.hasPremium) {
+        setTeacherPremiumStatus(premiumData);
+      } else {
+        setTeacherPremiumStatus(null);
+      }
+    } catch (error) {
+      console.error("Error fetching premium status:", error);
+    }
+  };
+
   const handlePurchaseAccess = async (post) => {
     if (!currentUser?.teacherId) {
       setError("Only teachers can purchase access");
+      return;
+    }
+
+    // Check if teacher has premium subscription
+    if (teacherPremiumStatus?.isPaid) {
+      // Premium teachers get free access - just view contact directly
+      handleViewContact(post);
       return;
     }
 
@@ -364,6 +390,17 @@ const StudentPosts = () => {
 
       console.log("Checkout session created:", data);
 
+      // Check if free access was granted (premium subscription)
+      if (data.freeAccess) {
+        alert("Contact information accessed via premium subscription!");
+        // Refresh purchases to update UI
+        fetchTeacherPurchases(currentUser.teacherId);
+        setPurchaseLoading((prev) => ({ ...prev, [post.id]: false }));
+        // Show contact modal
+        handleViewContact(post);
+        return;
+      }
+
       // Redirect to Stripe checkout
       if (data.url) {
         // Save pending purchase info to localStorage for after payment
@@ -404,7 +441,8 @@ const StudentPosts = () => {
         currentUser.teacherId
       );
       const data = response.data || response;
-      setSelectedContact(data);
+      // Add postId to track which post this contact is for
+      setSelectedContact({ ...data, postId: post.id });
       setShowContactModal(true);
     } catch (error) {
       console.error("Error fetching contact:", error);
@@ -552,8 +590,10 @@ const StudentPosts = () => {
 
     const hasPurchased = purchasedPosts.has(post.id);
     const isLoading = purchaseLoading[post.id];
+    const isPremium = teacherPremiumStatus?.isPaid;
 
-    if (hasPurchased) {
+    // Premium teachers can view contact without purchase
+    if (hasPurchased || isPremium) {
       return (
         <button
           className="btn btn-success btn-sm"
@@ -561,6 +601,15 @@ const StudentPosts = () => {
         >
           <i className="bi bi-telephone me-1"></i>
           View Contact
+          {isPremium && (
+            <span
+              className="badge bg-warning text-dark ms-2"
+              style={{ fontSize: "0.65rem" }}
+            >
+              <i className="bi bi-star-fill me-1"></i>
+              Premium
+            </span>
+          )}
         </button>
       );
     }
@@ -932,11 +981,36 @@ const StudentPosts = () => {
                     <span>{selectedContact.headline}</span>
                   </div>
                 </div>
-                <div className="alert alert-info mt-3">
-                  <i className="bi bi-info-circle me-2"></i>
-                  You have purchased access to this student's contact
-                  information. Please contact them directly to discuss tutoring
-                  arrangements.
+                <div
+                  className={`alert ${
+                    teacherPremiumStatus?.isPaid &&
+                    !purchasedPosts.has(selectedContact?.postId || "")
+                      ? "alert-warning"
+                      : "alert-info"
+                  } mt-3`}
+                >
+                  <i
+                    className={`bi ${
+                      teacherPremiumStatus?.isPaid &&
+                      !purchasedPosts.has(selectedContact?.postId || "")
+                        ? "bi-star-fill"
+                        : "bi-info-circle"
+                    } me-2`}
+                  ></i>
+                  {teacherPremiumStatus?.isPaid &&
+                  !purchasedPosts.has(selectedContact?.postId || "") ? (
+                    <>
+                      You have accessed this student's contact information via
+                      your Premium subscription. Please contact them directly to
+                      discuss tutoring arrangements.
+                    </>
+                  ) : (
+                    <>
+                      You have purchased access to this student's contact
+                      information. Please contact them directly to discuss
+                      tutoring arrangements.
+                    </>
+                  )}
                 </div>
               </div>
               <div className="modal-footer">
@@ -1042,13 +1116,29 @@ const StudentPosts = () => {
                                 : "Adult Learner"}
                             </span>
                           )}
-                          {purchasedPosts.has(post.id) &&
-                            currentUser?.role === "teacher" && (
-                              <span className="purchased-badge">
-                                <i className="bi bi-check-circle me-1"></i>
-                                Purchased
-                              </span>
-                            )}
+                          {currentUser?.role === "teacher" && (
+                            <>
+                              {purchasedPosts.has(post.id) && (
+                                <span className="purchased-badge">
+                                  <i className="bi bi-check-circle me-1"></i>
+                                  Purchased
+                                </span>
+                              )}
+                              {teacherPremiumStatus?.isPaid &&
+                                !purchasedPosts.has(post.id) && (
+                                  <span
+                                    className="purchased-badge"
+                                    style={{
+                                      background: "#fef3c7",
+                                      color: "#92400e",
+                                    }}
+                                  >
+                                    <i className="bi bi-star-fill me-1"></i>
+                                    Premium Access
+                                  </span>
+                                )}
+                            </>
+                          )}
                         </div>
 
                         {currentUser?.role === "student" &&
@@ -1084,7 +1174,8 @@ const StudentPosts = () => {
                           </span>
                         )}
                         {currentUser?.role === "teacher" &&
-                          !purchasedPosts.has(post.id) && (
+                          !purchasedPosts.has(post.id) &&
+                          !teacherPremiumStatus?.isPaid && (
                             <span className="contact-locked">
                               <i className="bi bi-lock"></i> Contact info
                               requires purchase

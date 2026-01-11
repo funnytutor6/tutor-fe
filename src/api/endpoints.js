@@ -111,4 +111,8 @@ export const ENDPOINTS = {
   GET_INVOICE_HISTORY: (email) => `/api/subscriptions/invoice-history/${email}`,
   CREATE_STUDENT_PREMIUM_CHECKOUT: "/create-student-premium-checkout-session",
   CHECK_STUDENT_PREMIUM_STATUS: `/check-student-premium-status`,
+  // Student Subscriptions
+  CANCEL_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/cancel",
+  REACTIVATE_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/reactivate",
+  GET_STUDENT_INVOICE_HISTORY: (email) => `/api/subscriptions/student/invoice-history/${email}`,
 };

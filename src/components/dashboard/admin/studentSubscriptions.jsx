@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import DataTable from "./dataTable";
+import AdminSearchInput from "./adminSearchInput";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { studentService } from "../../../api/services/studentService";
+import StudentSubscriptionDetailsModal from "./studentSubscriptionDetailsModal";
 
 const StudentSubscriptions = () => {
   const [data, setData] = useState([]);
@@ -10,11 +12,14 @@ const StudentSubscriptions = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedSubscription, setSelectedSubscription] = useState(null);
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, search]);
 
   const fetchData = async () => {
     try {
@@ -22,28 +27,46 @@ const StudentSubscriptions = () => {
       const response = await studentService.getAllPremiumStudentsForAdmin({
         page: currentPage,
         pageSize: pageSize,
-        search: "",
+        search: search,
       });
-      console.log("response", response);
-      setData(response?.data?.items || []);
-      setTotalStudents(response?.data?.total || 0);
-      setTotalPages(response?.data?.totalPages || 0);
+      const responseData = response?.data || response;
+      setData(responseData.items || []);
+      setTotalStudents(responseData.total || 0);
+      setTotalPages(responseData.totalPages || 0);
     } catch (error) {
       console.error("Error fetching student subscriptions:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const getStatusBadge = (status, isPaid, currentPeriodEnd) => {
+    if (!status && isPaid) {
+      // Legacy one-time payment
+      return <span className="badge bg-info">Legacy</span>;
+    }
+
+    const now = new Date();
+    const periodEnd = currentPeriodEnd ? new Date(currentPeriodEnd) : null;
+    const isActive = status === "active" && periodEnd && periodEnd > now;
+
+    if (isActive) {
+      return <span className="badge bg-success">Active</span>;
+    } else if (status === "canceled") {
+      return <span className="badge bg-secondary">Canceled</span>;
+    } else if (status === "past_due") {
+      return <span className="badge bg-warning">Past Due</span>;
+    } else if (status === "unpaid") {
+      return <span className="badge bg-danger">Unpaid</span>;
+    } else if (status === "trialing") {
+      return <span className="badge bg-info">Trialing</span>;
+    } else {
+      return <span className="badge bg-secondary">Inactive</span>;
+    }
+  };
+
   const columns = useMemo(
     () => [
-      {
-        header: "ID",
-        accessorKey: "id",
-        cell: ({ getValue }) => {
-          const id = getValue();
-          return <code>{id?.substring(0, 8)}...</code>;
-        },
-      },
       {
         header: "Email",
         accessorKey: "email",
@@ -65,29 +88,85 @@ const StudentSubscriptions = () => {
         ),
       },
       {
-        header: "Subscription Type",
-        accessorKey: "subscriptionType",
-        cell: ({ getValue }) => {
-          const type = getValue();
-          const badgeClass = type === "Premium" ? "bg-success" : "bg-secondary";
-          return <span className={`badge ${badgeClass}`}>{type}</span>;
+        header: "Subscription Status",
+        accessorKey: "subscriptionStatus",
+        cell: ({ row }) => {
+          const status = row.original.subscriptionStatus;
+          const isPaid = row.original.ispayed;
+          const periodEnd = row.original.currentPeriodEnd;
+          return getStatusBadge(status, isPaid, periodEnd);
         },
       },
       {
-        header: "Payment Status",
-        accessorKey: "isPaid",
-        cell: ({ getValue }) => {
-          const isPaid = getValue();
-          return (
-            <span className={`badge ${isPaid ? "bg-success" : "bg-danger"}`}>
-              {isPaid ? "PAID" : "FREE"}
-            </span>
+        header: "Current Period End",
+        accessorKey: "currentPeriodEnd",
+        cell: ({ getValue, row }) => {
+          const periodEnd = getValue();
+          if (periodEnd) {
+            return new Date(periodEnd).toLocaleDateString();
+          }
+          // Legacy payment - calculate 1 year from payment date
+          if (row.original.paymentDate) {
+            const paymentDate = new Date(row.original.paymentDate);
+            const oneYearLater = new Date(
+              paymentDate.getTime() + 365 * 24 * 60 * 60 * 1000
+            );
+            return oneYearLater.toLocaleDateString();
+          }
+          return "N/A";
+        },
+      },
+      {
+        header: "Next Billing",
+        accessorKey: "currentPeriodEnd",
+        cell: ({ getValue, row }) => {
+          const periodEnd = getValue();
+          const cancelAtPeriodEnd = row.original.cancelAtPeriodEnd;
+          if (periodEnd && !cancelAtPeriodEnd) {
+            return new Date(periodEnd).toLocaleDateString();
+          }
+          return cancelAtPeriodEnd ? (
+            <span className="text-muted">Will cancel</span>
+          ) : (
+            "N/A"
           );
         },
+      },
+      {
+        header: "Payment Amount",
+        accessorKey: "paymentAmount",
+        cell: ({ getValue }) => {
+          const amount = getValue();
+          return amount ? `$${amount}` : "N/A";
+        },
+      },
+      {
+        header: "Actions",
+        cell: ({ row }) => (
+          <button
+            className="btn btn-sm btn-outline-primary"
+            onClick={() => {
+              setSelectedSubscription(row.original);
+              setShowDetailsModal(true);
+            }}
+          >
+            <i className="bi bi-eye me-1"></i>
+            View
+          </button>
+        ),
       },
     ],
     []
   );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+  };
 
   return (
     <div>
@@ -98,17 +177,35 @@ const StudentSubscriptions = () => {
         </h4>
         <span className="badge bg-primary">{totalStudents} students</span>
       </div>
+
+      <AdminSearchInput
+        value={search}
+        onChange={setSearch}
+        placeholder="Search by email..."
+        maxWidth="500px"
+      />
+
       <DataTable
         data={data || []}
         columns={columns}
         isLoading={isLoading}
-        pageSize={pageSize}
         currentPage={currentPage}
         totalPages={totalPages}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
         totalData={totalStudents}
-        onPageChange={(page) => setCurrentPage(page)}
-        onPageSizeChange={(size) => setPageSize(size)}
       />
+
+      {showDetailsModal && selectedSubscription && (
+        <StudentSubscriptionDetailsModal
+          subscription={selectedSubscription}
+          onClose={() => {
+            setShowDetailsModal(false);
+            setSelectedSubscription(null);
+          }}
+          onUpdate={fetchData}
+        />
+      )}
     </div>
   );
 };

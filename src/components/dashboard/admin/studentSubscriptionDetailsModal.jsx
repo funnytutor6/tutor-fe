@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const TeacherSubscriptionDetailsModal = ({
+const StudentSubscriptionDetailsModal = ({
   subscription,
   onClose,
   onUpdate,
@@ -14,7 +14,7 @@ const TeacherSubscriptionDetailsModal = ({
   const [loadingInvoices, setLoadingInvoices] = useState(false);
 
   useEffect(() => {
-    if (subscription?.mail) {
+    if (subscription?.email) {
       fetchInvoiceHistory();
     }
   }, [subscription]);
@@ -22,8 +22,8 @@ const TeacherSubscriptionDetailsModal = ({
   const fetchInvoiceHistory = async () => {
     try {
       setLoadingInvoices(true);
-      const response = await subscriptionService.getInvoiceHistory(
-        subscription.mail
+      const response = await subscriptionService.getStudentInvoiceHistory(
+        subscription.email
       );
       const invoices = response?.data || response;
       setInvoiceHistory(Array.isArray(invoices) ? invoices : []);
@@ -72,8 +72,8 @@ const TeacherSubscriptionDetailsModal = ({
 
     setLoading(true);
     try {
-      await subscriptionService.cancelSubscription(
-        subscription.mail,
+      await subscriptionService.cancelStudentSubscription(
+        subscription.email,
         cancelAtPeriodEnd
       );
       toast.success(
@@ -97,7 +97,7 @@ const TeacherSubscriptionDetailsModal = ({
   const handleReactivateSubscription = async () => {
     setLoading(true);
     try {
-      await subscriptionService.reactivateSubscription(subscription.mail);
+      await subscriptionService.reactivateStudentSubscription(subscription.email);
       toast.success("Subscription reactivated successfully");
       if (onUpdate) {
         onUpdate();
@@ -122,8 +122,8 @@ const TeacherSubscriptionDetailsModal = ({
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              <i className="bi bi-person-workspace me-2"></i>
-              Teacher Subscription Details
+              <i className="bi bi-mortarboard me-2"></i>
+              Student Subscription Details
             </h5>
             <button
               type="button"
@@ -132,28 +132,31 @@ const TeacherSubscriptionDetailsModal = ({
             ></button>
           </div>
           <div className="modal-body">
-            {/* Teacher Information */}
+            {/* Student Information */}
             <div className="card mb-4">
               <div className="card-header bg-primary text-white">
                 <h6 className="mb-0">
                   <i className="bi bi-person me-2"></i>
-                  Teacher Information
+                  Student Information
                 </h6>
               </div>
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-6">
                     <p>
-                      <strong>Email:</strong> {subscription.mail}
+                      <strong>Email:</strong> {subscription.email}
+                    </p>
+                    <p>
+                      <strong>Subject:</strong> {subscription.subject || "N/A"}
                     </p>
                     <p>
                       <strong>Payment Status:</strong>{" "}
                       <span
                         className={`badge ${
-                          subscription.ispaid ? "bg-success" : "bg-danger"
+                          subscription.ispayed ? "bg-success" : "bg-danger"
                         }`}
                       >
-                        {subscription.ispaid ? "PAID" : "UNPAID"}
+                        {subscription.ispayed ? "PAID" : "UNPAID"}
                       </span>
                     </p>
                   </div>
@@ -190,7 +193,7 @@ const TeacherSubscriptionDetailsModal = ({
                       <strong>Subscription Status:</strong>{" "}
                       {getStatusBadge(
                         subscription.subscriptionStatus,
-                        subscription.ispaid,
+                        subscription.ispayed,
                         subscription.currentPeriodEnd
                       )}
                     </p>
@@ -416,4 +419,5 @@ const TeacherSubscriptionDetailsModal = ({
   );
 };
 
-export default TeacherSubscriptionDetailsModal;
+export default StudentSubscriptionDetailsModal;
+
