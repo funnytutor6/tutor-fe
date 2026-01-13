@@ -112,8 +112,9 @@ export const ENDPOINTS = {
   CREATE_STUDENT_PREMIUM_CHECKOUT: "/create-student-premium-checkout-session",
   CHECK_STUDENT_PREMIUM_STATUS: `/check-student-premium-status`,
   // Student Subscriptions
+  GET_STUDENT_SUBSCRIPTION_STATUS: "/api/subscriptions/student/status",
   CANCEL_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/cancel",
   REACTIVATE_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/reactivate",
-  GET_STUDENT_INVOICE_HISTORY: (email) =>
-    `/api/subscriptions/student/invoice-history/${email}`,
+  CREATE_STUDENT_CUSTOMER_PORTAL: "/api/subscriptions/student/customer-portal",
+  GET_STUDENT_INVOICE_HISTORY: "/api/subscriptions/student/invoice-history",
 };

@@ -42,12 +42,8 @@ export const subscriptionService = {
   /**
    * Cancel student subscription
    */
-  cancelStudentSubscription: async (
-    studentEmail,
-    cancelAtPeriodEnd = false
-  ) => {
+  cancelStudentSubscription: async (cancelAtPeriodEnd = false) => {
     const response = await api.post(ENDPOINTS.CANCEL_STUDENT_SUBSCRIPTION, {
-      studentEmail,
       cancelAtPeriodEnd,
     });
     return response.data;
@@ -56,20 +52,32 @@ export const subscriptionService = {
   /**
    * Reactivate student subscription
    */
-  reactivateStudentSubscription: async (studentEmail) => {
-    const response = await api.post(ENDPOINTS.REACTIVATE_STUDENT_SUBSCRIPTION, {
-      studentEmail,
-    });
+  reactivateStudentSubscription: async () => {
+    const response = await api.post(ENDPOINTS.REACTIVATE_STUDENT_SUBSCRIPTION);
+    return response.data;
+  },
+
+  /**
+   * Get student subscription status
+   */
+  getStudentSubscriptionStatus: async () => {
+    const response = await api.get(ENDPOINTS.GET_STUDENT_SUBSCRIPTION_STATUS);
     return response.data;
   },
 
   /**
    * Get student invoice history
    */
-  getStudentInvoiceHistory: async (studentEmail) => {
-    const response = await api.get(
-      ENDPOINTS.GET_STUDENT_INVOICE_HISTORY(studentEmail)
-    );
+  getStudentInvoiceHistory: async () => {
+    const response = await api.get(ENDPOINTS.GET_STUDENT_INVOICE_HISTORY);
+    return response.data;
+  },
+
+  /**
+   * Create customer portal session for student
+   */
+  createStudentCustomerPortalSession: async () => {
+    const response = await api.post(ENDPOINTS.CREATE_STUDENT_CUSTOMER_PORTAL);
     return response.data;
   },
 };
