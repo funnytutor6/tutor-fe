@@ -48,6 +48,7 @@ export const ENDPOINTS = {
   // Connection Requests
   SEND_CONNECTION_REQUEST: "/api/connect/requests/send",
   GET_CONNECTION_REQUESTS: "/api/connect/requests/teacher",
+  GET_CONNECTION_REQUESTS_FOR_STUDENT: "/api/connect/requests/student",
   GET_CONNECTION_REQUEST_COUNT: "/api/connect/requests/teacher/count",
   GET_CONNECTION_REQUEST: (requestId) => `/api/connect/requests/${requestId}`,
   PURCHASE_CONNECTION_REQUEST: (requestId) =>
@@ -116,5 +117,6 @@ export const ENDPOINTS = {
   CANCEL_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/cancel",
   REACTIVATE_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/reactivate",
   CREATE_STUDENT_CUSTOMER_PORTAL: "/api/subscriptions/student/customer-portal",
+  CREATE_CUSTOMER_PORTAL: "/api/subscriptions/customer-portal",
   GET_STUDENT_INVOICE_HISTORY: "/api/subscriptions/student/invoice-history",
 };

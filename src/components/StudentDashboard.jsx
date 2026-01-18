@@ -13,6 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import api from "../api/axiosConfig";
 import { ENDPOINTS } from "../api/endpoints";
+import StudentConnectionRequests from "./StudentConnectionRequests";
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 const StudentDashboard = () => {
@@ -933,6 +934,27 @@ const StudentDashboard = () => {
           <li style={{ margin: "5px 0" }}>
             <button
               style={{
+                color: activeTab === "connection-requests" ? "white" : "#333",
+                padding: "10px 15px",
+                borderRadius: "5px",
+                width: "100%",
+                background: activeTab === "connection-requests" ? "#0d6efd" : "none",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                textAlign: "left",
+                display: "flex",
+                alignItems: "center",
+              }}
+              onClick={() => setActiveTab("connection-requests")}
+            >
+              <i className="bi bi-envelope-paper me-2"></i>
+              Connection Requests
+            </button>
+          </li>
+          <li style={{ margin: "5px 0" }}>
+            <button
+              style={{
                 color: activeTab === "subscriptions" ? "white" : "#333",
                 padding: "10px 15px",
                 borderRadius: "5px",
@@ -989,6 +1011,8 @@ const StudentDashboard = () => {
               ? "Profile Management"
               : activeTab === "posts"
               ? "My Posts"
+              : activeTab === "connection-requests"
+              ? "Connection Requests"
               : "Subscriptions"}
           </h1>
         </div>
@@ -1603,6 +1627,37 @@ const StudentDashboard = () => {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Connection Requests Tab */}
+          {activeTab === "connection-requests" && (
+            <div
+              style={{
+                border: "none",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                borderRadius: "10px",
+                padding: "2rem",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "2rem",
+                }}
+              >
+                <div>
+                  <h5 style={{ margin: 0 }}>Sent Connection Requests</h5>
+                  <p style={{ color: "#6c757d", margin: "0.5rem 0 0 0" }}>
+                    View and manage your connection requests to teachers
+                  </p>
+                </div>
+              </div>
+              <StudentConnectionRequests
+                studentId={user?.id || user?.studentId}
+              />
             </div>
           )}
 

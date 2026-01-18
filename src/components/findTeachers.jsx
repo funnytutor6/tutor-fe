@@ -28,6 +28,7 @@ const FindTeachers = () => {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [requestMessage, setRequestMessage] = useState("");
+  const [requestMessageError, setRequestMessageError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [userType, setUserType] = useState(null);
   const [requestStatuses, setRequestStatuses] = useState({});
@@ -289,70 +290,6 @@ const FindTeachers = () => {
     }
   };
 
-  // New function to fetch teacher videos from PocketBase
-  const fetchTeacherVideos = async (teacherEmail) => {
-    try {
-      setLoadingVideos(true);
-
-      // Filter by teacher email
-      const response = await axios.get(
-        `${API_BASE_URL}/collections/findtutor_premium_teachers/records?filter=(mail='${teacherEmail}')`
-      );
-
-      if (
-        response.data &&
-        response.data.items &&
-        response.data.items.length > 0
-      ) {
-        const teacherData = response.data.items[0];
-
-        // Check if teacher has videos/links
-        if (teacherData.link_or_video && teacherData.ispaid) {
-          const videos = [];
-
-          // Collect all available video links
-          if (teacherData.link1) {
-            videos.push({
-              id: 1,
-              title: "Sample Lesson 1",
-              url: teacherData.link1,
-              description: "Teacher introduction and teaching methodology",
-            });
-          }
-
-          if (teacherData.link2) {
-            videos.push({
-              id: 2,
-              title: "Sample Lesson 2",
-              url: teacherData.link2,
-              description: "Advanced teaching techniques demonstration",
-            });
-          }
-
-          if (teacherData.link3) {
-            videos.push({
-              id: 3,
-              title: "Sample Lesson 3",
-              url: teacherData.link3,
-              description: "Student interaction and feedback session",
-            });
-          }
-
-          setTeacherVideos(videos);
-        } else {
-          setTeacherVideos([]);
-        }
-      } else {
-        setTeacherVideos([]);
-      }
-    } catch (error) {
-      console.error("Error fetching teacher videos:", error);
-      setTeacherVideos([]);
-    } finally {
-      setLoadingVideos(false);
-    }
-  };
-
   // Function to get video embed URL
   const getVideoEmbedUrl = (url) => {
     if (!url) return null;
@@ -383,9 +320,7 @@ const FindTeachers = () => {
 
   const handleViewProfile = async (post) => {
     try {
-      const response = await api.get(
-        `/api/posts/teachers/public/${post.teacherId}`
-      );
+      const response = await api.get(`/api/posts/teachers/public/${post.id}`);
 
       let isConnected = false;
 
@@ -411,9 +346,40 @@ const FindTeachers = () => {
       setSelectedPost(post);
       setActiveVideoTab("info"); // Reset to info tab when opening modal
 
-      // Fetch videos if teacher email is available
-      if (teacherData.email) {
-        await fetchTeacherVideos(teacherData.email);
+      if (teacherData.videoLinks) {
+        const videos = [];
+
+        // Collect all available video links
+        if (teacherData.videoLinks?.link1) {
+          videos.push({
+            id: 1,
+            title: "Sample Lesson 1",
+            url: teacherData.videoLinks?.link1,
+            description: "Teacher introduction and teaching methodology",
+          });
+        }
+
+        if (teacherData.videoLinks?.link2) {
+          videos.push({
+            id: 2,
+            title: "Sample Lesson 2",
+            url: teacherData.videoLinks?.link2,
+            description: "Advanced teaching techniques demonstration",
+          });
+        }
+
+        if (teacherData.videoLinks?.link3) {
+          videos.push({
+            id: 3,
+            title: "Sample Lesson 3",
+            url: teacherData.videoLinks?.link3,
+            description: "Student interaction and feedback session",
+          });
+        }
+
+        setTeacherVideos(videos);
+      } else {
+        setTeacherVideos([]);
       }
     } catch (error) {
       console.error("Error fetching teacher profile:", error);
@@ -492,6 +458,7 @@ const FindTeachers = () => {
       );
       setShowRequestModal(false);
       setRequestMessage("");
+      setRequestMessageError("");
       setSelectedPost(null);
       fetchPosts();
 
@@ -1167,7 +1134,7 @@ const FindTeachers = () => {
                                     className="video-thumbnail"
                                     onClick={() => handlePlayVideo(video)}
                                   >
-                                    <div className="video-preview">
+                                    <div className="video-preview mt-4">
                                       <i className="bi bi-play-circle-fill"></i>
                                       <span>Click to Play</span>
                                     </div>
@@ -1451,7 +1418,7 @@ const FindTeachers = () => {
                       Message to Teacher (Optional)
                     </label>
                     <textarea
-                      className="form-control"
+                      className={`form-control ${requestMessageError ? "is-invalid" : ""}`}
                       rows="4"
                       value={requestMessage}
                       onChange={(e) => {
@@ -1508,37 +1475,27 @@ const FindTeachers = () => {
 
                         if (validationError) {
                           setRequestMessage("");
-                          e.target.style.borderColor = "#dc3545";
-                          e.target.style.backgroundColor = "#f8d7da";
-
+                          setRequestMessageError(validationError);
+                          
+                          // Clear error after 3 seconds
                           setTimeout(() => {
-                            e.target.style.borderColor = "";
-                            e.target.style.backgroundColor = "";
-                          }, 2000);
-
-                          const errorDiv = document.createElement("div");
-                          errorDiv.className = "text-danger small mt-1";
-                          errorDiv.textContent = validationError;
-                          errorDiv.style.position = "absolute";
-                          errorDiv.style.zIndex = "1000";
-
-                          const container = e.target.parentNode;
-                          container.style.position = "relative";
-                          container.appendChild(errorDiv);
-
-                          setTimeout(() => {
-                            if (errorDiv.parentNode) {
-                              errorDiv.parentNode.removeChild(errorDiv);
-                            }
+                            setRequestMessageError("");
                           }, 3000);
 
                           return;
                         }
 
+                        setRequestMessageError("");
                         setRequestMessage(value);
                       }}
                       placeholder="Hi! I'm interested in your teaching services. I would like to learn..."
                     />
+                    {requestMessageError && (
+                      <div className="invalid-feedback d-block" style={{ marginTop: "0.25rem" }}>
+                        <i className="bi bi-exclamation-circle me-1"></i>
+                        {requestMessageError}
+                      </div>
+                    )}
                     <div className="form-text">
                       A personalized message helps teachers understand your
                       learning needs better.
@@ -1551,7 +1508,7 @@ const FindTeachers = () => {
                     </div>
                   </div>
 
-                  <div className="alert alert-info">
+                  <div className="alert alert-info mb-2">
                     <i className="bi bi-info-circle me-2"></i>
                     <strong>How it works:</strong>
                     <ul className="mb-0 mt-2">
@@ -1570,6 +1527,7 @@ const FindTeachers = () => {
                     onClick={() => {
                       setShowRequestModal(false);
                       setRequestMessage("");
+                      setRequestMessageError("");
                       setSelectedPost(null);
                     }}
                   >

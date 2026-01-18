@@ -49,5 +49,13 @@ export const connectionService = {
     const response = await api.get(ENDPOINTS.GET_REQUEST_STATUS(postId, studentId));
     return response.data;
   },
+
+  /**
+   * Get connection requests for student
+   */
+  getConnectionRequestsForStudent: async () => {
+    const response = await api.get(ENDPOINTS.GET_CONNECTION_REQUESTS_FOR_STUDENT);
+    return response.data;
+  },
 };
 

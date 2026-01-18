@@ -77,6 +77,9 @@ const TeacherDashboard = () => {
   const [reactivatingSubscription, setReactivatingSubscription] =
     useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
+  const [loadingPortal, setLoadingPortal] = useState(false);
+  const [invoiceHistory, setInvoiceHistory] = useState([]);
+  const [loadingInvoices, setLoadingInvoices] = useState(false);
 
   // Google Maps state
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
@@ -245,8 +248,75 @@ const TeacherDashboard = () => {
         console.error("Error fetching subscription status:", error);
         // Subscription status is optional, don't fail if it doesn't exist
       }
+
+      // If premium is active, load invoice history
+      if (premiumData.hasPremium && premiumData.isPaid) {
+        loadInvoiceHistory();
+      }
     } catch (error) {
       console.error("Error fetching premium status:", error);
+    }
+  };
+
+  const loadInvoiceHistory = async () => {
+    try {
+      setLoadingInvoices(true);
+      const teacherEmail = user?.email;
+      if (!teacherEmail) return;
+
+      const response = await subscriptionService.getInvoiceHistory(
+        teacherEmail
+      );
+      const invoices = response?.data || response;
+      setInvoiceHistory(Array.isArray(invoices) ? invoices : []);
+    } catch (error) {
+      console.error("Error loading invoice history:", error);
+      setInvoiceHistory([]);
+    } finally {
+      setLoadingInvoices(false);
+    }
+  };
+
+  const formatDetailedDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const calculateDaysRemaining = (endDate) => {
+    if (!endDate) return null;
+    const now = new Date();
+    const end = new Date(endDate);
+    const diffTime = end.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const getStatusBadge = (status, isPaid, currentPeriodEnd) => {
+    if (!status && isPaid) {
+      return <span className="badge bg-info">Legacy Payment</span>;
+    }
+
+    const now = new Date();
+    const periodEnd = currentPeriodEnd ? new Date(currentPeriodEnd) : null;
+    const isActive = status === "active" && periodEnd && periodEnd > now;
+
+    if (isActive) {
+      return <span className="badge bg-success">Active</span>;
+    } else if (status === "canceled") {
+      return <span className="badge bg-secondary">Canceled</span>;
+    } else if (status === "past_due") {
+      return <span className="badge bg-warning">Past Due</span>;
+    } else if (status === "unpaid") {
+      return <span className="badge bg-danger">Unpaid</span>;
+    } else if (status === "trialing") {
+      return <span className="badge bg-info">Trialing</span>;
+    } else {
+      return <span className="badge bg-secondary">Inactive</span>;
     }
   };
 
@@ -435,7 +505,29 @@ const TeacherDashboard = () => {
     try {
       setPremiumLoading(true);
 
-      // Instead of directly submitting to PocketBase, redirect to Stripe payment
+      // Check if teacher already has an active subscription or premium
+      const hasActivePremium =
+        subscriptionStatus?.isActive || teacherPremiumStatus?.isPaid;
+
+      if (hasActivePremium) {
+        // If teacher has active subscription, directly update the content
+        const contentData = {
+          link_or_video: premiumData.link_or_video,
+          link1: premiumData.link1,
+          link2: premiumData.link2,
+          link3: premiumData.link3,
+          video1: premiumData.video1,
+          video2: premiumData.video2,
+          video3: premiumData.video3,
+        };
+
+        await submitPremiumContent(contentData);
+        setShowPremiumModal(false);
+        handleClosePremiumModal();
+        return;
+      }
+
+      // If no active subscription, proceed with payment flow
       const stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
 
       const body = {
@@ -500,117 +592,41 @@ const TeacherDashboard = () => {
 
       if (!teacherEmail) {
         console.error("Teacher email not found");
+        toast.error("Teacher email not found");
         return;
       }
 
-      if (contentData.link_or_video === true) {
-        // Submit with YouTube links via backend
-        const payload = {
-          teacherEmail: teacherEmail,
-          contentData: {
-            link_or_video: true,
-            link1: contentData.link1 || "",
-            link2: contentData.link2 || "",
-            link3: contentData.link3 || "",
-          },
-        };
+      // Only YouTube links are supported now
+      // Submit with YouTube links via backend API service (with authentication)
+      const payload = {
+        contentData: {
+          link_or_video: true,
+          link1: contentData.link1 || "",
+          link2: contentData.link2 || "",
+          link3: contentData.link3 || "",
+        },
+      };
 
-        const response = await fetch(`${API_BASE_URL}/update-premium-content`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+      const response = await premiumService.updateTeacherPremiumContent(
+        payload
+      );
 
-        const responseData = await response.json();
-
-        if (response.ok) {
-          toast.success("Premium content submitted successfully!");
-          fetchPremiumStatus();
-        } else {
-          console.error(
-            "Failed to submit premium content with links:",
-            responseData
-          );
-          toast.error(`Error: ${responseData.error || "Unknown error"}`);
-        }
+      if (response?.data?.success || response?.success) {
+        toast.success("Premium content updated successfully!");
+        fetchPremiumStatus();
       } else {
-        try {
-          // First get the existing record ID
-          const encodedEmail = encodeURIComponent(teacherEmail);
-          const checkResponse = await fetch(
-            `${API_BASE_URL}/collections/findtutor_premium_teachers/records?filter=(mail='${teacherEmail}')`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                // Add authentication if required by your PocketBase setup
-                // 'Authorization': `Bearer ${YOUR_TOKEN}` // uncomment if needed
-              },
-            }
-          );
-
-          if (!checkResponse.ok) {
-            throw new Error(`Failed to fetch record: ${checkResponse.status}`);
-          }
-
-          const checkData = await checkResponse.json();
-
-          if (checkData.items && checkData.items.length > 0) {
-            const recordId = checkData.items[0].id;
-
-            // Prepare FormData
-            const formData = new FormData();
-            formData.append("link_or_video", "false"); // PocketBase expects string
-
-            if (contentData.video1) {
-              formData.append("video1", contentData.video1);
-            }
-            if (contentData.video2) {
-              formData.append("video2", contentData.video2);
-            }
-            if (contentData.video3) {
-              formData.append("video3", contentData.video3);
-            }
-
-            const uploadResponse = await fetch(
-              `${API_BASE_URL}/collections/findtutor_premium_teachers/records/${recordId}`,
-              {
-                method: "PATCH",
-                body: formData,
-                // Don't set Content-Type header for FormData - let browser set it
-                headers: {
-                  // Add authentication if required
-                  // 'Authorization': `Bearer ${YOUR_TOKEN}` // uncomment if needed
-                },
-              }
-            );
-
-            const uploadData = await uploadResponse.json();
-
-            if (uploadResponse.ok) {
-              toast.success(
-                "Premium content with videos submitted successfully!"
-              );
-              fetchPremiumStatus();
-            } else {
-              console.error("Failed to upload videos:", uploadData);
-              toast.error(
-                `Upload failed: ${uploadData.message || "Unknown error"}`
-              );
-            }
-          } else {
-            console.error("No premium record found for teacher");
-            toast.error("Premium record not found");
-          }
-        } catch (directUploadError) {
-          console.error("Direct upload error:", directUploadError);
-          toast.error(`Upload error: ${directUploadError.message}`);
-        }
+        console.error("Failed to update premium content:", response);
+        toast.error(
+          response?.data?.error || response?.error || "Failed to update content"
+        );
       }
     } catch (error) {
       console.error("Content submission error:", error);
-      toast.error(`Submission error: ${error.message}`);
+      toast.error(
+        error.response?.data?.error ||
+          error.message ||
+          "Failed to update premium content"
+      );
     }
   };
 
@@ -633,7 +649,8 @@ const TeacherDashboard = () => {
   const renderVideoPreview = (videoData, index) => {
     if (!teacherPremiumStatus?.premiumData) return null;
 
-    const isPremium = teacherPremiumStatus.isPaid;
+    const isPremium =
+      teacherPremiumStatus.isPaid || subscriptionStatus?.isActive;
     const isBlurred = !isPremium;
     const premiumData = teacherPremiumStatus.premiumData;
 
@@ -1478,229 +1495,645 @@ const TeacherDashboard = () => {
                   </div>
 
                   {/* Current Status */}
-                  {teacherPremiumStatus?.hasPremium ? (
-                    <div className="current-status mb-5">
+                  {teacherPremiumStatus?.hasPremium &&
+                  (teacherPremiumStatus.isPaid ||
+                    subscriptionStatus?.isActive) ? (
+                    <>
+                      {/* Subscription Status Card */}
                       <div
-                        className={`status-card ${
-                          subscriptionStatus?.isActive ||
-                          teacherPremiumStatus.isPaid
-                            ? "premium-active"
-                            : "premium-pending"
-                        }`}
+                        style={{
+                          padding: "2rem",
+                          borderRadius: "15px",
+                          border: "2px solid #10b981",
+                          background:
+                            "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+                          marginBottom: "2rem",
+                        }}
                       >
-                        <div className="status-header">
-                          <div className="status-icon">
-                            <i
-                              className={`bi ${
-                                subscriptionStatus?.isActive ||
-                                teacherPremiumStatus.isPaid
-                                  ? "bi-check-circle-fill"
-                                  : "bi-clock-fill"
-                              }`}
-                            ></i>
-                          </div>
-                          <div>
-                            <h5 className="status-title">
-                              {subscriptionStatus?.subscription?.status
-                                ? subscriptionStatus.subscription.status ===
-                                  "active"
-                                  ? "Premium Active"
-                                  : subscriptionStatus.subscription.status ===
-                                    "canceled"
-                                  ? "Premium Canceled"
-                                  : subscriptionStatus.subscription.status ===
-                                    "past_due"
-                                  ? "Payment Past Due"
-                                  : "Premium " +
-                                    subscriptionStatus.subscription.status
-                                      .charAt(0)
-                                      .toUpperCase() +
-                                    subscriptionStatus.subscription.status.slice(
-                                      1
-                                    )
-                                : teacherPremiumStatus.isPaid
-                                ? "Premium Active"
-                                : "Premium Pending"}
-                            </h5>
-                            <p className="status-subtitle">
-                              {subscriptionStatus?.subscription
-                                ?.currentPeriodEnd
-                                ? subscriptionStatus.subscription.status ===
-                                  "active"
-                                  ? `Your subscription is active until ${new Date(
-                                      subscriptionStatus.subscription.currentPeriodEnd
-                                    ).toLocaleDateString()}`
-                                  : subscriptionStatus.subscription
-                                      .cancelAtPeriodEnd
-                                  ? `Your subscription will cancel on ${new Date(
-                                      subscriptionStatus.subscription.currentPeriodEnd
-                                    ).toLocaleDateString()}`
-                                  : subscriptionStatus.subscription.status ===
-                                    "canceled"
-                                  ? "Your subscription has been canceled"
-                                  : "Your premium subscription status"
-                                : teacherPremiumStatus.isPaid
-                                ? "Your premium subscription is active and videos are visible to students"
-                                : "Your premium request is pending approval"}
-                            </p>
-                            {subscriptionStatus?.subscription
-                              ?.currentPeriodEnd && (
-                              <div className="mt-2">
-                                <small className="text-muted">
-                                  <i className="bi bi-calendar me-1"></i>
-                                  Next billing:{" "}
-                                  {new Date(
-                                    subscriptionStatus.subscription.currentPeriodEnd
-                                  ).toLocaleDateString()}
-                                </small>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Subscription Management Buttons */}
-                        {subscriptionStatus?.hasSubscription &&
-                          subscriptionStatus.subscription.status ===
-                            "active" && (
-                            <div className="mt-3">
-                              <button
-                                className="btn btn-outline-danger btn-sm me-2"
-                                onClick={async () => {
-                                  if (
-                                    !window.confirm(
-                                      "Are you sure you want to cancel your subscription? You will lose access at the end of the current billing period."
-                                    )
-                                  ) {
-                                    return;
-                                  }
-
-                                  setCancelingSubscription(true);
-                                  try {
-                                    await subscriptionService.cancelSubscription(
-                                      user?.email,
-                                      true
-                                    );
-                                    toast.success(
-                                      "Subscription will be canceled at the end of the billing period"
-                                    );
-                                    await fetchPremiumStatus();
-                                  } catch (error) {
-                                    toast.error(
-                                      error.response?.data?.error ||
-                                        "Failed to cancel subscription"
-                                    );
-                                  } finally {
-                                    setCancelingSubscription(false);
-                                  }
-                                }}
-                                disabled={cancelingSubscription}
-                              >
-                                {cancelingSubscription ? (
-                                  <>
-                                    <span className="spinner-border spinner-border-sm me-2"></span>
-                                    Canceling...
-                                  </>
-                                ) : (
-                                  <>
-                                    <i className="bi bi-x-circle me-2"></i>
-                                    Cancel Subscription
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          )}
-
-                        {subscriptionStatus?.hasSubscription &&
-                          subscriptionStatus.subscription.status ===
-                            "canceled" &&
-                          !subscriptionStatus.subscription.canceledAt && (
-                            <div className="mt-3">
-                              <button
-                                className="btn btn-outline-success btn-sm"
-                                onClick={async () => {
-                                  setReactivatingSubscription(true);
-                                  try {
-                                    await subscriptionService.reactivateSubscription(
-                                      user?.email
-                                    );
-                                    toast.success(
-                                      "Subscription reactivated successfully"
-                                    );
-                                    await fetchPremiumStatus();
-                                  } catch (error) {
-                                    toast.error(
-                                      error.response?.data?.error ||
-                                        "Failed to reactivate subscription"
-                                    );
-                                  } finally {
-                                    setReactivatingSubscription(false);
-                                  }
-                                }}
-                                disabled={reactivatingSubscription}
-                              >
-                                {reactivatingSubscription ? (
-                                  <>
-                                    <span className="spinner-border spinner-border-sm me-2"></span>
-                                    Reactivating...
-                                  </>
-                                ) : (
-                                  <>
-                                    <i className="bi bi-arrow-clockwise me-2"></i>
-                                    Reactivate Subscription
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          )}
-
-                        {/* Show videos preview */}
-                        <div className="videos-preview mt-4">
-                          <h6 className="videos-title">Your Teaching Videos</h6>
-                          <div className="row">
-                            {[0, 1, 2].map((index) => (
-                              <div key={index} className="col-md-4 mb-3">
-                                {renderVideoPreview(
-                                  teacherPremiumStatus,
-                                  index
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Add Content Button for paid users */}
-                        {(subscriptionStatus?.isActive ||
-                          teacherPremiumStatus.isPaid) && (
-                          <div className="text-center mt-3">
-                            <button
-                              className="btn btn-outline-primary"
-                              onClick={() => {
-                                setPremiumData((prev) => ({
-                                  ...prev,
-                                  mail: user?.email || "",
-                                  link1:
-                                    teacherPremiumStatus?.premiumData?.link1 ||
-                                    "",
-                                  link2:
-                                    teacherPremiumStatus?.premiumData?.link2 ||
-                                    "",
-                                  link3:
-                                    teacherPremiumStatus?.premiumData?.link3 ||
-                                    "",
-                                  link_or_video:
-                                    teacherPremiumStatus?.premiumData
-                                      ?.link_or_video,
-                                }));
-                                setShowPremiumModal(true);
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            marginBottom: "1.5rem",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "1rem",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "1.5rem",
+                                background: "#10b981",
+                                color: "white",
                               }}
                             >
-                              <i className="bi bi-pencil me-2"></i>
-                              Update Videos
-                            </button>
+                              <i className="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div>
+                              <h5 style={{ margin: 0, fontWeight: "700" }}>
+                                Premium Active{" "}
+                                {getStatusBadge(
+                                  teacherPremiumStatus.subscriptionStatus,
+                                  teacherPremiumStatus.isPaid,
+                                  teacherPremiumStatus.currentPeriodEnd
+                                )}
+                              </h5>
+                              <p style={{ margin: 0, opacity: 0.8 }}>
+                                {teacherPremiumStatus.subscriptionPlan?.name ||
+                                  "Premium Teaching Subscription"}
+                              </p>
+                            </div>
                           </div>
-                        )}
+                          <div>
+                            <div
+                              style={{
+                                fontSize: "1.5rem",
+                                fontWeight: "700",
+                                color: "#10b981",
+                              }}
+                            >
+                              $
+                              {teacherPremiumStatus.subscriptionPlan?.amount ||
+                                teacherPremiumStatus.paymentAmount ||
+                                29}
+                              <span
+                                style={{
+                                  fontSize: "0.875rem",
+                                  fontWeight: "400",
+                                  opacity: 0.8,
+                                }}
+                              >
+                                /month
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Subscription Details Grid */}
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns:
+                              "repeat(auto-fit, minmax(200px, 1fr))",
+                            gap: "1rem",
+                            marginBottom: "1.5rem",
+                          }}
+                        >
+                          {teacherPremiumStatus.paymentDate && (
+                            <div
+                              style={{
+                                background: "rgba(255, 255, 255, 0.7)",
+                                padding: "1rem",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: "0.75rem",
+                                  opacity: 0.7,
+                                  marginBottom: "0.25rem",
+                                }}
+                              >
+                                Last Payment
+                              </div>
+                              <div style={{ fontWeight: "600" }}>
+                                {formatDetailedDate(
+                                  teacherPremiumStatus.paymentDate
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          {teacherPremiumStatus.nextPaymentDate && (
+                            <div
+                              style={{
+                                background: "rgba(255, 255, 255, 0.7)",
+                                padding: "1rem",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: "0.75rem",
+                                  opacity: 0.7,
+                                  marginBottom: "0.25rem",
+                                }}
+                              >
+                                Next Payment
+                              </div>
+                              <div style={{ fontWeight: "600" }}>
+                                {formatDetailedDate(
+                                  teacherPremiumStatus.nextPaymentDate
+                                )}
+                              </div>
+                              {teacherPremiumStatus.daysRemaining !== null &&
+                                teacherPremiumStatus.daysRemaining > 0 && (
+                                  <div
+                                    style={{
+                                      fontSize: "0.75rem",
+                                      color: "#059669",
+                                      marginTop: "0.25rem",
+                                    }}
+                                  >
+                                    {teacherPremiumStatus.daysRemaining} days
+                                    remaining
+                                  </div>
+                                )}
+                            </div>
+                          )}
+                          {teacherPremiumStatus.currentPeriodStart && (
+                            <div
+                              style={{
+                                background: "rgba(255, 255, 255, 0.7)",
+                                padding: "1rem",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: "0.75rem",
+                                  opacity: 0.7,
+                                  marginBottom: "0.25rem",
+                                }}
+                              >
+                                Period Start
+                              </div>
+                              <div style={{ fontWeight: "600" }}>
+                                {formatDetailedDate(
+                                  teacherPremiumStatus.currentPeriodStart
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          {teacherPremiumStatus.currentPeriodEnd && (
+                            <div
+                              style={{
+                                background: "rgba(255, 255, 255, 0.7)",
+                                padding: "1rem",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: "0.75rem",
+                                  opacity: 0.7,
+                                  marginBottom: "0.25rem",
+                                }}
+                              >
+                                Period End
+                              </div>
+                              <div style={{ fontWeight: "600" }}>
+                                {formatDetailedDate(
+                                  teacherPremiumStatus.currentPeriodEnd
+                                )}
+                              </div>
+                              {teacherPremiumStatus.daysRemaining !== null &&
+                                teacherPremiumStatus.daysRemaining > 0 && (
+                                  <div
+                                    style={{
+                                      fontSize: "0.75rem",
+                                      color: "#059669",
+                                      marginTop: "0.25rem",
+                                    }}
+                                  >
+                                    {calculateDaysRemaining(
+                                      teacherPremiumStatus.currentPeriodEnd
+                                    )}{" "}
+                                    days left
+                                  </div>
+                                )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Cancel at Period End Warning */}
+                        {teacherPremiumStatus.cancelAtPeriodEnd ? (
+                          <div
+                            className="alert alert-warning"
+                            style={{ marginBottom: "1rem" }}
+                          >
+                            <i className="bi bi-exclamation-triangle me-2"></i>
+                            This subscription is scheduled to cancel at the end
+                            of the current billing period.
+                          </div>
+                        ) : null}
+
+                        {/* Management Actions */}
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <button
+                            className="btn btn-primary"
+                            onClick={async () => {
+                              try {
+                                setLoadingPortal(true);
+                                const response =
+                                  await subscriptionService.createCustomerPortalSession();
+                                const portalUrl =
+                                  response?.data?.url || response?.url;
+
+                                if (portalUrl) {
+                                  window.location.href = portalUrl;
+                                } else {
+                                  toast.error(
+                                    "Failed to create portal session"
+                                  );
+                                }
+                              } catch (error) {
+                                console.error(
+                                  "Error creating customer portal session:",
+                                  error
+                                );
+                                toast.error(
+                                  error.response?.data?.error ||
+                                    "Failed to open payment management"
+                                );
+                              } finally {
+                                setLoadingPortal(false);
+                              }
+                            }}
+                            disabled={loadingPortal}
+                          >
+                            {loadingPortal ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                Opening...
+                              </>
+                            ) : (
+                              <>
+                                <i className="bi bi-credit-card me-2"></i>
+                                Manage Payment Method
+                              </>
+                            )}
+                          </button>
+                          {teacherPremiumStatus.subscriptionStatus ===
+                            "active" &&
+                            !teacherPremiumStatus.cancelAtPeriodEnd && (
+                              <>
+                                <button
+                                  className="btn btn-outline-warning"
+                                  onClick={async () => {
+                                    if (
+                                      !window.confirm(
+                                        "Are you sure you want to cancel your subscription? It will remain active until the end of the current billing period."
+                                      )
+                                    ) {
+                                      return;
+                                    }
+
+                                    setCancelingSubscription(true);
+                                    try {
+                                      await subscriptionService.cancelSubscription(
+                                        user?.email,
+                                        true
+                                      );
+                                      toast.success(
+                                        "Subscription will be canceled at the end of the billing period"
+                                      );
+                                      await fetchPremiumStatus();
+                                    } catch (error) {
+                                      toast.error(
+                                        error.response?.data?.error ||
+                                          "Failed to cancel subscription"
+                                      );
+                                    } finally {
+                                      setCancelingSubscription(false);
+                                    }
+                                  }}
+                                  disabled={cancelingSubscription}
+                                >
+                                  <i className="bi bi-x-circle me-2"></i>
+                                  Cancel at Period End
+                                </button>
+                                <button
+                                  className="btn btn-outline-danger"
+                                  onClick={async () => {
+                                    if (
+                                      !window.confirm(
+                                        "Are you sure you want to cancel your subscription immediately? Access will be revoked right away."
+                                      )
+                                    ) {
+                                      return;
+                                    }
+
+                                    setCancelingSubscription(true);
+                                    try {
+                                      await subscriptionService.cancelSubscription(
+                                        user?.email,
+                                        false
+                                      );
+                                      toast.success(
+                                        "Subscription canceled immediately"
+                                      );
+                                      await fetchPremiumStatus();
+                                    } catch (error) {
+                                      toast.error(
+                                        error.response?.data?.error ||
+                                          "Failed to cancel subscription"
+                                      );
+                                    } finally {
+                                      setCancelingSubscription(false);
+                                    }
+                                  }}
+                                  disabled={cancelingSubscription}
+                                >
+                                  <i className="bi bi-x-octagon me-2"></i>
+                                  Cancel Immediately
+                                </button>
+                              </>
+                            )}
+                          {teacherPremiumStatus.subscriptionStatus ===
+                            "canceled" ||
+                          teacherPremiumStatus.cancelAtPeriodEnd ? (
+                            <button
+                              className="btn btn-success"
+                              onClick={async () => {
+                                setReactivatingSubscription(true);
+                                try {
+                                  await subscriptionService.reactivateSubscription(
+                                    user?.email
+                                  );
+                                  toast.success(
+                                    "Subscription reactivated successfully"
+                                  );
+                                  await fetchPremiumStatus();
+                                } catch (error) {
+                                  toast.error(
+                                    error.response?.data?.error ||
+                                      "Failed to reactivate subscription"
+                                  );
+                                } finally {
+                                  setReactivatingSubscription(false);
+                                }
+                              }}
+                              disabled={reactivatingSubscription}
+                            >
+                              {reactivatingSubscription ? (
+                                <>
+                                  <span className="spinner-border spinner-border-sm me-2"></span>
+                                  Reactivating...
+                                </>
+                              ) : (
+                                <>
+                                  <i className="bi bi-arrow-clockwise me-2"></i>
+                                  Reactivate Subscription
+                                </>
+                              )}
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
+
+                      {/* Detailed Subscription Information */}
+                      {teacherPremiumStatus.premiumData && (
+                        <div
+                          className="card"
+                          style={{
+                            marginBottom: "2rem",
+                            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          <div className="card-header bg-primary text-white">
+                            <h6 className="mb-0">
+                              <i className="bi bi-info-circle me-2"></i>
+                              Subscription Details
+                            </h6>
+                          </div>
+                          <div className="card-body">
+                            <div className="row">
+                              <div className="col-md-6">
+                                <p>
+                                  <strong>Subscription ID:</strong>{" "}
+                                  {teacherPremiumStatus.premiumData
+                                    .stripeSubscriptionId ? (
+                                    <code>
+                                      {teacherPremiumStatus.premiumData.stripeSubscriptionId.substring(
+                                        0,
+                                        20
+                                      )}
+                                      ...
+                                    </code>
+                                  ) : (
+                                    <span className="text-muted">
+                                      N/A (Legacy Payment)
+                                    </span>
+                                  )}
+                                </p>
+                                <p>
+                                  <strong>Status:</strong>{" "}
+                                  {getStatusBadge(
+                                    teacherPremiumStatus.subscriptionStatus,
+                                    teacherPremiumStatus.isPaid,
+                                    teacherPremiumStatus.currentPeriodEnd
+                                  )}
+                                </p>
+                                <p>
+                                  <strong>Payment Amount:</strong> $
+                                  {teacherPremiumStatus.paymentAmount ||
+                                    teacherPremiumStatus.subscriptionPlan
+                                      ?.amount ||
+                                    29}
+                                </p>
+                                {teacherPremiumStatus.premiumData.mail && (
+                                  <p>
+                                    <strong>Email:</strong>{" "}
+                                    {teacherPremiumStatus.premiumData.mail}
+                                  </p>
+                                )}
+                              </div>
+                              <div className="col-md-6">
+                                <p>
+                                  <strong>Created:</strong>{" "}
+                                  {formatDetailedDate(
+                                    teacherPremiumStatus.premiumData.created
+                                  )}
+                                </p>
+                                <p>
+                                  <strong>Last Updated:</strong>{" "}
+                                  {formatDetailedDate(
+                                    teacherPremiumStatus.premiumData.updated
+                                  )}
+                                </p>
+                                {teacherPremiumStatus.premiumData
+                                  .canceledAt && (
+                                  <p>
+                                    <strong>Canceled At:</strong>{" "}
+                                    {formatDetailedDate(
+                                      teacherPremiumStatus.premiumData
+                                        .canceledAt
+                                    )}
+                                  </p>
+                                )}
+                                {teacherPremiumStatus.premiumData
+                                  .stripeCustomerId && (
+                                  <p>
+                                    <strong>Customer ID:</strong>{" "}
+                                    <code>
+                                      {teacherPremiumStatus.premiumData.stripeCustomerId.substring(
+                                        0,
+                                        20
+                                      )}
+                                      ...
+                                    </code>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Invoice History */}
+                      <div
+                        className="card"
+                        style={{
+                          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                          marginBottom: "2rem",
+                        }}
+                      >
+                        <div className="card-header bg-secondary text-white">
+                          <h6 className="mb-0">
+                            <i className="bi bi-receipt me-2"></i>
+                            Payment History
+                          </h6>
+                        </div>
+                        <div className="card-body">
+                          {loadingInvoices ? (
+                            <div className="text-center py-3">
+                              <div className="spinner-border spinner-border-sm"></div>
+                              <p className="mt-2">Loading invoices...</p>
+                            </div>
+                          ) : invoiceHistory.length > 0 ? (
+                            <div className="table-responsive">
+                              <table className="table table-sm">
+                                <thead>
+                                  <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Period</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {invoiceHistory.map((invoice) => (
+                                    <tr key={invoice.id}>
+                                      <td>
+                                        {invoice.created
+                                          ? formatDetailedDate(invoice.created)
+                                          : "N/A"}
+                                      </td>
+                                      <td>
+                                        {invoice.currency} {invoice.amount}
+                                      </td>
+                                      <td>
+                                        <span
+                                          className={`badge ${
+                                            invoice.status === "paid"
+                                              ? "bg-success"
+                                              : invoice.status === "open"
+                                              ? "bg-warning"
+                                              : "bg-danger"
+                                          }`}
+                                        >
+                                          {invoice.status?.toUpperCase() ||
+                                            "N/A"}
+                                        </span>
+                                      </td>
+                                      <td>
+                                        {invoice.periodStart &&
+                                        invoice.periodEnd
+                                          ? `${formatDetailedDate(
+                                              invoice.periodStart
+                                            )} - ${formatDetailedDate(
+                                              invoice.periodEnd
+                                            )}`
+                                          : "N/A"}
+                                      </td>
+                                      <td>
+                                        {invoice.hostedInvoiceUrl && (
+                                          <a
+                                            href={invoice.hostedInvoiceUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-sm btn-outline-primary"
+                                          >
+                                            <i className="bi bi-download me-1"></i>
+                                            View
+                                          </a>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <p className="text-muted text-center py-3">
+                              No payment history available
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Show videos preview */}
+                      <div className="videos-preview mt-4">
+                        <h6 className="videos-title">Your Teaching Videos</h6>
+                        <div className="row">
+                          {[0, 1, 2].map((index) => (
+                            <div key={index} className="col-md-4 mb-3">
+                              {renderVideoPreview(teacherPremiumStatus, index)}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Add Content Button for paid users */}
+                      {(subscriptionStatus?.isActive ||
+                        teacherPremiumStatus.isPaid) && (
+                        <div className="text-center mt-3">
+                          <button
+                            className="btn btn-outline-primary"
+                            onClick={() => {
+                              setPremiumData((prev) => ({
+                                ...prev,
+                                mail: user?.email || "",
+                                link1:
+                                  teacherPremiumStatus?.premiumData?.link1 ||
+                                  "",
+                                link2:
+                                  teacherPremiumStatus?.premiumData?.link2 ||
+                                  "",
+                                link3:
+                                  teacherPremiumStatus?.premiumData?.link3 ||
+                                  "",
+                                link_or_video:
+                                  teacherPremiumStatus?.premiumData
+                                    ?.link_or_video,
+                              }));
+                              setShowPremiumModal(true);
+                            }}
+                          >
+                            <i className="bi bi-pencil me-2"></i>
+                            Update Videos
+                          </button>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <div className="cta-section text-center">
                       <div className="premium-card">
@@ -1893,13 +2326,13 @@ const TeacherDashboard = () => {
                                             {request.studentEmail}
                                           </a>
                                         </p>
-                                        {request.studentPhone && (
+                                        {request.phoneNumber && (
                                           <p className="contact-item">
                                             <i className="bi bi-telephone me-2"></i>
                                             <a
-                                              href={`tel:${request.studentPhone}`}
+                                              href={`tel:${request.phoneNumber}`}
                                             >
-                                              {request.studentPhone}
+                                              {request.phoneNumber}
                                             </a>
                                           </p>
                                         )}
@@ -2121,7 +2554,8 @@ const TeacherDashboard = () => {
                         <h6 className="videos-section-title">
                           <i className="bi bi-camera-video me-2"></i>
                           Teaching Videos
-                          {teacherPremiumStatus.isPaid && (
+                          {(teacherPremiumStatus.isPaid ||
+                            subscriptionStatus?.isActive) && (
                             <span className="badge bg-success ms-2">
                               Premium
                             </span>
@@ -2134,17 +2568,18 @@ const TeacherDashboard = () => {
                             </div>
                           ))}
                         </div>
-                        {!teacherPremiumStatus.isPaid && (
-                          <div className="upgrade-prompt mt-3">
-                            <button
-                              className="btn btn-premium btn-sm"
-                              onClick={() => setActiveTab("premium")}
-                            >
-                              <i className="bi bi-unlock me-2"></i>
-                              Upgrade to Premium
-                            </button>
-                          </div>
-                        )}
+                        {!teacherPremiumStatus.isPaid &&
+                          !subscriptionStatus?.isActive && (
+                            <div className="upgrade-prompt mt-3">
+                              <button
+                                className="btn btn-premium btn-sm"
+                                onClick={() => setActiveTab("premium")}
+                              >
+                                <i className="bi bi-unlock me-2"></i>
+                                Upgrade to Premium
+                              </button>
+                            </div>
+                          )}
                       </div>
                     )}
                   </div>
@@ -2291,7 +2726,9 @@ const TeacherDashboard = () => {
               <div className="modal-header">
                 <h5 className="modal-title">
                   <i className="bi bi-star-fill text-warning me-2"></i>
-                  Get Premium Subscription
+                  {subscriptionStatus?.isActive || teacherPremiumStatus?.isPaid
+                    ? "Update Teaching Videos"
+                    : "Get Premium Subscription"}
                 </h5>
                 <button
                   type="button"
@@ -2483,12 +2920,25 @@ const TeacherDashboard = () => {
                   {premiumLoading ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2"></span>
-                      Submitting...
+                      {subscriptionStatus?.isActive ||
+                      teacherPremiumStatus?.isPaid
+                        ? "Updating..."
+                        : "Submitting..."}
                     </>
                   ) : (
                     <>
-                      <i className="bi bi-star-fill me-2"></i>
-                      Submit Premium Request
+                      <i
+                        className={`bi ${
+                          subscriptionStatus?.isActive ||
+                          teacherPremiumStatus?.isPaid
+                            ? "bi-pencil"
+                            : "bi-star-fill"
+                        } me-2`}
+                      ></i>
+                      {subscriptionStatus?.isActive ||
+                      teacherPremiumStatus?.isPaid
+                        ? "Update Videos"
+                        : "Submit Premium Request"}
                     </>
                   )}
                 </button>
@@ -3300,6 +3750,7 @@ const TeacherDashboard = () => {
           align-items: center;
           gap: 1rem;
           margin-bottom: 1rem;
+          flex-wrap: wrap;
         }
 
         .status-icon {

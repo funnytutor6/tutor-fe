@@ -80,4 +80,12 @@ export const subscriptionService = {
     const response = await api.post(ENDPOINTS.CREATE_STUDENT_CUSTOMER_PORTAL);
     return response.data;
   },
+
+  /**
+   * Create customer portal session for teacher
+   */
+  createCustomerPortalSession: async () => {
+    const response = await api.post(ENDPOINTS.CREATE_CUSTOMER_PORTAL);
+    return response.data;
+  },
 };
