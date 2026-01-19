@@ -66,7 +66,7 @@ const StudentPremiumSuccess = () => {
         ispayed: true,
         paymentDate: new Date().toISOString(),
         stripeSessionId: sessionId,
-        paymentAmount: 29.0, // Default student premium amount
+        paymentAmount: 15.0, // Default student premium amount
       };
 
       // Use your MySQL API endpoint to create the record

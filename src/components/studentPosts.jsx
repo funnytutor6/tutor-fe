@@ -621,7 +621,7 @@ const StudentPosts = () => {
         ) : (
           <>
             <i className="bi bi-credit-card me-1"></i>
-            Purchase Access ($5)
+            Purchase Access ($6)
           </>
         )}
       </button>

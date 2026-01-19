@@ -1743,7 +1743,7 @@ const StudentDashboard = () => {
                             $
                             {studentPremiumStatus.subscriptionPlan?.amount ||
                               studentPremiumStatus.paymentAmount ||
-                              29}
+                              15}
                             <span
                               style={{
                                 fontSize: "0.875rem",
@@ -2014,7 +2014,7 @@ const StudentDashboard = () => {
                                 {studentPremiumStatus.paymentAmount ||
                                   studentPremiumStatus.subscriptionPlan
                                     ?.amount ||
-                                  29}
+                                  15}
                               </p>
                               {studentPremiumStatus.premiumData.subject && (
                                 <p>
@@ -2226,7 +2226,7 @@ const StudentDashboard = () => {
                                 lineHeight: 1,
                               }}
                             >
-                              $29
+                              $15
                             </span>
                             <span style={{ fontSize: "1rem", opacity: 0.8 }}>
                               per month
@@ -2347,7 +2347,7 @@ const StudentDashboard = () => {
                           }}
                         >
                           <i className="bi bi-credit-card me-2"></i>
-                          Pay $29 & Get Premium
+                          Pay $15 & Get Premium
                         </button>
                       </div>
                     </div>
@@ -2664,7 +2664,7 @@ const StudentDashboard = () => {
                   }}
                 >
                   <div style={{ fontSize: "2rem", color: "#0d6efd" }}>
-                    $29{" "}
+                    $15{" "}
                     <small style={{ fontSize: "1rem", color: "#6c757d" }}>
                       /month
                     </small>
@@ -2854,7 +2854,7 @@ const StudentDashboard = () => {
                   ) : (
                     <>
                       <i className="bi bi-credit-card me-2"></i>
-                      Pay $29 with Stripe
+                      Pay $15 with Stripe
                     </>
                   )}
                 </button>
