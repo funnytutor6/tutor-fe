@@ -17,6 +17,12 @@ const StudentPremiumSuccess = () => {
   const maxRetries = 10;
   const hasRun = useRef(false); // Prevent double execution in React StrictMode
 
+  const updateUserPremiumStatus = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    user.hasPremium = true;
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
   const checkPremiumStatus = async (studentEmail, attempt = 1) => {
     try {
       // Check student premium status using your MySQL API
@@ -30,6 +36,7 @@ const StudentPremiumSuccess = () => {
         setPremiumData(premiumResponse.data.premiumData);
         setSuccess(true);
         setLoading(false);
+        updateUserPremiumStatus();
         return true;
       }
 
@@ -176,6 +183,7 @@ const StudentPremiumSuccess = () => {
                 setPremiumData(createdRecord);
                 setSuccess(true);
                 setLoading(false);
+                updateUserPremiumStatus();
                 return;
               }
             }
@@ -202,7 +210,7 @@ const StudentPremiumSuccess = () => {
   }, [searchParams]);
 
   const handleGoToDashboard = () => {
-    navigate("/dashboard/student");
+    window.location.href = "/dashboard/student";
   };
 
   const handleFindTeachers = () => {
@@ -256,6 +264,7 @@ Thank you for your urgent assistance!`);
         setPremiumData(createdRecord);
         setSuccess(true);
         setLoading(false);
+        updateUserPremiumStatus();
       }
     } catch (error) {
       console.error("Manual check failed:", error);

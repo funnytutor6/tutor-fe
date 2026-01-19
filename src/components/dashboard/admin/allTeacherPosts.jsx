@@ -98,8 +98,8 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
       {
         header: "Location",
         accessorKey: "townOrCity",
-        cell: ({ getValue }) => {
-          const city = getValue() || "N/A";
+        cell: ({ getValue, row }) => {
+          const city = getValue() || row.original?.location || row.original?.cityOrTown || "N/A";
           return (
             <span>
               <i className="bi bi-geo-alt me-2"></i>

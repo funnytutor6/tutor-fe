@@ -13,9 +13,8 @@ export const subscriptionService = {
   /**
    * Cancel subscription
    */
-  cancelSubscription: async (teacherEmail, cancelAtPeriodEnd = false) => {
+  cancelSubscription: async (cancelAtPeriodEnd = false) => {
     const response = await api.post(ENDPOINTS.CANCEL_SUBSCRIPTION, {
-      teacherEmail,
       cancelAtPeriodEnd,
     });
     return response.data;

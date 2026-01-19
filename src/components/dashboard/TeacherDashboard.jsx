@@ -624,8 +624,8 @@ const TeacherDashboard = () => {
       console.error("Content submission error:", error);
       toast.error(
         error.response?.data?.error ||
-          error.message ||
-          "Failed to update premium content"
+        error.message ||
+        "Failed to update premium content"
       );
     }
   };
@@ -1138,7 +1138,7 @@ const TeacherDashboard = () => {
       console.error("Error deleting account:", error);
       toast.error(
         error.response?.data?.error ||
-          "Failed to delete account. Please try again."
+        "Failed to delete account. Please try again."
       );
     } finally {
       setDeletingAccount(false);
@@ -1496,8 +1496,8 @@ const TeacherDashboard = () => {
 
                   {/* Current Status */}
                   {teacherPremiumStatus?.hasPremium &&
-                  (teacherPremiumStatus.isPaid ||
-                    subscriptionStatus?.isActive) ? (
+                    (teacherPremiumStatus.isPaid ||
+                      subscriptionStatus?.isActive) ? (
                     <>
                       {/* Subscription Status Card */}
                       <div
@@ -1760,7 +1760,7 @@ const TeacherDashboard = () => {
                                 );
                                 toast.error(
                                   error.response?.data?.error ||
-                                    "Failed to open payment management"
+                                  "Failed to open payment management"
                                 );
                               } finally {
                                 setLoadingPortal(false);
@@ -1798,7 +1798,6 @@ const TeacherDashboard = () => {
                                     setCancelingSubscription(true);
                                     try {
                                       await subscriptionService.cancelSubscription(
-                                        user?.email,
                                         true
                                       );
                                       toast.success(
@@ -1808,7 +1807,7 @@ const TeacherDashboard = () => {
                                     } catch (error) {
                                       toast.error(
                                         error.response?.data?.error ||
-                                          "Failed to cancel subscription"
+                                        "Failed to cancel subscription"
                                       );
                                     } finally {
                                       setCancelingSubscription(false);
@@ -1833,7 +1832,6 @@ const TeacherDashboard = () => {
                                     setCancelingSubscription(true);
                                     try {
                                       await subscriptionService.cancelSubscription(
-                                        user?.email,
                                         false
                                       );
                                       toast.success(
@@ -1843,7 +1841,7 @@ const TeacherDashboard = () => {
                                     } catch (error) {
                                       toast.error(
                                         error.response?.data?.error ||
-                                          "Failed to cancel subscription"
+                                        "Failed to cancel subscription"
                                       );
                                     } finally {
                                       setCancelingSubscription(false);
@@ -1858,7 +1856,7 @@ const TeacherDashboard = () => {
                             )}
                           {teacherPremiumStatus.subscriptionStatus ===
                             "canceled" ||
-                          teacherPremiumStatus.cancelAtPeriodEnd ? (
+                            teacherPremiumStatus.cancelAtPeriodEnd ? (
                             <button
                               className="btn btn-success"
                               onClick={async () => {
@@ -1874,7 +1872,7 @@ const TeacherDashboard = () => {
                                 } catch (error) {
                                   toast.error(
                                     error.response?.data?.error ||
-                                      "Failed to reactivate subscription"
+                                    "Failed to reactivate subscription"
                                   );
                                 } finally {
                                   setReactivatingSubscription(false);
@@ -1970,27 +1968,27 @@ const TeacherDashboard = () => {
                                 </p>
                                 {teacherPremiumStatus.premiumData
                                   .canceledAt && (
-                                  <p>
-                                    <strong>Canceled At:</strong>{" "}
-                                    {formatDetailedDate(
-                                      teacherPremiumStatus.premiumData
-                                        .canceledAt
-                                    )}
-                                  </p>
-                                )}
+                                    <p>
+                                      <strong>Canceled At:</strong>{" "}
+                                      {formatDetailedDate(
+                                        teacherPremiumStatus.premiumData
+                                          .canceledAt
+                                      )}
+                                    </p>
+                                  )}
                                 {teacherPremiumStatus.premiumData
                                   .stripeCustomerId && (
-                                  <p>
-                                    <strong>Customer ID:</strong>{" "}
-                                    <code>
-                                      {teacherPremiumStatus.premiumData.stripeCustomerId.substring(
-                                        0,
-                                        20
-                                      )}
-                                      ...
-                                    </code>
-                                  </p>
-                                )}
+                                    <p>
+                                      <strong>Customer ID:</strong>{" "}
+                                      <code>
+                                        {teacherPremiumStatus.premiumData.stripeCustomerId.substring(
+                                          0,
+                                          20
+                                        )}
+                                        ...
+                                      </code>
+                                    </p>
+                                  )}
                               </div>
                             </div>
                           </div>
@@ -2042,13 +2040,12 @@ const TeacherDashboard = () => {
                                       </td>
                                       <td>
                                         <span
-                                          className={`badge ${
-                                            invoice.status === "paid"
-                                              ? "bg-success"
-                                              : invoice.status === "open"
+                                          className={`badge ${invoice.status === "paid"
+                                            ? "bg-success"
+                                            : invoice.status === "open"
                                               ? "bg-warning"
                                               : "bg-danger"
-                                          }`}
+                                            }`}
                                         >
                                           {invoice.status?.toUpperCase() ||
                                             "N/A"}
@@ -2056,12 +2053,12 @@ const TeacherDashboard = () => {
                                       </td>
                                       <td>
                                         {invoice.periodStart &&
-                                        invoice.periodEnd
+                                          invoice.periodEnd
                                           ? `${formatDetailedDate(
-                                              invoice.periodStart
-                                            )} - ${formatDetailedDate(
-                                              invoice.periodEnd
-                                            )}`
+                                            invoice.periodStart
+                                          )} - ${formatDetailedDate(
+                                            invoice.periodEnd
+                                          )}`
                                           : "N/A"}
                                       </td>
                                       <td>
@@ -2105,34 +2102,34 @@ const TeacherDashboard = () => {
                       {/* Add Content Button for paid users */}
                       {(subscriptionStatus?.isActive ||
                         teacherPremiumStatus.isPaid) && (
-                        <div className="text-center mt-3">
-                          <button
-                            className="btn btn-outline-primary"
-                            onClick={() => {
-                              setPremiumData((prev) => ({
-                                ...prev,
-                                mail: user?.email || "",
-                                link1:
-                                  teacherPremiumStatus?.premiumData?.link1 ||
-                                  "",
-                                link2:
-                                  teacherPremiumStatus?.premiumData?.link2 ||
-                                  "",
-                                link3:
-                                  teacherPremiumStatus?.premiumData?.link3 ||
-                                  "",
-                                link_or_video:
-                                  teacherPremiumStatus?.premiumData
-                                    ?.link_or_video,
-                              }));
-                              setShowPremiumModal(true);
-                            }}
-                          >
-                            <i className="bi bi-pencil me-2"></i>
-                            Update Videos
-                          </button>
-                        </div>
-                      )}
+                          <div className="text-center mt-3">
+                            <button
+                              className="btn btn-outline-primary"
+                              onClick={() => {
+                                setPremiumData((prev) => ({
+                                  ...prev,
+                                  mail: user?.email || "",
+                                  link1:
+                                    teacherPremiumStatus?.premiumData?.link1 ||
+                                    "",
+                                  link2:
+                                    teacherPremiumStatus?.premiumData?.link2 ||
+                                    "",
+                                  link3:
+                                    teacherPremiumStatus?.premiumData?.link3 ||
+                                    "",
+                                  link_or_video:
+                                    teacherPremiumStatus?.premiumData
+                                      ?.link_or_video,
+                                }));
+                                setShowPremiumModal(true);
+                              }}
+                            >
+                              <i className="bi bi-pencil me-2"></i>
+                              Update Videos
+                            </button>
+                          </div>
+                        )}
                     </>
                   ) : (
                     <div className="cta-section text-center">
@@ -2281,7 +2278,7 @@ const TeacherDashboard = () => {
                                       "
                                       {request.message.length > 100
                                         ? request.message.substring(0, 100) +
-                                          "..."
+                                        "..."
                                         : request.message}
                                       "
                                     </em>
@@ -2304,8 +2301,8 @@ const TeacherDashboard = () => {
                                 <>
                                   {/* Check if teacher has active subscription - show contact directly */}
                                   {subscriptionStatus?.isActive ||
-                                  teacherPremiumStatus?.isPaid ||
-                                  request.hasFreeAccess ? (
+                                    teacherPremiumStatus?.isPaid ||
+                                    request.hasFreeAccess ? (
                                     <div className="contact-info">
                                       <h6 className="contact-title">
                                         <i className="bi bi-star-fill me-2 text-warning"></i>
@@ -2375,14 +2372,14 @@ const TeacherDashboard = () => {
                                     Contact Information
                                     {request.paymentStatus ===
                                       "free_subscription" && (
-                                      <span
-                                        className="badge bg-success ms-2"
-                                        style={{ fontSize: "0.65rem" }}
-                                      >
-                                        <i className="bi bi-star-fill me-1"></i>
-                                        Premium
-                                      </span>
-                                    )}
+                                        <span
+                                          className="badge bg-success ms-2"
+                                          style={{ fontSize: "0.65rem" }}
+                                        >
+                                          <i className="bi bi-star-fill me-1"></i>
+                                          Premium
+                                        </span>
+                                      )}
                                   </h6>
                                   <div className="contact-details">
                                     <p className="contact-item">
@@ -2403,7 +2400,7 @@ const TeacherDashboard = () => {
                                     )}
                                     <small className="purchase-date">
                                       {request.paymentStatus ===
-                                      "free_subscription" ? (
+                                        "free_subscription" ? (
                                         <>
                                           <i className="bi bi-star-fill me-1 text-warning"></i>
                                           Free access with Premium subscription
@@ -2473,8 +2470,8 @@ const TeacherDashboard = () => {
                               {post.lessonType === "online"
                                 ? "Online"
                                 : post.lessonType === "in-person"
-                                ? "In-Person"
-                                : "Both"}
+                                  ? "In-Person"
+                                  : "Both"}
                             </span>
                           </div>
 
@@ -2556,10 +2553,10 @@ const TeacherDashboard = () => {
                           Teaching Videos
                           {(teacherPremiumStatus.isPaid ||
                             subscriptionStatus?.isActive) && (
-                            <span className="badge bg-success ms-2">
-                              Premium
-                            </span>
-                          )}
+                              <span className="badge bg-success ms-2">
+                                Premium
+                              </span>
+                            )}
                         </h6>
                         <div className="teaching-videos">
                           {[0, 1, 2].map((index) => (
@@ -2659,7 +2656,7 @@ const TeacherDashboard = () => {
                             <div className="stat-box">
                               <h4 className="text-warning">
                                 {subscriptionStatus?.isActive ||
-                                teacherPremiumStatus?.isPaid
+                                  teacherPremiumStatus?.isPaid
                                   ? "Premium"
                                   : "Basic"}
                               </h4>
@@ -2796,9 +2793,8 @@ const TeacherDashboard = () => {
                   <label className="form-label fw-bold">Email *</label>
                   <input
                     type="email"
-                    className={`form-control ${
-                      premiumErrors.mail ? "is-invalid" : ""
-                    }`}
+                    className={`form-control ${premiumErrors.mail ? "is-invalid" : ""
+                      }`}
                     name="mail"
                     value={premiumData.mail}
                     onChange={handlePremiumInputChange}
@@ -2823,9 +2819,8 @@ const TeacherDashboard = () => {
                         </label>
                         <input
                           type="url"
-                          className={`form-control ${
-                            premiumErrors[`link${num}`] ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${premiumErrors[`link${num}`] ? "is-invalid" : ""
+                            }`}
                           name={`link${num}`}
                           value={premiumData[`link${num}`]}
                           onChange={handlePremiumInputChange}
@@ -2853,9 +2848,8 @@ const TeacherDashboard = () => {
                         </label>
                         <input
                           type="file"
-                          className={`form-control ${
-                            premiumErrors[`video${num}`] ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${premiumErrors[`video${num}`] ? "is-invalid" : ""
+                            }`}
                           accept="video/*"
                           onChange={(e) =>
                             handleVideoUpload(num, e.target.files[0])
@@ -2921,22 +2915,21 @@ const TeacherDashboard = () => {
                     <>
                       <span className="spinner-border spinner-border-sm me-2"></span>
                       {subscriptionStatus?.isActive ||
-                      teacherPremiumStatus?.isPaid
+                        teacherPremiumStatus?.isPaid
                         ? "Updating..."
                         : "Submitting..."}
                     </>
                   ) : (
                     <>
                       <i
-                        className={`bi ${
-                          subscriptionStatus?.isActive ||
+                        className={`bi ${subscriptionStatus?.isActive ||
                           teacherPremiumStatus?.isPaid
-                            ? "bi-pencil"
-                            : "bi-star-fill"
-                        } me-2`}
+                          ? "bi-pencil"
+                          : "bi-star-fill"
+                          } me-2`}
                       ></i>
                       {subscriptionStatus?.isActive ||
-                      teacherPremiumStatus?.isPaid
+                        teacherPremiumStatus?.isPaid
                         ? "Update Videos"
                         : "Submit Premium Request"}
                     </>
@@ -3089,73 +3082,72 @@ const TeacherDashboard = () => {
                     </div>
                     {(postForm.lessonType === "in-person" ||
                       postForm.lessonType === "both") && (
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">
-                          Travel Distance (km)
-                        </label>
-                        <select
-                          className="form-select"
-                          value={postForm.distanceFromLocation}
-                          onChange={(e) =>
-                            setPostForm((prev) => ({
-                              ...prev,
-                              distanceFromLocation: parseInt(e.target.value),
-                            }))
-                          }
-                        >
-                          <option value={5}>5 km</option>
-                          <option value={10}>10 km</option>
-                          <option value={15}>15 km</option>
-                          <option value={20}>20 km</option>
-                          <option value={25}>25 km</option>
-                          <option value={50}>50 km</option>
-                        </select>
-                      </div>
-                    )}
+                        <div className="col-md-6 mb-3">
+                          <label className="form-label">
+                            Travel Distance (km)
+                          </label>
+                          <select
+                            className="form-select"
+                            value={postForm.distanceFromLocation}
+                            onChange={(e) =>
+                              setPostForm((prev) => ({
+                                ...prev,
+                                distanceFromLocation: parseInt(e.target.value),
+                              }))
+                            }
+                          >
+                            <option value={5}>5 km</option>
+                            <option value={10}>10 km</option>
+                            <option value={15}>15 km</option>
+                            <option value={20}>20 km</option>
+                            <option value={25}>25 km</option>
+                            <option value={50}>50 km</option>
+                          </select>
+                        </div>
+                      )}
                   </div>
 
                   {(postForm.lessonType === "in-person" ||
                     postForm.lessonType === "both") && (
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Location</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={postForm.location}
-                          onChange={(e) =>
-                            setPostForm((prev) => ({
-                              ...prev,
-                              location: e.target.value,
-                            }))
-                          }
-                          placeholder="e.g., London, Manchester"
-                        />
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <label className="form-label">Location</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={postForm.location}
+                            onChange={(e) =>
+                              setPostForm((prev) => ({
+                                ...prev,
+                                location: e.target.value,
+                              }))
+                            }
+                            placeholder="e.g., London, Manchester"
+                          />
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <label className="form-label">Town/District</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={postForm.townOrDistrict}
+                            onChange={(e) =>
+                              setPostForm((prev) => ({
+                                ...prev,
+                                townOrDistrict: e.target.value,
+                              }))
+                            }
+                            placeholder="e.g., Camden, City Centre"
+                          />
+                        </div>
                       </div>
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Town/District</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={postForm.townOrDistrict}
-                          onChange={(e) =>
-                            setPostForm((prev) => ({
-                              ...prev,
-                              townOrDistrict: e.target.value,
-                            }))
-                          }
-                          placeholder="e.g., Camden, City Centre"
-                        />
-                      </div>
-                    </div>
-                  )}
+                    )}
 
                   <div className="mb-3">
                     <label className="form-label">Description *</label>
                     <textarea
-                      className={`form-control ${
-                        descriptionErrors.length > 0 ? "is-invalid" : ""
-                      }`}
+                      className={`form-control ${descriptionErrors.length > 0 ? "is-invalid" : ""
+                        }`}
                       rows="4"
                       value={postForm.description}
                       onChange={(e) => {
@@ -3219,9 +3211,8 @@ const TeacherDashboard = () => {
                     ) : (
                       <>
                         <i
-                          className={`bi ${
-                            editingPost ? "bi-pencil" : "bi-plus-lg"
-                          } me-2`}
+                          className={`bi ${editingPost ? "bi-pencil" : "bi-plus-lg"
+                            } me-2`}
                         ></i>
                         {editingPost ? "Update Post" : "Create Post"}
                       </>

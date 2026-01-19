@@ -17,6 +17,12 @@ const PremiumSuccess = () => {
   const [premiumData, setPremiumData] = useState(null);
   const [showContentModal, setShowContentModal] = useState(false);
 
+  const updateUserPremiumStatus = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    user.hasPremium = true;
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
   // Content form state
   const [contentForm, setContentForm] = useState({
     link_or_video: true,
@@ -63,6 +69,7 @@ const PremiumSuccess = () => {
           premiumResponse.data.data.isPaid
         ) {
           setPremiumData(premiumResponse.data.premiumData);
+          updateUserPremiumStatus();
           setSuccess(true);
         } else {
           setError(
@@ -83,7 +90,7 @@ const PremiumSuccess = () => {
   }, [searchParams]);
 
   const handleGoToDashboard = () => {
-    navigate("/dashboard/teacher?tab=premium");
+    window.location.href = "/dashboard/teacher?tab=premium";
   };
 
   const handleAddContent = () => {
@@ -210,6 +217,7 @@ const PremiumSuccess = () => {
             ENDPOINTS.CHECK_TEACHER_PREMIUM
           );
           setPremiumData(premiumResponse.data.premiumData);
+          updateUserPremiumStatus();
         } else {
           const errorData = await response.json();
           setError(errorData.error || "Failed to update content");
@@ -246,6 +254,7 @@ const PremiumSuccess = () => {
               `${STRIPE_SERVER_URL}/check-premium-status`
             );
             setPremiumData(premiumResponse.data.premiumData);
+            updateUserPremiumStatus();
           } else {
             setError("Failed to upload videos");
           }
@@ -432,9 +441,9 @@ const PremiumSuccess = () => {
                 </h5>
 
                 {premiumData &&
-                (premiumData.link1 ||
-                  premiumData.link2 ||
-                  premiumData.link3) ? (
+                  (premiumData.link1 ||
+                    premiumData.link2 ||
+                    premiumData.link3) ? (
                   <div className="row">
                     {[1, 2, 3].map((num) => {
                       const link = premiumData[`link${num}`];
@@ -605,9 +614,8 @@ const PremiumSuccess = () => {
                         </label>
                         <input
                           type="url"
-                          className={`form-control ${
-                            contentErrors[`link${num}`] ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${contentErrors[`link${num}`] ? "is-invalid" : ""
+                            }`}
                           name={`link${num}`}
                           value={contentForm[`link${num}`]}
                           onChange={handleContentInputChange}
@@ -635,9 +643,8 @@ const PremiumSuccess = () => {
                         </label>
                         <input
                           type="file"
-                          className={`form-control ${
-                            contentErrors[`video${num}`] ? "is-invalid" : ""
-                          }`}
+                          className={`form-control ${contentErrors[`video${num}`] ? "is-invalid" : ""
+                            }`}
                           accept="video/*"
                           onChange={(e) =>
                             handleVideoUpload(num, e.target.files[0])
