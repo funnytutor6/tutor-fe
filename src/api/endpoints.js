@@ -73,8 +73,7 @@ export const ENDPOINTS = {
   CHECK_TEACHER_PREMIUM: `/check-premium-status`,
   CREATE_TEACHER_PREMIUM_CHECKOUT: "/create-premium-checkout-session",
   UPDATE_TEACHER_PREMIUM_CONTENT: "/update-premium-content",
-  CHECK_STUDENT_PREMIUM: (studentEmail) =>
-    `/check-student-premium-status/${studentEmail}`,
+  CHECK_STUDENT_PREMIUM: `/check-student-premium-status`,
   CREATE_STUDENT_PREMIUM_CHECKOUT: "/create-student-premium-checkout-session",
 
   // Upload

@@ -35,10 +35,8 @@ export const premiumService = {
   /**
    * Check student premium status
    */
-  checkStudentPremiumStatus: async (studentEmail) => {
-    const response = await api.get(
-      ENDPOINTS.CHECK_STUDENT_PREMIUM(studentEmail)
-    );
+  checkStudentPremiumStatus: async () => {
+    const response = await api.get(ENDPOINTS.CHECK_STUDENT_PREMIUM);
     return response.data;
   },
 

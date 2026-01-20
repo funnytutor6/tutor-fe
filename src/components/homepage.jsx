@@ -145,7 +145,7 @@ const EduLink = () => {
       role: "Student, Psychology",
       content:
         "Funny Study Learning completely transformed my learning experience. I found a perfect tutor who helped me improve my grades dramatically in just two months!",
-      image: "/api/placeholder/100/100",
+      image: "https://m.media-amazon.com/images/M/MV5BNjEyZGMzODktY2JmYi00ZGEwLTg0YjItODVhZDlkYTMyN2YwXkEyXkFqcGc@._V1_.jpg",
     },
     {
       id: 2,
@@ -153,7 +153,7 @@ const EduLink = () => {
       role: "Math Teacher",
       content:
         "As a teacher, Funny Study Learning has allowed me to connect with motivated students and share my passion for mathematics. The platform is intuitive and professional.",
-      image: "/api/placeholder/100/100",
+      image: "https://i.namu.wiki/i/U_Pf78u_x9bkrVouMaswozqpvby9SFMu_Tnz_rhgDOsqXBjePVgYsZp9ySMjiq7e1p33A1_rOA4OdEFl4CGWtA.webp",
     },
     {
       id: 3,
@@ -161,7 +161,7 @@ const EduLink = () => {
       role: "Parent",
       content:
         "Finding a qualified tutor for my daughter was so easy with Funny Study Learning. The verification process gave me confidence, and the results speak for themselves!",
-      image: "/api/placeholder/100/100",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emma_Thompson_Berlinale_2022.jpg/960px-Emma_Thompson_Berlinale_2022.jpg",
     },
   ];
 
@@ -866,7 +866,8 @@ const EduLink = () => {
                     e.target.style.background = "rgba(255, 255, 255, 0.1)";
                     e.target.style.borderColor = "rgba(255, 255, 255, 0.3)";
                   }}
-                  onClick={() => navigate("/video-demo")}
+                  // onClick={() => navigate("/video-demo")}
+                  onClick={() => navigate("/#")}
                 >
                   <i className="bi bi-play-circle me-2"></i>
                   Watch Demo
@@ -1032,9 +1033,8 @@ const EduLink = () => {
                       "0 20px 40px rgba(0,0,0,0.15)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = `translateY(${
-                      index % 2 === 0 ? "0" : "20px"
-                    }) scale(1)`;
+                    e.currentTarget.style.transform = `translateY(${index % 2 === 0 ? "0" : "20px"
+                      }) scale(1)`;
                     e.currentTarget.style.boxShadow =
                       "0 10px 30px rgba(0,0,0,0.1)";
                   }}
@@ -1108,11 +1108,10 @@ const EduLink = () => {
                           }}
                         >
                           <i
-                            className={`bi ${
-                              testimonial.role.includes("Student")
-                                ? "bi-mortarboard"
-                                : "bi-person-workspace"
-                            } text-white`}
+                            className={`bi ${testimonial.role.includes("Student")
+                              ? "bi-mortarboard"
+                              : "bi-person-workspace"
+                              } text-white`}
                             style={{ fontSize: "10px" }}
                           ></i>
                         </div>
@@ -1205,7 +1204,8 @@ const EduLink = () => {
                     e.target.style.boxShadow =
                       "0 4px 15px rgba(255,255,255,0.2)";
                   }}
-                  onClick={() => navigate("/video-demo")}
+                  // onClick={() => navigate("/video-demo")}
+                  onClick={() => navigate("/#")}
                 >
                   <i className="bi bi-play-circle me-2"></i>
                   Watch Demo

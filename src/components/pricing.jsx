@@ -7,48 +7,11 @@ import Footer from './footer';
 const Pricing = () => {
   // Pricing plans data
   const plans = [
-    {
-      id: 1,
-      name: 'Starter',
-      price: 'Free',
-      period: 'forever',
-      description: 'Perfect for new teachers starting their online teaching journey',
-      features: [
-        'Create basic teacher profile',
-        'List up to 3 subjects',
-        'Basic student messaging',
-        'Standard profile visibility',
-        'Community support',
-        'Basic analytics'
-      ],
-      buttonText: 'Get Started',
-      buttonVariant: 'outline-primary',
-      popular: false
-    },
-    {
-      id: 2,
-      name: 'Professional',
-      price: '$9.99',
-      period: 'per month',
-      description: 'Best for growing your teaching business',
-      features: [
-        'Everything in Starter',
-        'List unlimited subjects',
-        'Priority profile visibility',
-        'Advanced student messaging',
-        'Video call integration',
-        'Advanced analytics',
-        'Custom profile branding',
-        'Priority support'
-      ],
-      buttonText: 'Start Free Trial',
-      buttonVariant: 'primary',
-      popular: true
-    },
+
     {
       id: 3,
       name: 'Enterprise',
-      price: '$29.99',
+      price: '$29',
       period: 'per month',
       description: 'For established teachers and institutions',
       features: [
@@ -104,7 +67,7 @@ const Pricing = () => {
             {plans.map((plan) => (
               <div key={plan.id} className="col-lg-4 col-md-6">
                 <div className={`card pricing-card h-100 border-0 shadow-sm ${plan.popular ? 'popular' : ''}`}>
-                  
+
                   <div className="card-body p-4">
                     <h3 className="plan-name h4 fw-bold text-center mb-3">{plan.name}</h3>
                     <div className="price text-center mb-4">
@@ -120,11 +83,11 @@ const Pricing = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link 
-                      to={plan.id === 1 ? '/register/teacher' : '/register/teacher?plan=' + plan.id}
+                    <Link
+                      to={'/register/teacher'}
                       className={`btn btn-${plan.buttonVariant} btn-lg w-100`}
                     >
-                      {plan.buttonText}
+                      Get Started
                     </Link>
                   </div>
                 </div>
@@ -135,7 +98,7 @@ const Pricing = () => {
       </section>
 
       {/* Feature Comparison */}
-      <section className="feature-comparison py-5 bg-light">
+      {/* <section className="feature-comparison py-5 bg-light">
         <div className="container">
           <h2 className="text-center mb-5">Compare Features</h2>
           <div className="table-responsive">
@@ -153,17 +116,17 @@ const Pricing = () => {
                   <tr key={index}>
                     <td>{feature.name}</td>
                     <td>
-                      {typeof feature.starter === 'boolean' 
+                      {typeof feature.starter === 'boolean'
                         ? (feature.starter ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-muted"></i>)
                         : feature.starter}
                     </td>
                     <td>
-                      {typeof feature.professional === 'boolean' 
+                      {typeof feature.professional === 'boolean'
                         ? (feature.professional ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-muted"></i>)
                         : feature.professional}
                     </td>
                     <td>
-                      {typeof feature.enterprise === 'boolean' 
+                      {typeof feature.enterprise === 'boolean'
                         ? (feature.enterprise ? <i className="bi bi-check-lg text-success"></i> : <i className="bi bi-x-lg text-muted"></i>)
                         : feature.enterprise}
                     </td>
@@ -173,7 +136,7 @@ const Pricing = () => {
             </table>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section className="faq py-5">
@@ -224,7 +187,7 @@ const Pricing = () => {
         </div>
       </section>
 
-      
+
 
       <style jsx>{`
         .pricing-hero {

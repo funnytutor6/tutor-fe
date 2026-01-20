@@ -749,11 +749,11 @@ const TeacherDashboard = () => {
 
     const confirmed = await showConfirmToast({
       title: "Purchase Contact Information",
-      message: "Purchase student contact information for $7.00?",
+      message: "Purchase student contact information for $5.00?",
       confirmText: (
         <React.Fragment>
           <i className="bi bi-credit-card me-1"></i>
-          Purchase ($7.00)
+          Purchase ($5.00)
         </React.Fragment>
       ),
       cancelText: "Cancel",
@@ -1353,146 +1353,7 @@ const TeacherDashboard = () => {
             <div className="card">
               <div className="card-body">
                 <div className="premium-content">
-                  {/* Header */}
-                  <div className="text-center mb-5">
-                    <div className="premium-icon mb-3">
-                      <i className="bi bi-star-fill"></i>
-                    </div>
-                    <h3 className="premium-title">
-                      Premium Teaching Experience
-                    </h3>
-                    <p className="premium-subtitle text-muted">
-                      Showcase your teaching skills and connect directly with
-                      students
-                    </p>
-                  </div>
 
-                  {/* Premium Pricing */}
-                  <div className="pricing-section mb-5">
-                    <div className="pricing-card">
-                      <div className="pricing-header">
-                        <h4 className="pricing-title">Premium Subscription</h4>
-                        <div className="pricing-price">
-                          <span className="price-amount">$29</span>
-                          <span className="price-period">per-month</span>
-                        </div>
-                      </div>
-                      <ul className="pricing-features">
-                        <li>
-                          <i className="bi bi-check-circle-fill me-2"></i>
-                          Verified Teacher Badge
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle-fill me-2"></i>
-                          Unlimited Posts
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle-fill me-2"></i>Direct
-                          Contact Visibility
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle-fill me-2"></i>3
-                          Teaching Video Clips
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle-fill me-2"></i>
-                          Teaching Resources Space
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Why Premium Section */}
-                  <div className="why-premium mb-5">
-                    <h4 className="section-title">
-                      <i className="bi bi-question-circle me-2"></i>
-                      Why subscription is a good choice?
-                    </h4>
-                    <div className="premium-description">
-                      <p>
-                        The students reaching your profile can see your{" "}
-                        <strong>live teaching</strong>. It makes them get a good
-                        understanding of your teaching and the impact of your
-                        lessons that can have on them.
-                      </p>
-                      <p>
-                        We allow you to{" "}
-                        <strong>
-                          share your contact details directly through the videos
-                        </strong>
-                        . So that any student who visits your profile can
-                        contact you directly without any delay.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Benefits Section */}
-                  <div className="benefits-section mb-5">
-                    <h4 className="section-title">
-                      <i className="bi bi-check-circle me-2"></i>
-                      Premium Benefits
-                    </h4>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <div className="benefit-item">
-                          <i className="bi bi-camera-video text-primary"></i>
-                          <div>
-                            <h6>Live Teaching Showcase</h6>
-                            <p className="text-muted mb-0">
-                              Let students see your actual teaching style
-                            </p>
-                          </div>
-                        </div>
-                        <div className="benefit-item">
-                          <i className="bi bi-person-lines-fill text-primary"></i>
-                          <div>
-                            <h6>Direct Contact Sharing</h6>
-                            <p className="text-muted mb-0">
-                              Share contact details through your videos
-                            </p>
-                          </div>
-                        </div>
-                        <div className="benefit-item">
-                          <i className="bi bi-lightning-charge text-primary"></i>
-                          <div>
-                            <h6>Instant Connections</h6>
-                            <p className="text-muted mb-0">
-                              Students can contact you immediately
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="benefit-item">
-                          <i className="bi bi-graph-up-arrow text-primary"></i>
-                          <div>
-                            <h6>Increased Visibility</h6>
-                            <p className="text-muted mb-0">
-                              Stand out from other teachers
-                            </p>
-                          </div>
-                        </div>
-                        <div className="benefit-item">
-                          <i className="bi bi-heart text-primary"></i>
-                          <div>
-                            <h6>Build Trust</h6>
-                            <p className="text-muted mb-0">
-                              Show your personality and teaching method
-                            </p>
-                          </div>
-                        </div>
-                        <div className="benefit-item">
-                          <i className="bi bi-currency-dollar text-primary"></i>
-                          <div>
-                            <h6>More Students</h6>
-                            <p className="text-muted mb-0">
-                              Attract more students to your classes
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* Current Status */}
                   {teacherPremiumStatus?.hasPremium &&
@@ -2132,47 +1993,189 @@ const TeacherDashboard = () => {
                         )}
                     </>
                   ) : (
-                    <div className="cta-section text-center">
-                      <div className="premium-card">
-                        <div className="premium-badge">
-                          <i className="bi bi-gem"></i>
-                          <span>PREMIUM</span>
+                    <>
+                      {/* Header */}
+                      <div className="text-center mb-5">
+                        <div className="premium-icon mb-3">
+                          <i className="bi bi-star-fill"></i>
                         </div>
-                        <h5 className="premium-card-title">
-                          Ready to Get Started?
-                        </h5>
-                        <p className="premium-text">
-                          Join thousands of teachers who showcase their skills
-                          with premium videos
+                        <h3 className="premium-title">
+                          Premium Teaching Experience
+                        </h3>
+                        <p className="premium-subtitle text-muted">
+                          Showcase your teaching skills and connect directly with
+                          students
                         </p>
-                        <button
-                          type="button"
-                          className="btn btn-premium"
-                          onClick={() => {
-                            setPremiumData((prev) => ({
-                              ...prev,
-                              mail: user?.email || "",
-                            }));
-                            setShowPremiumModal(true);
-                          }}
-                          disabled={premiumLoading}
-                        >
-                          {premiumLoading ? (
-                            <>
-                              <span className="spinner-border spinner-border-sm me-2"></span>
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <i className="bi bi-credit-card me-2"></i>
-                              {teacherPremiumStatus?.isPaid
-                                ? "Update Content"
-                                : "Pay $29 & Get Premium"}
-                            </>
-                          )}
-                        </button>
                       </div>
-                    </div>
+
+                      {/* Premium Pricing */}
+                      <div className="pricing-section mb-5">
+                        <div className="pricing-card">
+                          <div className="pricing-header">
+                            <h4 className="pricing-title">Premium Subscription</h4>
+                            <div className="pricing-price">
+                              <span className="price-amount">$29</span>
+                              <span className="price-period">per-month</span>
+                            </div>
+                          </div>
+                          <ul className="pricing-features">
+                            <li>
+                              <i className="bi bi-check-circle-fill me-2"></i>
+                              Verified Teacher Badge
+                            </li>
+                            <li>
+                              <i className="bi bi-check-circle-fill me-2"></i>
+                              Unlimited Posts
+                            </li>
+                            <li>
+                              <i className="bi bi-check-circle-fill me-2"></i>Direct
+                              Contact Visibility
+                            </li>
+                            <li>
+                              <i className="bi bi-check-circle-fill me-2"></i>3
+                              Teaching Video Clips
+                            </li>
+                            <li>
+                              <i className="bi bi-check-circle-fill me-2"></i>
+                              Teaching Resources Space
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Why Premium Section */}
+                      <div className="why-premium mb-5">
+                        <h4 className="section-title">
+                          <i className="bi bi-question-circle me-2"></i>
+                          Why subscription is a good choice?
+                        </h4>
+                        <div className="premium-description">
+                          <p>
+                            The students reaching your profile can see your{" "}
+                            <strong>live teaching</strong>. It makes them get a good
+                            understanding of your teaching and the impact of your
+                            lessons that can have on them.
+                          </p>
+                          <p>
+                            We allow you to{" "}
+                            <strong>
+                              share your contact details directly through the videos
+                            </strong>
+                            . So that any student who visits your profile can
+                            contact you directly without any delay.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Benefits Section */}
+                      <div className="benefits-section mb-5">
+                        <h4 className="section-title">
+                          <i className="bi bi-check-circle me-2"></i>
+                          Premium Benefits
+                        </h4>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="benefit-item">
+                              <i className="bi bi-camera-video text-primary"></i>
+                              <div>
+                                <h6>Live Teaching Showcase</h6>
+                                <p className="text-muted mb-0">
+                                  Let students see your actual teaching style
+                                </p>
+                              </div>
+                            </div>
+                            <div className="benefit-item">
+                              <i className="bi bi-person-lines-fill text-primary"></i>
+                              <div>
+                                <h6>Direct Contact Sharing</h6>
+                                <p className="text-muted mb-0">
+                                  Share contact details through your videos
+                                </p>
+                              </div>
+                            </div>
+                            <div className="benefit-item">
+                              <i className="bi bi-lightning-charge text-primary"></i>
+                              <div>
+                                <h6>Instant Connections</h6>
+                                <p className="text-muted mb-0">
+                                  Students can contact you immediately
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="benefit-item">
+                              <i className="bi bi-graph-up-arrow text-primary"></i>
+                              <div>
+                                <h6>Increased Visibility</h6>
+                                <p className="text-muted mb-0">
+                                  Stand out from other teachers
+                                </p>
+                              </div>
+                            </div>
+                            <div className="benefit-item">
+                              <i className="bi bi-heart text-primary"></i>
+                              <div>
+                                <h6>Build Trust</h6>
+                                <p className="text-muted mb-0">
+                                  Show your personality and teaching method
+                                </p>
+                              </div>
+                            </div>
+                            <div className="benefit-item">
+                              <i className="bi bi-currency-dollar text-primary"></i>
+                              <div>
+                                <h6>More Students</h6>
+                                <p className="text-muted mb-0">
+                                  Attract more students to your classes
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="cta-section text-center">
+                        <div className="premium-card">
+                          <div className="premium-badge">
+                            <i className="bi bi-gem"></i>
+                            <span>PREMIUM</span>
+                          </div>
+                          <h5 className="premium-card-title">
+                            Ready to Get Started?
+                          </h5>
+                          <p className="premium-text">
+                            Join thousands of teachers who showcase their skills
+                            with premium videos
+                          </p>
+                          <button
+                            type="button"
+                            className="btn btn-premium"
+                            onClick={() => {
+                              setPremiumData((prev) => ({
+                                ...prev,
+                                mail: user?.email || "",
+                              }));
+                              setShowPremiumModal(true);
+                            }}
+                            disabled={premiumLoading}
+                          >
+                            {premiumLoading ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <i className="bi bi-credit-card me-2"></i>
+                                {teacherPremiumStatus?.isPaid
+                                  ? "Update Content"
+                                  : "Pay $29 & Get Premium"}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -2349,7 +2352,7 @@ const TeacherDashboard = () => {
                                         disabled={loading}
                                       >
                                         <i className="bi bi-credit-card me-2"></i>
-                                        Purchase Contact ($7.00)
+                                        Purchase Contact ($5.00)
                                       </button>
                                       <button
                                         className="btn btn-outline-primary btn-sm"
@@ -2390,11 +2393,11 @@ const TeacherDashboard = () => {
                                         {request.studentEmail}
                                       </a>
                                     </p>
-                                    {request.studentPhone && (
+                                    {request.phoneNumber && (
                                       <p className="contact-item">
                                         <i className="bi bi-telephone me-2"></i>
-                                        <a href={`tel:${request.studentPhone}`}>
-                                          {request.studentPhone}
+                                        <a href={`tel:${request.phoneNumber}`}>
+                                          {request.phoneNumber}
                                         </a>
                                       </p>
                                     )}

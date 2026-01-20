@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import api from "../../api/axiosConfig";
 
 const STRIPE_SERVER_URL = import.meta.env.VITE_STRIPE_SERVER_URL;
 
@@ -26,11 +27,7 @@ const StudentPremiumSuccess = () => {
   const checkPremiumStatus = async (studentEmail, attempt = 1) => {
     try {
       // Check student premium status using your MySQL API
-      const premiumResponse = await axios.get(
-        `${STRIPE_SERVER_URL}/check-student-premium-status/${encodeURIComponent(
-          studentEmail
-        )}`
-      );
+      const premiumResponse = await api.get(`/check-student-premium-status`);
 
       if (premiumResponse.data.hasPremium && premiumResponse.data.isPaid) {
         setPremiumData(premiumResponse.data.premiumData);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import api from "../../api/axiosConfig";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -30,11 +31,11 @@ const Success = () => {
 
       try {
         // First, verify the payment status with Stripe
-        const paymentResponse = await axios.get(
-          `${API_BASE_URL}/api/check-payment/${sessionId}`
+        const paymentResponse = await api.get(
+          `/api/check-payment/${sessionId}`
         );
-
-        if (paymentResponse.data.paymentStatus !== "paid") {
+        console.log("paymentResponse", paymentResponse.data.data.paymentStatus);
+        if (paymentResponse.data.data.paymentStatus !== "paid") {
           setError("Payment not completed");
           setLoading(false);
           return;
@@ -49,13 +50,13 @@ const Success = () => {
         let requestResponse;
         if (type === "teacher_purchase") {
           // For teacher purchases, use the teacher purchase endpoint
-          requestResponse = await axios.get(
-            `${API_BASE_URL}/buy/teacher-purchases/${requestId}/${teacherId}`
+          requestResponse = await api.get(
+            `/buy/teacher-purchases/${requestId}/${teacherId}`
           );
         } else {
           // For connection requests, use the connection request endpoint
-          requestResponse = await axios.get(
-            `${API_BASE_URL}/connect/requests/${requestId}`
+          requestResponse = await api.get(
+            `/api/connect/requests/${requestId}`
           );
         }
 
@@ -75,13 +76,14 @@ const Success = () => {
               "Webhook not processed yet, attempting manual purchase..."
             );
 
-            const purchaseResponse = await axios.post(
-              `${API_BASE_URL}/connect/requests/${requestId}/purchase`,
+            const purchaseResponse = await api.post(
+              `/api/connect/requests/${requestId}/purchase`,
               {
                 teacherId: teacherId,
               }
             );
 
+            console.log("purchaseResponse", purchaseResponse);
             if (purchaseResponse.data.contactInfo) {
               setContactInfo({
                 ...purchaseResponse.data.contactInfo,
@@ -89,10 +91,10 @@ const Success = () => {
               });
               setSuccess(true);
             } else {
-              setError("Failed to retrieve contact information");
+              // setError("Failed to retrieve contact information");
             }
           } else {
-            setError("Failed to retrieve contact information");
+            // setError("Failed to retrieve contact information");
           }
         }
       } catch (error) {
@@ -224,7 +226,7 @@ const Success = () => {
                   Thank you for your purchase!
                 </h3>
                 <p className="text-muted">
-                  Your payment of <strong>$7.00</strong> has been processed
+                  Your payment of <strong>$5.00</strong> has been processed
                   successfully. You now have access to the student's contact
                   information.
                 </p>

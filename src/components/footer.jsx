@@ -35,9 +35,9 @@ const Footer = () => {
       title: "Company",
       links: [
         { name: "About Us", path: "/about" },
-        { name: "Careers", path: "/careers" },
-        { name: "Blog", path: "/blog" },
-        { name: "Press", path: "/press" },
+        // { name: "Careers", path: "/careers" },
+        // { name: "Blog", path: "/blog" },
+        // { name: "Press", path: "/press" },
       ],
     },
     {
@@ -46,7 +46,7 @@ const Footer = () => {
         { name: "Help Center", path: "/help" },
         { name: "Contact Us", path: "/contact" },
         { name: "Privacy Policy", path: "/privacy" },
-        { name: "Terms of Service", path: "/terms" },
+        // { name: "Terms of Service", path: "/terms" },
       ],
     },
   ];
@@ -156,7 +156,7 @@ const Footer = () => {
       style={{
         marginLeft:
           path === "/dashboard/teacher" || path === "/dashboard/student"
-            ? "280px"
+            ? "300px"
             : "0px",
       }}
     >
@@ -304,16 +304,8 @@ const Footer = () => {
               </p>
             </div>
             <div className="col-md-6">
-              <div className="footer-bottom-links">
-                <Link to="/privacy" className="footer-bottom-link">
-                  Privacy Policy
-                </Link>
-                <Link to="/terms" className="footer-bottom-link">
-                  Terms of Service
-                </Link>
-                <Link to="/cookies" className="footer-bottom-link">
-                  Cookie Policy
-                </Link>
+              <div className="footer-bottom-links footer-bottom-link">
+                Developed By Fortxcore
               </div>
             </div>
           </div>
@@ -402,6 +394,9 @@ const Footer = () => {
           gap: 0.5rem;
           color: #e2e8f0;
           font-size: 0.875rem;
+          background-color: rgba(255, 255, 255, 0.05);
+          padding: 0.5rem 0.75rem;
+          border-radius: 8px;
         }
 
         .stat-item i {

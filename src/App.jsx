@@ -29,6 +29,14 @@ import PremiumSuccess from "./components/stripr/premiumSucess";
 import StudentPremiumSuccess from "./components/stripr/studentPremiumSuccess";
 import AdminDashboard from "./components/dashboard/adminDashboard";
 import AdminAuth from "./components/auth/adminAuth";
+import Subjects from "./components/subjects";
+import Resources from "./components/resources";
+import TeacherResources from "./components/teacherResources";
+import Careers from "./components/careers";
+import Blog from "./components/blog";
+import Press from "./components/press";
+import Privacy from "./components/privacy";
+import Terms from "./components/terms";
 
 // Protected Route component
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -70,6 +78,14 @@ const AppLayout = () => {
           <Route path="/register/teacher" element={<TeacherAuth />} />
           <Route path="/video-demo" element={<VideoPlayer />} />
           <Route path="/help" element={<HelpCenter />} />
+          <Route path="/subjects" element={<Subjects />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/teacher-resources" element={<TeacherResources />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/press" element={<Press />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/premium-success" element={<PremiumSuccess />} />

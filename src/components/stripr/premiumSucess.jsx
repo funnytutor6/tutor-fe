@@ -36,6 +36,7 @@ const PremiumSuccess = () => {
   const [contentErrors, setContentErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  console.log("premiumData", premiumData);
   useEffect(() => {
     const processPayment = async () => {
       const sessionId = searchParams.get("session_id");
@@ -49,9 +50,10 @@ const PremiumSuccess = () => {
 
       try {
         // Verify the payment status with Stripe
-        const paymentResponse = await axios.get(
-          `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
+        const paymentResponse = await api.get(
+          `/api/check-payment/${sessionId}`
         );
+        console.log("paymentResponse", paymentResponse);
         if (paymentResponse.data.data.paymentStatus !== "paid") {
           setError("Payment not completed");
           setLoading(false);
@@ -64,11 +66,12 @@ const PremiumSuccess = () => {
         // Check premium status
         const premiumResponse = await api.get(ENDPOINTS.CHECK_TEACHER_PREMIUM);
 
+        console.log("premiumResponse.data.data.premiumData", premiumResponse.data.data.premiumData);
         if (
           premiumResponse.data.data.hasPremium &&
           premiumResponse.data.data.isPaid
         ) {
-          setPremiumData(premiumResponse.data.premiumData);
+          setPremiumData(premiumResponse.data.data.premiumData);
           updateUserPremiumStatus();
           setSuccess(true);
         } else {
@@ -216,6 +219,8 @@ const PremiumSuccess = () => {
           const premiumResponse = await api.get(
             ENDPOINTS.CHECK_TEACHER_PREMIUM
           );
+
+          console.log("premiumResponse 2", premiumResponse);
           setPremiumData(premiumResponse.data.premiumData);
           updateUserPremiumStatus();
         } else {
