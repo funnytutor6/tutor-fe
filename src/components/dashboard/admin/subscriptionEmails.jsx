@@ -7,14 +7,6 @@ const SubscriptionEmails = ({ data, isLoading }) => {
   const columns = useMemo(
     () => [
       {
-        header: "ID",
-        accessorKey: "id",
-        cell: ({ getValue }) => {
-          const id = getValue();
-          return <code>{id?.substring(0, 8)}...</code>;
-        },
-      },
-      {
         header: "Email",
         accessorKey: "email",
         cell: ({ getValue }) => (
@@ -33,14 +25,7 @@ const SubscriptionEmails = ({ data, isLoading }) => {
             {getValue()}
           </span>
         ),
-      },
-      {
-        header: "Plan",
-        accessorKey: "plan",
-        cell: ({ getValue }) => (
-          <span className="badge bg-secondary">{getValue()}</span>
-        ),
-      },
+      }
     ],
     []
   );

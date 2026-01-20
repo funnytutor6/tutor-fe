@@ -94,22 +94,28 @@ const Footer = () => {
         field: email.trim(),
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      // Axios automatically parses JSON, response data is in response.data
+      if (response.status === 201 || response.status === 200) {
         setMessage(
           "🎉 Thank you for subscribing! You'll receive amazing learning tips soon."
         );
         setMessageType("success");
         setEmail(""); // Clear the input
-      } else {
-        // Handle different error responses
-        const errorData = await response.json();
+      }
+    } catch (error) {
+      // Axios throws errors for non-2xx status codes
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const status = error.response.status;
+        const errorData = error.response.data;
 
-        if (
-          response.status === 400 &&
-          errorData.message?.includes("duplicate")
-        ) {
+        if (status === 409) {
+          // Backend returns 409 for duplicate emails
           setMessage("This email is already subscribed to our newsletter.");
+          setMessageType("error");
+        } else if (status === 400) {
+          setMessage(errorData.error || "Invalid email address.");
           setMessageType("error");
         } else {
           setMessage("Something went wrong. Please try again later.");
@@ -117,11 +123,17 @@ const Footer = () => {
         }
 
         console.error("Subscription failed:", errorData);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Network error:", error.request);
+        setMessage("Network error. Please check your connection and try again.");
+        setMessageType("error");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error:", error.message);
+        setMessage("An unexpected error occurred. Please try again.");
+        setMessageType("error");
       }
-    } catch (error) {
-      console.error("Network error:", error);
-      setMessage("Network error. Please check your connection and try again.");
-      setMessageType("error");
     } finally {
       setIsLoading(false);
     }
@@ -234,9 +246,8 @@ const Footer = () => {
               {/* Message Display */}
               {message && (
                 <div
-                  className={`alert ${
-                    messageType === "success" ? "alert-success" : "alert-danger"
-                  } newsletter-alert`}
+                  className={`alert ${messageType === "success" ? "alert-success" : "alert-danger"
+                    } newsletter-alert`}
                 >
                   {message}
                 </div>
