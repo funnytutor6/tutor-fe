@@ -102,6 +102,7 @@ export const ENDPOINTS = {
   GET_ADMIN_PROFILE: "/api/admin/profile",
   UPDATE_ADMIN_PROFILE: "/api/admin/profile",
   GET_ALL_PREMIUM_STUDENTS_FOR_ADMIN: "/api/admin/students/premium",
+  GET_ADMIN_REPORTS: "/api/admin/reports",
   GET_ALL_TEACHER_SUBSCRIPTIONS_FOR_ADMIN: "/api/admin/teacher-subscriptions",
 
   // Subscriptions

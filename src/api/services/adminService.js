@@ -22,8 +22,7 @@ export const adminService = {
       params.append("search", search);
     }
     const response = await api.get(
-      `${
-        ENDPOINTS.GET_ALL_TEACHER_SUBSCRIPTIONS_FOR_ADMIN
+      `${ENDPOINTS.GET_ALL_TEACHER_SUBSCRIPTIONS_FOR_ADMIN
       }?${params.toString()}`
     );
     return response.data;
@@ -52,6 +51,14 @@ export const adminService = {
     const response = await api.put(ENDPOINTS.UPDATE_TEACHER_STATUS(teacherId), {
       status,
     });
+    return response.data;
+  },
+
+  /**
+   * Get reports data
+   */
+  getReportsData: async () => {
+    const response = await api.get(ENDPOINTS.GET_ADMIN_REPORTS);
     return response.data;
   },
 };

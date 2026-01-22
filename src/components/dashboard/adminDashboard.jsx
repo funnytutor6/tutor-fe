@@ -16,6 +16,7 @@ import AdminProfile from "./admin/adminProfile";
 import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Reports from "./admin/Reports";
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -99,10 +100,10 @@ const AdminDashboard = () => {
           expiryDate: item.currentPeriodEnd
             ? new Date(item.currentPeriodEnd).toLocaleDateString()
             : item.paymentDate
-            ? new Date(
+              ? new Date(
                 new Date(item.paymentDate).getTime() + 365 * 24 * 60 * 60 * 1000
               ).toLocaleDateString()
-            : "N/A",
+              : "N/A",
           isPaid: item.ispaid,
           paymentAmount: item.paymentAmount,
           subscriptionStatus: item.subscriptionStatus,
@@ -128,8 +129,8 @@ const AdminDashboard = () => {
           subscriptionType: item.ispayed ? "Premium" : "Free",
           expiryDate: item.paymentDate
             ? new Date(
-                new Date(item.paymentDate).getTime() + 365 * 24 * 60 * 60 * 1000
-              ).toLocaleDateString()
+              new Date(item.paymentDate).getTime() + 365 * 24 * 60 * 60 * 1000
+            ).toLocaleDateString()
             : "N/A",
           isPaid: item.ispayed,
           paymentAmount: item.paymentAmount,
@@ -272,6 +273,12 @@ const AdminDashboard = () => {
       title: "General",
       items: [
         {
+          id: "reports",
+          label: "Reports",
+          icon: "envelope-check",
+          badge: null,
+        },
+        {
           id: "emails",
           label: "Newsletter Subscribers",
           icon: "envelope-check",
@@ -345,18 +352,16 @@ const AdminDashboard = () => {
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             >
               <i
-                className={`bi bi-${
-                  sidebarCollapsed ? "chevron-right" : "chevron-left"
-                }`}
+                className={`bi bi-${sidebarCollapsed ? "chevron-right" : "chevron-left"
+                  }`}
               ></i>
             </button>
           </div>
         </div>
 
         <nav
-          className={`nav flex p-2 ${
-            sidebarCollapsed ? "align-items-center" : ""
-          }`}
+          className={`nav flex p-2 ${sidebarCollapsed ? "align-items-center" : ""
+            }`}
           style={{ overflowY: "scroll", maxHeight: "calc(84vh - 100px)" }}
         >
           {menuSections.map((section, sectionIndex) => (
@@ -382,9 +387,8 @@ const AdminDashboard = () => {
               {section.items.map((item) => (
                 <button
                   key={item.id}
-                  className={`nav-link text-start mb-1 rounded  ${
-                    activeSection === item.id ? "text-white" : "text-dark"
-                  }`}
+                  className={`nav-link text-start mb-1 rounded  ${activeSection === item.id ? "text-white" : "text-dark"
+                    }`}
                   onClick={() => setActiveSection(item.id)}
                   style={{
                     padding: "12px 16px",
@@ -412,18 +416,16 @@ const AdminDashboard = () => {
                 >
                   <div className="d-flex align-items-center ">
                     <i
-                      className={`bi bi-${item.icon} ${
-                        !sidebarCollapsed ? "me-3" : ""
-                      }`}
+                      className={`bi bi-${item.icon} ${!sidebarCollapsed ? "me-3" : ""
+                        }`}
                     ></i>
                     {!sidebarCollapsed && (
                       <>
                         <span className="flex-grow-1">{item.label}</span>
                         {item.badge !== null && item.badge !== undefined && (
                           <span
-                            className={`badge bg-${
-                              item.badgeClass || "primary"
-                            } ms-2`}
+                            className={`badge bg-${item.badgeClass || "primary"
+                              } ms-2`}
                             style={{
                               backgroundColor:
                                 activeSection === item.id
@@ -585,6 +587,13 @@ const AdminDashboard = () => {
                 <div className="card shadow-sm">
                   <div className="card-body">
                     <AdminProfile />
+                  </div>
+                </div>
+              )}
+              {activeSection === "reports" && (
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <Reports />
                   </div>
                 </div>
               )}
