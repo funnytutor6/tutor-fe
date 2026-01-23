@@ -30,6 +30,7 @@ const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState("requests");
   const [loading, setLoading] = useState(false);
 
+  console.log("user", user);
   // Connection requests states
   const [requests, setRequests] = useState([]);
   const [requestsCount, setRequestsCount] = useState({
@@ -1049,18 +1050,63 @@ const TeacherDashboard = () => {
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form fields
+    const errors = {};
+    
+    // Validate name (required)
+    const trimmedName = profileForm.name?.trim();
+    if (!trimmedName || trimmedName.length === 0) {
+      errors.name = "Name is required";
+    } else if (trimmedName.length < 2) {
+      errors.name = "Name must be at least 2 characters";
+    }
+    
+    // Validate email (required)
+    const trimmedEmail = profileForm.email?.trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!trimmedEmail || trimmedEmail.length === 0) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(trimmedEmail)) {
+      errors.email = "Please enter a valid email address";
+    }
+    
+    // Validate phone number (optional, but if provided must be valid)
+    const trimmedPhone = profileForm.phoneNumber?.trim();
+    if (trimmedPhone && trimmedPhone.length > 0) {
+      // Remove common phone number separators for validation
+      const digitsOnly = trimmedPhone.replace(/\D/g, "");
+      // Phone should have 7-15 digits (international format)
+      if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+        errors.phoneNumber = "Please enter a valid phone number (7-15 digits)";
+      }
+    }
+    
+    // Validate city/town (optional, but if provided must not be empty)
+    const trimmedCity = profileForm.cityOrTown?.trim();
+    if (trimmedCity && trimmedCity.length > 0 && trimmedCity.length < 2) {
+      errors.cityOrTown = "City/Town must be at least 2 characters";
+    }
+    
+    // If there are validation errors, show them and return
+    if (Object.keys(errors).length > 0) {
+      const errorMessages = Object.values(errors).join(". ");
+      toast.error(errorMessages, { id: "profile-submit" });
+      return;
+    }
+    
     try {
       setLoading(true);
       const loadingToast = toast.loading("Updating profile...", {
         id: "profile-submit",
       });
 
-      // Prepare update data
+      // Prepare update data with trimmed values
       const updateData = {
-        name: profileForm.name,
-        email: profileForm.email,
-        phoneNumber: profileForm.phoneNumber,
-        cityOrTown: profileForm.cityOrTown,
+        name: trimmedName,
+        email: trimmedEmail,
+        phoneNumber: trimmedPhone || "",
+        cityOrTown: trimmedCity || "",
       };
 
       // Only include profilePhotoUrl if a new image was uploaded
@@ -1078,10 +1124,10 @@ const TeacherDashboard = () => {
 
       const updatedUserData = {
         ...user,
-        name: profileForm.name,
-        email: profileForm.email,
-        phoneNumber: profileForm.phoneNumber,
-        cityOrTown: profileForm.cityOrTown,
+        name: updateData.name,
+        email: updateData.email,
+        phoneNumber: updateData.phoneNumber,
+        cityOrTown: updateData.cityOrTown,
         profilePhoto:
           response.data.profilePhoto ||
           profileForm.profilePhotoUrl ||
@@ -2802,6 +2848,7 @@ const TeacherDashboard = () => {
                     value={premiumData.mail}
                     onChange={handlePremiumInputChange}
                     placeholder="Enter your email"
+                    readOnly
                   />
                   {premiumErrors.mail && (
                     <div className="invalid-feedback">{premiumErrors.mail}</div>
