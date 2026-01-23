@@ -101,7 +101,7 @@ const AdminDashboard = () => {
             ? new Date(item.currentPeriodEnd).toLocaleDateString()
             : item.paymentDate
               ? new Date(
-                new Date(item.paymentDate).getTime() + 365 * 24 * 60 * 60 * 1000
+                new Date(item.paymentDate).getTime() + 30 * 24 * 60 * 60 * 1000
               ).toLocaleDateString()
               : "N/A",
           isPaid: item.ispaid,
@@ -129,7 +129,7 @@ const AdminDashboard = () => {
           subscriptionType: item.ispayed ? "Premium" : "Free",
           expiryDate: item.paymentDate
             ? new Date(
-              new Date(item.paymentDate).getTime() + 365 * 24 * 60 * 60 * 1000
+              new Date(item.paymentDate).getTime() + 30 * 24 * 60 * 60 * 1000
             ).toLocaleDateString()
             : "N/A",
           isPaid: item.ispayed,

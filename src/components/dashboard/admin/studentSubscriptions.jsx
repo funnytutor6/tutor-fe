@@ -109,7 +109,7 @@ const StudentSubscriptions = () => {
           if (row.original.paymentDate) {
             const paymentDate = new Date(row.original.paymentDate);
             const oneYearLater = new Date(
-              paymentDate.getTime() + 365 * 24 * 60 * 60 * 1000
+              paymentDate.getTime() + 30 * 24 * 60 * 60 * 1000
             );
             return oneYearLater.toLocaleDateString();
           }
