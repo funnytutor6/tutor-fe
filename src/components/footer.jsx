@@ -46,18 +46,18 @@ const Footer = () => {
         { name: "Help Center", path: "/help" },
         { name: "Contact Us", path: "/contact" },
         { name: "Privacy Policy", path: "/privacy" },
-        // { name: "Terms of Service", path: "/terms" },
+        { name: "Terms of Service", path: "/terms" },
       ],
     },
   ];
 
   // Social media links
   const socialLinks = [
-    { icon: "bi-facebook", url: "#" },
-    { icon: "bi-twitter", url: "#" },
-    { icon: "bi-instagram", url: "#" },
-    { icon: "bi-linkedin", url: "#" },
-    { icon: "bi-youtube", url: "#" },
+    { icon: "bi-facebook", url: "https://www.facebook.com/" },
+    { icon: "bi-twitter", url: "https://www.twitter.com/" },
+    { icon: "bi-instagram", url: "https://www.instagram.com/" },
+    { icon: "bi-linkedin", url: "https://www.linkedin.com/" },
+    { icon: "bi-youtube", url: "https://www.youtube.com/" },
   ];
 
   // Email validation function
@@ -150,6 +150,32 @@ const Footer = () => {
     }
   }, [message]);
 
+  const location = useLocation();
+  
+  // Track if footer link was clicked
+  const [shouldScrollOnPathChange, setShouldScrollOnPathChange] = React.useState(false);
+
+  // Scroll to top after navigation completes
+  React.useEffect(() => {
+    if (shouldScrollOnPathChange) {
+      // Small delay to ensure page has rendered after navigation
+      const timer = setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+        setShouldScrollOnPathChange(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, shouldScrollOnPathChange]);
+
+  // Handle footer link click - mark that we should scroll after navigation
+  const handleLinkClick = () => {
+    setShouldScrollOnPathChange(true);
+  };
+
   return (
     <footer
       className="footer"
@@ -167,7 +193,11 @@ const Footer = () => {
             {/* Brand Column */}
             <div className="col-lg-4">
               <div className="footer-brand">
-                <Link to="/" className="d-flex align-items-center mb-3 ">
+                <Link 
+                  to="/" 
+                  className="d-flex align-items-center mb-3 "
+                  onClick={handleLinkClick}
+                >
                   <div className="logo-icon me-3">
                     <i className="bi bi-emoji-laughing-fill"></i>
                     <div className="academic-badge">
@@ -217,7 +247,11 @@ const Footer = () => {
                 <ul className="footer-links">
                   {section.links.map((link, linkIndex) => (
                     <li key={linkIndex}>
-                      <Link to={link.path} className="footer-link">
+                      <Link 
+                        to={link.path} 
+                        className="footer-link"
+                        onClick={handleLinkClick}
+                      >
                         {link.name}
                       </Link>
                     </li>
