@@ -2274,7 +2274,7 @@ const TeacherDashboard = () => {
                     </p>
                   </div>
                 ) : (
-                  <div className="requests-list" style={{ overflow: "unset" }}>
+                  <div className="requests-list" style={{ overflowX: "hidden" }}>
                     {requests?.map((request) => (
                       <div key={request.id} className="request-card mb-3">
                         <div className="row align-items-center">
