@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const AdminInfo = ({ adminDetails, stats }) => {
+const AdminInfo = ({ adminDetails, stats, onNavigate }) => {
   const statCards = [
     {
       title: "Total Users",
@@ -10,6 +10,7 @@ const AdminInfo = ({ adminDetails, stats }) => {
       icon: "bi-people-fill",
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       iconBg: "rgba(255, 255, 255, 0.2)",
+      navigateTo: "all-students",
     },
     {
       title: "Paid Subscriptions",
@@ -17,6 +18,7 @@ const AdminInfo = ({ adminDetails, stats }) => {
       icon: "bi-check-circle-fill",
       gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
       iconBg: "rgba(255, 255, 255, 0.2)",
+      navigateTo: "teachers",
     },
     {
       title: "Pending Approvals",
@@ -24,13 +26,15 @@ const AdminInfo = ({ adminDetails, stats }) => {
       icon: "bi-clock-history",
       gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
       iconBg: "rgba(255, 255, 255, 0.2)",
+      navigateTo: "pending",
     },
     {
-      title: "Total Teachers",
+      title: "Total Tutors",
       value: stats.totalTeachers || 0,
       icon: "bi-person-workspace",
       gradient: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
       iconBg: "rgba(255, 255, 255, 0.2)",
+      navigateTo: "all-teachers",
     },
   ];
 
@@ -274,6 +278,7 @@ const AdminInfo = ({ adminDetails, stats }) => {
                 cursor: "pointer",
                 height: "100%",
               }}
+              onClick={() => onNavigate && onNavigate(card.navigateTo)}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
                 e.currentTarget.style.boxShadow =
@@ -302,6 +307,13 @@ const AdminInfo = ({ adminDetails, stats }) => {
                     style={{ fontSize: "1.75rem" }}
                   ></i>
                 </div>
+                <i
+                  className="bi bi-arrow-right-circle"
+                  style={{
+                    fontSize: "1.25rem",
+                    opacity: 0.7,
+                  }}
+                ></i>
               </div>
               <div>
                 <div

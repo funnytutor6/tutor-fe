@@ -78,7 +78,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
             color: 'white',
             cursor: 'pointer',
             transition: 'all 0.3s ease',
-            fontSize: '1.2rem'
+            fontSize: '1.2rem',
+            zIndex: 10000
           }}
           onClick={onClose}
           onMouseEnter={(e) => {
@@ -460,6 +461,7 @@ const ExampleUsage = () => {
   };
 
   const handleCloseModal = () => {
+    console.log("Closing modal");
     setShowRegistrationModal(false);
   };
 
@@ -487,10 +489,10 @@ const ExampleUsage = () => {
       </button>
 
       {/* Registration Selection Modal */}
-      <RegistrationSelectionModal
+      {showRegistrationModal && <RegistrationSelectionModal
         isOpen={showRegistrationModal}
         onClose={handleCloseModal}
-      />
+      />}
     </div>
   );
 };

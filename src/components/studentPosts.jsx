@@ -219,22 +219,17 @@ const StudentPosts = () => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
-    if (!userData) {
-      window.location.href = "/login/student";
-      return;
-    }
-    setCurrentUser(userData);
 
     fetchAllPosts();
 
     // Only fetch user's posts if they are a student
-    if (userData.role === "student" && userData.studentId) {
-      fetchMyPosts(userData.studentId);
+    if (userData?.role === "student" && userData?.studentId) {
+      fetchMyPosts(userData?.studentId);
     }
 
     // If user is a teacher, fetch their purchases and premium status
-    if (userData.role === "teacher" && userData.teacherId) {
-      fetchTeacherPurchases(userData.teacherId);
+    if (userData?.role === "teacher" && userData?.teacherId) {
+      fetchTeacherPurchases(userData?.teacherId);
       fetchTeacherPremiumStatus();
     }
   }, []);
@@ -415,8 +410,8 @@ const StudentPosts = () => {
       console.error("Error response:", error.response?.data);
       setError(
         error.response?.data?.error ||
-          error.message ||
-          "Failed to create checkout session"
+        error.message ||
+        "Failed to create checkout session"
       );
       setPurchaseLoading((prev) => ({ ...prev, [post.id]: false }));
     }
@@ -808,9 +803,8 @@ const StudentPosts = () => {
                       <label className="form-label">Subject *</label>
                       <input
                         type="text"
-                        className={`form-control ${
-                          validationErrors.subject ? "is-invalid" : ""
-                        }`}
+                        className={`form-control ${validationErrors.subject ? "is-invalid" : ""
+                          }`}
                         value={formData.subject}
                         onChange={(e) =>
                           handleInputChange("subject", e.target.value)
@@ -828,9 +822,8 @@ const StudentPosts = () => {
                       <label className="form-label">Headline *</label>
                       <input
                         type="text"
-                        className={`form-control ${
-                          validationErrors.headline ? "is-invalid" : ""
-                        }`}
+                        className={`form-control ${validationErrors.headline ? "is-invalid" : ""
+                          }`}
                         value={formData.headline}
                         onChange={(e) =>
                           handleInputChange("headline", e.target.value)
@@ -847,9 +840,8 @@ const StudentPosts = () => {
                     <div className="col-12">
                       <label className="form-label">Description *</label>
                       <textarea
-                        className={`form-control ${
-                          validationErrors.description ? "is-invalid" : ""
-                        }`}
+                        className={`form-control ${validationErrors.description ? "is-invalid" : ""
+                          }`}
                         rows="4"
                         value={formData.description}
                         onChange={(e) =>
@@ -908,9 +900,8 @@ const StudentPosts = () => {
                     ) : (
                       <>
                         <i
-                          className={`bi ${
-                            editingPost ? "bi-check-circle" : "bi-plus-circle"
-                          } me-2`}
+                          className={`bi ${editingPost ? "bi-check-circle" : "bi-plus-circle"
+                            } me-2`}
                         ></i>
                         {editingPost ? "Update Post" : "Create Post"}
                       </>
@@ -975,23 +966,21 @@ const StudentPosts = () => {
                   </div>
                 </div>
                 <div
-                  className={`alert ${
-                    teacherPremiumStatus?.isPaid &&
+                  className={`alert ${teacherPremiumStatus?.isPaid &&
                     !purchasedPosts.has(selectedContact?.postId || "")
-                      ? "alert-warning"
-                      : "alert-info"
-                  } mt-3`}
+                    ? "alert-warning"
+                    : "alert-info"
+                    } mt-3`}
                 >
                   <i
-                    className={`bi ${
-                      teacherPremiumStatus?.isPaid &&
+                    className={`bi ${teacherPremiumStatus?.isPaid &&
                       !purchasedPosts.has(selectedContact?.postId || "")
-                        ? "bi-star-fill"
-                        : "bi-info-circle"
-                    } me-2`}
+                      ? "bi-star-fill"
+                      : "bi-info-circle"
+                      } me-2`}
                   ></i>
                   {teacherPremiumStatus?.isPaid &&
-                  !purchasedPosts.has(selectedContact?.postId || "") ? (
+                    !purchasedPosts.has(selectedContact?.postId || "") ? (
                     <>
                       You have accessed this student's contact information via
                       your Premium subscription. Please contact them directly to
@@ -1084,19 +1073,18 @@ const StudentPosts = () => {
                             className={`lesson-type-badge ${post.lessonType}`}
                           >
                             <i
-                              className={`bi ${
-                                post.lessonType === "online"
-                                  ? "bi-laptop"
-                                  : post.lessonType === "in-person"
+                              className={`bi ${post.lessonType === "online"
+                                ? "bi-laptop"
+                                : post.lessonType === "in-person"
                                   ? "bi-geo-alt"
                                   : "bi-hybrid"
-                              } me-1`}
+                                } me-1`}
                             ></i>
                             {post.lessonType === "online"
                               ? "Online"
                               : post.lessonType === "in-person"
-                              ? "In-Person"
-                              : "Both online and In Person"}
+                                ? "In-Person"
+                                : "Both online and In Person"}
                           </span>
                           <span className="subject-badge">{post.subject}</span>
                           {post.grade && (
@@ -1105,8 +1093,8 @@ const StudentPosts = () => {
                               {post.grade === "student"
                                 ? "K-12 Student"
                                 : post.grade === "university-student"
-                                ? "University"
-                                : "Adult Learner"}
+                                  ? "University"
+                                  : "Adult Learner"}
                             </span>
                           )}
                           {currentUser?.role === "teacher" && (

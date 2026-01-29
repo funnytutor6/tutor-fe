@@ -217,11 +217,11 @@ const AdminDashboard = () => {
       ],
     },
     {
-      title: "Teachers",
+      title: "Tutors",
       items: [
         {
           id: "all-teachers",
-          label: "All Teachers",
+          label: "All Tutors",
           icon: "people",
           badge: totalTeachersCount,
         },
@@ -505,7 +505,11 @@ const AdminDashboard = () => {
               {activeSection === "dashboard" && (
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <AdminInfo adminDetails={adminDetails} stats={stats} />
+                    <AdminInfo
+                      adminDetails={adminDetails}
+                      stats={stats}
+                      onNavigate={setActiveSection}
+                    />
                   </div>
                 </div>
               )}
