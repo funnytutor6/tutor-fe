@@ -823,12 +823,12 @@ const TeacherAuth = () => {
                 <div className="text-center mb-4">
                   <i className="bi bi-person-workspace display-4 text-primary mb-3"></i>
                   <h2 className="fw-bold">
-                    {isLogin ? "Teacher Login" : "Teacher Registration"}
+                    {isLogin ? "Tutor Login" : "Tutor Registration"}
                   </h2>
                   <p className="text-muted">
                     {isLogin
                       ? "Welcome back! Please login to your account."
-                      : "Create your teacher account to start offering lessons"}
+                      : "Create your Tutor account to start offering lessons"}
                   </p>
                 </div>
 
@@ -1008,11 +1008,10 @@ const TeacherAuth = () => {
                           )}
                           <input
                             type="tel"
-                            className={`form-control ${
-                              countryCode
-                                ? "phone-input-with-code"
-                                : "auth-form-control"
-                            }`}
+                            className={`form-control ${countryCode
+                              ? "phone-input-with-code"
+                              : "auth-form-control"
+                              }`}
                             id="phoneNumber"
                             name="phoneNumber"
                             value={
@@ -1152,9 +1151,8 @@ const TeacherAuth = () => {
                     ) : (
                       <>
                         <i
-                          className={`bi ${
-                            isLogin ? "bi-box-arrow-in-right" : "bi-person-plus"
-                          } me-2`}
+                          className={`bi ${isLogin ? "bi-box-arrow-in-right" : "bi-person-plus"
+                            } me-2`}
                         ></i>
                         {isLogin ? "Login" : "Create Account"}
                       </>
@@ -1188,7 +1186,7 @@ const TeacherAuth = () => {
                         <h6 className="alert-heading mb-1">For Teachers</h6>
                         <small>
                           {isLogin
-                            ? "Login to access your teacher dashboard and manage your tutoring services."
+                            ? "Login to access your Tutor dashboard and manage your tutoring services."
                             : "Join our platform to offer tutoring services and connect with students looking for help."}
                         </small>
                       </div>

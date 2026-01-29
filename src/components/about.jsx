@@ -1,4 +1,4 @@
-import React, { useEffect}from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -6,7 +6,7 @@ import Footer from './footer';
 
 
 const About = () => {
-  useEffect(() => { window.scrollTo(0, 0);},[])
+  useEffect(() => { window.scrollTo(0, 0); }, [])
   // Team members data
   const teamMembers = [
     {
@@ -68,21 +68,21 @@ const About = () => {
               </p>
               <div className="d-flex gap-3">
                 <Link to="/find-teachers" className="btn btn-primary btn-lg">
-                  Find a Teacher
+                  Find a Tutor
                 </Link>
               </div>
-               <div className="d-flex gap-3 mt-3 ">
+              <div className="d-flex gap-3 mt-3 ">
                 <Link to="/student-posts" className="btn btn-primary btn-lg ">
                   Find Students
                 </Link>
               </div>
             </div>
             <div className="col-lg-6 d-none d-lg-block">
-              <img 
-                src="https://criancasatortoeadireitos.wordpress.com/wp-content/uploads/2018/11/snews.png" 
-                alt="Students collaborating" 
+              <img
+                src="https://criancasatortoeadireitos.wordpress.com/wp-content/uploads/2018/11/snews.png"
+                alt="Students collaborating"
                 className="img-fluid rounded-3 shadow-lg"
-                style={{ 
+                style={{
                   width: '100%',
                   height: '400px',
                   objectFit: 'cover',
@@ -165,12 +165,12 @@ const About = () => {
               <h2 className="section-title">Our Story</h2>
               <div className="company-story-content">
                 <p className="story-paragraph">
-                  Funny Study was born from a simple yet powerful vision: to bridge the gap between passionate educators and eager learners worldwide. 
+                  Funny Study was born from a simple yet powerful vision: to bridge the gap between passionate educators and eager learners worldwide.
                   We believe that education should be accessible, personalized, and transformative for everyone.
                 </p>
                 <p className="story-paragraph">
-                  Our platform connects thousands of qualified teachers with students seeking knowledge, creating meaningful learning experiences 
-                  that transcend geographical boundaries. Whether you're a student looking to expand your horizons or a teacher wanting to share 
+                  Our platform connects thousands of qualified teachers with students seeking knowledge, creating meaningful learning experiences
+                  that transcend geographical boundaries. Whether you're a student looking to expand your horizons or a Tutor wanting to share
                   your expertise, Funny Study provides the perfect environment for educational growth.
                 </p>
                 <div className="company-stats">
@@ -204,12 +204,12 @@ const About = () => {
             <div className="col-lg-8 text-center">
               <h2 className="display-5 fw-bold mb-4">Join Our Educational Revolution</h2>
               <p className="lead mb-5">
-                Whether you're a teacher looking to share your knowledge or a student seeking to learn,
+                Whether you're a Tutor looking to share your knowledge or a student seeking to learn,
                 Funny Study is your gateway to a world of educational opportunities.
               </p>
               <div className="d-flex gap-3 justify-content-center">
                 <Link to="/register/teacher" className="btn btn-light btn-lg">
-                  Become a Teacher
+                  Become a Tutor
                 </Link>
                 <Link to="/register/student" className="btn btn-outline-light btn-lg">
                   Join as Student
@@ -220,7 +220,7 @@ const About = () => {
         </div>
       </section>
 
-      
+
 
       <style jsx>{`
         .about-hero {

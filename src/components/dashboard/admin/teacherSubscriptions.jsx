@@ -163,7 +163,7 @@ const TeacherSubscriptions = ({ isLoading: parentLoading }) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>
           <i className="bi bi-person-workspace me-2"></i>
-          Teacher Subscriptions
+          Tutor Subscriptions
         </h4>
         <span className="badge bg-primary">{totalSubscriptions} teachers</span>
       </div>

@@ -191,10 +191,10 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                     className="modal-title mb-0"
                     style={{ fontSize: "1.5rem", fontWeight: "600" }}
                   >
-                    Teacher Post Details
+                    Tutor Post Details
                   </h5>
                   <small style={{ opacity: 0.9 }}>
-                    Complete post and teacher information
+                    Complete post and Tutor information
                   </small>
                 </div>
               </div>
@@ -226,7 +226,7 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                 </div>
               ) : postData ? (
                 <>
-                  {/* Teacher Profile Header */}
+                  {/* Tutor Profile Header */}
                   <div
                     className="text-center mb-4 p-3 rounded-3"
                     style={{
@@ -274,7 +274,7 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                           className="mb-1"
                           style={{ fontWeight: "700", color: "#333" }}
                         >
-                          {postData.teacher?.name || "Unknown Teacher"}
+                          {postData.teacher?.name || "Unknown Tutor"}
                         </h5>
                         <div className="text-muted small">
                           <i className="bi bi-envelope me-1"></i>
@@ -321,12 +321,12 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                         value={
                           postData.post?.lessonType
                             ? postData.post.lessonType
-                                .split("-")
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(" ")
+                              .split("-")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() + word.slice(1)
+                              )
+                              .join(" ")
                             : null
                         }
                         color="#8b5cf6"
@@ -336,9 +336,8 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                         label="Price"
                         value={
                           postData.post?.price
-                            ? `${postData.post.price} ${
-                                postData.post.priceType || "per hour"
-                              }`
+                            ? `${postData.post.price} ${postData.post.priceType || "per hour"
+                            }`
                             : null
                         }
                         color="#f59e0b"
@@ -449,22 +448,21 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                       />
                       <InfoCard
                         icon="telephone-fill"
-                        label="Teacher Phone"
+                        label="Tutor Phone"
                         value={postData.teacher?.phoneNumber}
                         color="#10b981"
                       />
                       <InfoCard
                         icon="geo-alt-fill"
-                        label="Teacher Location"
+                        label="Tutor Location"
                         value={
                           postData.teacher?.cityOrTown ||
-                          postData.teacher?.country
-                            ? `${postData.teacher.cityOrTown || ""}${
-                                postData.teacher.cityOrTown &&
-                                postData.teacher.country
-                                  ? ", "
-                                  : ""
-                              }${postData.teacher.country || ""}`
+                            postData.teacher?.country
+                            ? `${postData.teacher.cityOrTown || ""}${postData.teacher.cityOrTown &&
+                              postData.teacher.country
+                              ? ", "
+                              : ""
+                            }${postData.teacher.country || ""}`
                             : null
                         }
                         color="#3b82f6"
@@ -475,13 +473,13 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                         value={
                           postData.post?.created
                             ? new Date(
-                                postData.post.created
-                              ).toLocaleDateString("en-US", {
-                                weekday: "short",
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              })
+                              postData.post.created
+                            ).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
                             : null
                         }
                         color="#8b5cf6"

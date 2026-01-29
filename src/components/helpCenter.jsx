@@ -16,12 +16,12 @@ const HelpCenter = () => {
         {
           id: 1,
           question: 'How do I create an account?',
-          answer: 'To create an account, click on the "Sign Up" button in the top right corner. Choose whether you\'re a student or teacher, fill in your details, and verify your email address.'
+          answer: 'To create an account, click on the "Sign Up" button in the top right corner. Choose whether you\'re a student or Tutor, fill in your details, and verify your email address.'
         },
         {
           id: 2,
-          question: 'What\'s the difference between student and teacher accounts?',
-          answer: 'Student accounts can search for teachers, send connection requests, and access learning materials. Teacher accounts can create teaching posts, receive student requests, and manage their teaching profile.'
+          question: 'What\'s the difference between student and Tutor accounts?',
+          answer: 'Student accounts can search for teachers, send connection requests, and access learning materials. Tutor accounts can create teaching posts, receive student requests, and manage their teaching profile.'
         },
         {
           id: 3,
@@ -30,8 +30,8 @@ const HelpCenter = () => {
         },
         {
           id: 4,
-          question: 'How do I connect with a teacher?',
-          answer: 'Once you find a teacher you like, click "View Profile" to see their details and sample videos. Then click "Connect Now" to send a connection request with an optional message.'
+          question: 'How do I connect with a Tutor?',
+          answer: 'Once you find a Tutor you like, click "View Profile" to see their details and sample videos. Then click "Connect Now" to send a connection request with an optional message.'
         }
       ]
     },
@@ -68,7 +68,7 @@ const HelpCenter = () => {
         {
           id: 9,
           question: 'How do I create a teaching post?',
-          answer: 'In your teacher dashboard, click "Create New Post". Fill in your subject, description, pricing, location preferences, and lesson type. Add sample videos if you have them.'
+          answer: 'In your Tutor dashboard, click "Create New Post". Fill in your subject, description, pricing, location preferences, and lesson type. Add sample videos if you have them.'
         },
         {
           id: 10,
@@ -83,7 +83,7 @@ const HelpCenter = () => {
         {
           id: 12,
           question: 'How do I upload sample videos?',
-          answer: 'You can upload sample videos through the premium teacher system. Contact support to upgrade your account and add video content to showcase your teaching style.'
+          answer: 'You can upload sample videos through the premium Tutor system. Contact support to upgrade your account and add video content to showcase your teaching style.'
         }
       ]
     },
@@ -98,17 +98,17 @@ const HelpCenter = () => {
         },
         {
           id: 14,
-          question: 'Can I see teacher videos before connecting?',
+          question: 'Can I see Tutor videos before connecting?',
           answer: 'Yes! Many teachers have sample videos available. Click "View Profile" to see their information and any available sample teaching videos.'
         },
         {
           id: 15,
           question: 'How does the connection process work?',
-          answer: 'Send a connection request to a teacher with an optional message. Once the teacher accepts, you\'ll get access to their contact information to arrange lessons.'
+          answer: 'Send a connection request to a Tutor with an optional message. Once the Tutor accepts, you\'ll get access to their contact information to arrange lessons.'
         },
         {
           id: 16,
-          question: 'What if a teacher doesn\'t respond to my request?',
+          question: 'What if a Tutor doesn\'t respond to my request?',
           answer: 'Teachers have different response times. If you don\'t hear back within a few days, you can try connecting with other teachers or send a follow-up message.'
         }
       ]
@@ -135,7 +135,7 @@ const HelpCenter = () => {
         {
           id: 20,
           question: 'Can I get a refund?',
-          answer: 'Refund policies depend on the specific service. For platform subscriptions, contact our support team. For lesson payments, discuss refund terms directly with your teacher.'
+          answer: 'Refund policies depend on the specific service. For platform subscriptions, contact our support team. For lesson payments, discuss refund terms directly with your Tutor.'
         }
       ]
     },
@@ -145,7 +145,7 @@ const HelpCenter = () => {
       faqs: [
         {
           id: 21,
-          question: 'Why can\'t I see teacher videos?',
+          question: 'Why can\'t I see Tutor videos?',
           answer: 'Make sure your browser supports video playback and check your internet connection. Some teachers may not have uploaded sample videos yet.'
         },
         {
@@ -172,9 +172,9 @@ const HelpCenter = () => {
     if (!searchQuery) {
       return faqCategories[activeCategory].faqs;
     }
-    
+
     const allFaqs = Object.values(faqCategories).flatMap(category => category.faqs);
-    return allFaqs.filter(faq => 
+    return allFaqs.filter(faq =>
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -198,7 +198,7 @@ const HelpCenter = () => {
               <p className="lead mb-5">
                 Find answers to common questions and get the help you need to make the most of our platform.
               </p>
-              
+
               {/* Search Bar */}
               <div className="search-container">
                 <div className="input-group input-group-lg">
@@ -231,9 +231,8 @@ const HelpCenter = () => {
                   {Object.entries(faqCategories).map(([key, category]) => (
                     <button
                       key={key}
-                      className={`list-group-item list-group-item-action d-flex align-items-center ${
-                        activeCategory === key ? 'active' : ''
-                      }`}
+                      className={`list-group-item list-group-item-action d-flex align-items-center ${activeCategory === key ? 'active' : ''
+                        }`}
                       onClick={() => {
                         setActiveCategory(key);
                         setSearchQuery('');
@@ -323,7 +322,7 @@ const HelpCenter = () => {
                     Can't find what you're looking for? Our support team is here to help!
                   </p>
                 </div>
-                
+
                 <div className="row">
                   <div className="col-md-4 text-center mb-3">
                     <div className="support-option">
@@ -335,7 +334,7 @@ const HelpCenter = () => {
                       </a>
                     </div>
                   </div>
-                  
+
                   <div className="col-md-4 text-center mb-3">
                     <div className="support-option">
                       <i className="bi bi-chat-dots-fill text-success mb-2"></i>
@@ -346,7 +345,7 @@ const HelpCenter = () => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="col-md-4 text-center mb-3">
                     <div className="support-option">
                       <i className="bi bi-telephone-fill text-info mb-2"></i>

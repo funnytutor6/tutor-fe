@@ -2,238 +2,238 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const TeacherResources = () => {
-    const resourceCategories = [
-        {
-            title: 'Teaching Guides',
-            icon: 'bi-book',
-            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            items: [
-                'Effective Online Teaching Methods',
-                'Student Engagement Strategies',
-                'Lesson Planning Templates',
-                'Assessment Best Practices'
-            ]
-        },
-        {
-            title: 'Tools & Software',
-            icon: 'bi-laptop',
-            gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-            items: [
-                'Virtual Classroom Tools',
-                'Interactive Whiteboard Apps',
-                'Video Recording Software',
-                'Screen Sharing Solutions'
-            ]
-        },
-        {
-            title: 'Professional Development',
-            icon: 'bi-trophy',
-            gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            items: [
-                'Teaching Certifications',
-                'Webinar Series',
-                'Expert Masterclasses',
-                'Community Forums'
-            ]
-        },
-        {
-            title: 'Growth & Marketing',
-            icon: 'bi-graph-up-arrow',
-            gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            items: [
-                'Profile Optimization Tips',
-                'Student Acquisition Strategies',
-                'Pricing Guidelines',
-                'Success Stories'
-            ]
-        }
-    ];
+  const resourceCategories = [
+    {
+      title: 'Teaching Guides',
+      icon: 'bi-book',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      items: [
+        'Effective Online Teaching Methods',
+        'Student Engagement Strategies',
+        'Lesson Planning Templates',
+        'Assessment Best Practices'
+      ]
+    },
+    {
+      title: 'Tools & Software',
+      icon: 'bi-laptop',
+      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      items: [
+        'Virtual Classroom Tools',
+        'Interactive Whiteboard Apps',
+        'Video Recording Software',
+        'Screen Sharing Solutions'
+      ]
+    },
+    {
+      title: 'Professional Development',
+      icon: 'bi-trophy',
+      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      items: [
+        'Teaching Certifications',
+        'Webinar Series',
+        'Expert Masterclasses',
+        'Community Forums'
+      ]
+    },
+    {
+      title: 'Growth & Marketing',
+      icon: 'bi-graph-up-arrow',
+      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      items: [
+        'Profile Optimization Tips',
+        'Student Acquisition Strategies',
+        'Pricing Guidelines',
+        'Success Stories'
+      ]
+    }
+  ];
 
-    const tutorials = [
-        {
-            title: 'Getting Started as a Teacher',
-            duration: '25 min',
-            level: 'Beginner',
-            icon: 'bi-play-circle',
-            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-        },
-        {
-            title: 'Creating Engaging Lessons',
-            duration: '35 min',
-            level: 'Intermediate',
-            icon: 'bi-lightbulb',
-            gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
-        },
-        {
-            title: 'Building Your Student Base',
-            duration: '30 min',
-            level: 'Intermediate',
-            icon: 'bi-people',
-            gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-        },
-        {
-            title: 'Advanced Teaching Techniques',
-            duration: '45 min',
-            level: 'Advanced',
-            icon: 'bi-mortarboard',
-            gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
-        }
-    ];
+  const tutorials = [
+    {
+      title: 'Getting Started as a Tutor',
+      duration: '25 min',
+      level: 'Beginner',
+      icon: 'bi-play-circle',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    },
+    {
+      title: 'Creating Engaging Lessons',
+      duration: '35 min',
+      level: 'Intermediate',
+      icon: 'bi-lightbulb',
+      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    },
+    {
+      title: 'Building Your Student Base',
+      duration: '30 min',
+      level: 'Intermediate',
+      icon: 'bi-people',
+      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    },
+    {
+      title: 'Advanced Teaching Techniques',
+      duration: '45 min',
+      level: 'Advanced',
+      icon: 'bi-mortarboard',
+      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    }
+  ];
 
-    const tips = [
-        {
-            icon: 'bi-camera-video',
-            title: 'Quality Video Setup',
-            description: 'Invest in good lighting and a clear webcam for professional-looking lessons.'
-        },
-        {
-            icon: 'bi-chat-dots',
-            title: 'Active Communication',
-            description: 'Respond promptly to student inquiries and maintain regular feedback loops.'
-        },
-        {
-            icon: 'bi-calendar-check',
-            title: 'Consistent Schedule',
-            description: 'Maintain regular teaching hours to build trust and reliability with students.'
-        },
-        {
-            icon: 'bi-star',
-            title: 'Gather Reviews',
-            description: 'Encourage satisfied students to leave reviews to boost your profile credibility.'
-        }
-    ];
+  const tips = [
+    {
+      icon: 'bi-camera-video',
+      title: 'Quality Video Setup',
+      description: 'Invest in good lighting and a clear webcam for professional-looking lessons.'
+    },
+    {
+      icon: 'bi-chat-dots',
+      title: 'Active Communication',
+      description: 'Respond promptly to student inquiries and maintain regular feedback loops.'
+    },
+    {
+      icon: 'bi-calendar-check',
+      title: 'Consistent Schedule',
+      description: 'Maintain regular teaching hours to build trust and reliability with students.'
+    },
+    {
+      icon: 'bi-star',
+      title: 'Gather Reviews',
+      description: 'Encourage satisfied students to leave reviews to boost your profile credibility.'
+    }
+  ];
 
-    return (
-        <div className="teacher-resources-page">
-            {/* Hero Section */}
-            <section className="hero-section">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-8 mx-auto text-center">
-                            <h1 className="hero-title">
-                                <i className="bi bi-easel me-3"></i>
-                                Teacher Resources
-                            </h1>
-                            <p className="hero-description">
-                                Everything you need to excel as an online tutor. Access tools, guides, and training to enhance your teaching career.
-                            </p>
-                        </div>
-                    </div>
+  return (
+    <div className="teacher-resources-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-8 mx-auto text-center">
+              <h1 className="hero-title">
+                <i className="bi bi-easel me-3"></i>
+                Tutor Resources
+              </h1>
+              <p className="hero-description">
+                Everything you need to excel as an online tutor. Access tools, guides, and training to enhance your teaching career.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Tutorials */}
+      <section className="tutorials-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-play-btn me-2"></i>
+            Video Tutorials
+          </h2>
+          <div className="row g-4">
+            {tutorials.map((tutorial, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <div className="tutorial-card">
+                  <div
+                    className="tutorial-icon"
+                    style={{ background: tutorial.gradient }}
+                  >
+                    <i className={`bi ${tutorial.icon}`}></i>
+                  </div>
+                  <h3 className="tutorial-title">{tutorial.title}</h3>
+                  <div className="tutorial-meta">
+                    <span className="duration">
+                      <i className="bi bi-clock me-1"></i>
+                      {tutorial.duration}
+                    </span>
+                    <span className={`level level-${tutorial.level.toLowerCase()}`}>
+                      {tutorial.level}
+                    </span>
+                  </div>
+                  <button className="watch-btn">
+                    <i className="bi bi-play-fill me-2"></i>
+                    Watch Now
+                  </button>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Video Tutorials */}
-            <section className="tutorials-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-play-btn me-2"></i>
-                        Video Tutorials
-                    </h2>
-                    <div className="row g-4">
-                        {tutorials.map((tutorial, index) => (
-                            <div key={index} className="col-md-6 col-lg-3">
-                                <div className="tutorial-card">
-                                    <div
-                                        className="tutorial-icon"
-                                        style={{ background: tutorial.gradient }}
-                                    >
-                                        <i className={`bi ${tutorial.icon}`}></i>
-                                    </div>
-                                    <h3 className="tutorial-title">{tutorial.title}</h3>
-                                    <div className="tutorial-meta">
-                                        <span className="duration">
-                                            <i className="bi bi-clock me-1"></i>
-                                            {tutorial.duration}
-                                        </span>
-                                        <span className={`level level-${tutorial.level.toLowerCase()}`}>
-                                            {tutorial.level}
-                                        </span>
-                                    </div>
-                                    <button className="watch-btn">
-                                        <i className="bi bi-play-fill me-2"></i>
-                                        Watch Now
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+      {/* Resource Categories */}
+      <section className="categories-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            Essential Resources
+          </h2>
+          <div className="row g-4">
+            {resourceCategories.map((category, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <div className="resource-category-card">
+                  <div
+                    className="category-icon"
+                    style={{ background: category.gradient }}
+                  >
+                    <i className={`bi ${category.icon}`}></i>
+                  </div>
+                  <h3 className="category-title">{category.title}</h3>
+                  <ul className="resource-list">
+                    {category.items.map((item, idx) => (
+                      <li key={idx} className="resource-list-item">
+                        <i className="bi bi-check-circle-fill me-2"></i>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Resource Categories */}
-            <section className="categories-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        Essential Resources
-                    </h2>
-                    <div className="row g-4">
-                        {resourceCategories.map((category, index) => (
-                            <div key={index} className="col-md-6 col-lg-3">
-                                <div className="resource-category-card">
-                                    <div
-                                        className="category-icon"
-                                        style={{ background: category.gradient }}
-                                    >
-                                        <i className={`bi ${category.icon}`}></i>
-                                    </div>
-                                    <h3 className="category-title">{category.title}</h3>
-                                    <ul className="resource-list">
-                                        {category.items.map((item, idx) => (
-                                            <li key={idx} className="resource-list-item">
-                                                <i className="bi bi-check-circle-fill me-2"></i>
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+      {/* Quick Tips */}
+      <section className="tips-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-lightbulb me-2"></i>
+            Quick Tips for Success
+          </h2>
+          <div className="row g-4">
+            {tips.map((tip, index) => (
+              <div key={index} className="col-md-6">
+                <div className="tip-card">
+                  <div className="tip-icon">
+                    <i className={`bi ${tip.icon}`}></i>
+                  </div>
+                  <div className="tip-content">
+                    <h3 className="tip-title">{tip.title}</h3>
+                    <p className="tip-description">{tip.description}</p>
+                  </div>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Quick Tips */}
-            <section className="tips-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-lightbulb me-2"></i>
-                        Quick Tips for Success
-                    </h2>
-                    <div className="row g-4">
-                        {tips.map((tip, index) => (
-                            <div key={index} className="col-md-6">
-                                <div className="tip-card">
-                                    <div className="tip-icon">
-                                        <i className={`bi ${tip.icon}`}></i>
-                                    </div>
-                                    <div className="tip-content">
-                                        <h3 className="tip-title">{tip.title}</h3>
-                                        <p className="tip-description">{tip.description}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-card">
+            <h2 className="cta-title">Ready to Start Teaching?</h2>
+            <p className="cta-description">
+              Join our community of expert teachers and start making an impact today!
+            </p>
+            <Link to="/register/teacher" className="cta-btn">
+              <i className="bi bi-person-plus me-2"></i>
+              Create Tutor Profile
+            </Link>
+          </div>
+        </div>
+      </section>
 
-            {/* CTA Section */}
-            <section className="cta-section">
-                <div className="container">
-                    <div className="cta-card">
-                        <h2 className="cta-title">Ready to Start Teaching?</h2>
-                        <p className="cta-description">
-                            Join our community of expert teachers and start making an impact today!
-                        </p>
-                        <Link to="/register/teacher" className="cta-btn">
-                            <i className="bi bi-person-plus me-2"></i>
-                            Create Teacher Profile
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            <style jsx>{`
+      <style jsx>{`
         .teacher-resources-page {
           background: #f5f7fa;
           min-height: 100vh;
@@ -539,8 +539,8 @@ const TeacherResources = () => {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default TeacherResources;

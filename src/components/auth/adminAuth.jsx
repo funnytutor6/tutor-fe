@@ -206,7 +206,7 @@ const AdminAuth = () => {
                     onClick={() => navigate("/login/teacher")}
                   >
                     <i className="bi bi-person-workspace me-1"></i>
-                    Teacher Login
+                    Tutor Login
                   </button>
                 </div>
               </div>

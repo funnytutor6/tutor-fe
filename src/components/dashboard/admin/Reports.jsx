@@ -69,8 +69,8 @@ const Reports = () => {
             ["Monthly Recurring Revenue (MRR)", `$${(data.subscriptionStats?.mrr || 0).toFixed(2)}`],
             ["Total Cancellations", data.subscriptionStats?.cancellations || 0],
             ["Failed Payments", data.subscriptionStats?.failedPayments || 0],
-            ["Pending Teacher Approvals", data.pendingApprovals || 0],
-            ["Total Teacher Posts", data.posts?.teacher || 0],
+            ["Pending Tutor Approvals", data.pendingApprovals || 0],
+            ["Total Tutor Posts", data.posts?.teacher || 0],
             ["Total Student Posts", data.posts?.student || 0],
         ];
 
@@ -93,7 +93,7 @@ const Reports = () => {
         });
 
         // Top Locations
-        doc.text("Top Teacher Locations", 14, doc.lastAutoTable.finalY + 15);
+        doc.text("Top Tutor Locations", 14, doc.lastAutoTable.finalY + 15);
         const locationRows = (data.topLocations || []).map(l => [l.location, l.count]);
         autoTable(doc, {
             head: [['Location', 'Teachers']],
@@ -394,7 +394,7 @@ const Reports = () => {
                 <div className="col-lg-6 mb-4">
                     <div className="card shadow-sm border-0">
                         <div className="card-header py-3 bg-white">
-                            <h6 className="m-0 font-weight-bold text-primary">Top Teacher Locations</h6>
+                            <h6 className="m-0 font-weight-bold text-primary">Top Tutor Locations</h6>
                         </div>
                         <div className="card-body">
                             <div className="chart-area" style={{ height: '300px' }}>

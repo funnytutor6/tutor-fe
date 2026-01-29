@@ -2,202 +2,202 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Press = () => {
-    const pressReleases = [
-        {
-            title: 'Funny Study Reaches 50,000 Active Users Milestone',
-            date: 'January 10, 2026',
-            excerpt: 'The online education platform celebrates significant growth in student and teacher engagement.',
-            icon: 'bi-trophy'
-        },
-        {
-            title: 'New AI-Powered Matching Algorithm Launched',
-            date: 'December 15, 2025',
-            excerpt: 'Revolutionary technology helps students find their perfect tutor match in seconds.',
-            icon: 'bi-robot'
-        },
-        {
-            title: 'Partnership with Leading Universities Announced',
-            date: 'November 20, 2025',
-            excerpt: 'Collaboration aims to provide certified courses and professional development programs.',
-            icon: 'bi-building'
-        }
-    ];
+  const pressReleases = [
+    {
+      title: 'Funny Study Reaches 50,000 Active Users Milestone',
+      date: 'January 10, 2026',
+      excerpt: 'The online education platform celebrates significant growth in student and Tutor Tutorent.',
+      icon: 'bi-trophy'
+    },
+    {
+      title: 'New AI-Powered Matching Algorithm Launched',
+      date: 'December 15, 2025',
+      excerpt: 'Revolutionary technology helps students find their perfect tutor match in seconds.',
+      icon: 'bi-robot'
+    },
+    {
+      title: 'Partnership with Leading Universities Announced',
+      date: 'November 20, 2025',
+      excerpt: 'Collaboration aims to provide certified courses and professional development programs.',
+      icon: 'bi-building'
+    }
+  ];
 
-    const mediaKit = [
-        {
-            title: 'Brand Guidelines',
-            description: 'Official logos, colors, and typography',
-            icon: 'bi-palette',
-            type: 'PDF'
-        },
-        {
-            title: 'Company Fact Sheet',
-            description: 'Key statistics and company information',
-            icon: 'bi-file-text',
-            type: 'PDF'
-        },
-        {
-            title: 'Press Photos',
-            description: 'High-resolution images and screenshots',
-            icon: 'bi-images',
-            type: 'ZIP'
-        },
-        {
-            title: 'Executive Bios',
-            description: 'Leadership team biographies',
-            icon: 'bi-person-badge',
-            type: 'PDF'
-        }
-    ];
+  const mediaKit = [
+    {
+      title: 'Brand Guidelines',
+      description: 'Official logos, colors, and typography',
+      icon: 'bi-palette',
+      type: 'PDF'
+    },
+    {
+      title: 'Company Fact Sheet',
+      description: 'Key statistics and company information',
+      icon: 'bi-file-text',
+      type: 'PDF'
+    },
+    {
+      title: 'Press Photos',
+      description: 'High-resolution images and screenshots',
+      icon: 'bi-images',
+      type: 'ZIP'
+    },
+    {
+      title: 'Executive Bios',
+      description: 'Leadership team biographies',
+      icon: 'bi-person-badge',
+      type: 'PDF'
+    }
+  ];
 
-    const coverage = [
-        {
-            outlet: 'TechCrunch',
-            title: 'How Funny Study is Revolutionizing Online Education',
-            date: 'December 2025',
-            logo: 'bi-newspaper'
-        },
-        {
-            outlet: 'EdTech Magazine',
-            title: 'Top 10 EdTech Platforms to Watch in 2026',
-            date: 'November 2025',
-            logo: 'bi-journal-text'
-        },
-        {
-            outlet: 'Forbes',
-            title: 'The Future of Remote Learning',
-            date: 'October 2025',
-            logo: 'bi-trophy'
-        }
-    ];
+  const coverage = [
+    {
+      outlet: 'TechCrunch',
+      title: 'How Funny Study is Revolutionizing Online Education',
+      date: 'December 2025',
+      logo: 'bi-newspaper'
+    },
+    {
+      outlet: 'EdTech Magazine',
+      title: 'Top 10 EdTech Platforms to Watch in 2026',
+      date: 'November 2025',
+      logo: 'bi-journal-text'
+    },
+    {
+      outlet: 'Forbes',
+      title: 'The Future of Remote Learning',
+      date: 'October 2025',
+      logo: 'bi-trophy'
+    }
+  ];
 
-    return (
-        <div className="press-page">
-            {/* Hero Section */}
-            <section className="hero-section">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-8 mx-auto text-center">
-                            <h1 className="hero-title">
-                                <i className="bi bi-megaphone me-3"></i>
-                                Press & Media
-                            </h1>
-                            <p className="hero-description">
-                                Latest news, press releases, and media resources about Funny Study Learning Academy.
-                            </p>
-                        </div>
-                    </div>
+  return (
+    <div className="press-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-8 mx-auto text-center">
+              <h1 className="hero-title">
+                <i className="bi bi-megaphone me-3"></i>
+                Press & Media
+              </h1>
+              <p className="hero-description">
+                Latest news, press releases, and media resources about Funny Study Learning Academy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Press Releases */}
+      <section className="press-releases-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-newspaper me-2"></i>
+            Recent Press Releases
+          </h2>
+          <div className="row g-4">
+            {pressReleases.map((release, index) => (
+              <div key={index} className="col-lg-12">
+                <div className="press-release-card">
+                  <div className="press-icon">
+                    <i className={`bi ${release.icon}`}></i>
+                  </div>
+                  <div className="press-content">
+                    <div className="press-date">{release.date}</div>
+                    <h3 className="press-title">{release.title}</h3>
+                    <p className="press-excerpt">{release.excerpt}</p>
+                    <button className="read-more-link">
+                      Read Full Release
+                      <i className="bi bi-arrow-right ms-2"></i>
+                    </button>
+                  </div>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Press Releases */}
-            <section className="press-releases-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-newspaper me-2"></i>
-                        Recent Press Releases
-                    </h2>
-                    <div className="row g-4">
-                        {pressReleases.map((release, index) => (
-                            <div key={index} className="col-lg-12">
-                                <div className="press-release-card">
-                                    <div className="press-icon">
-                                        <i className={`bi ${release.icon}`}></i>
-                                    </div>
-                                    <div className="press-content">
-                                        <div className="press-date">{release.date}</div>
-                                        <h3 className="press-title">{release.title}</h3>
-                                        <p className="press-excerpt">{release.excerpt}</p>
-                                        <button className="read-more-link">
-                                            Read Full Release
-                                            <i className="bi bi-arrow-right ms-2"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+      {/* Media Coverage */}
+      <section className="coverage-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-broadcast me-2"></i>
+            In the News
+          </h2>
+          <div className="row g-4">
+            {coverage.map((item, index) => (
+              <div key={index} className="col-md-4">
+                <div className="coverage-card">
+                  <div className="coverage-logo">
+                    <i className={`bi ${item.logo}`}></i>
+                  </div>
+                  <div className="coverage-outlet">{item.outlet}</div>
+                  <h3 className="coverage-title">{item.title}</h3>
+                  <div className="coverage-date">{item.date}</div>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Media Coverage */}
-            <section className="coverage-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-broadcast me-2"></i>
-                        In the News
-                    </h2>
-                    <div className="row g-4">
-                        {coverage.map((item, index) => (
-                            <div key={index} className="col-md-4">
-                                <div className="coverage-card">
-                                    <div className="coverage-logo">
-                                        <i className={`bi ${item.logo}`}></i>
-                                    </div>
-                                    <div className="coverage-outlet">{item.outlet}</div>
-                                    <h3 className="coverage-title">{item.title}</h3>
-                                    <div className="coverage-date">{item.date}</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+      {/* Media Kit */}
+      <section className="media-kit-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-folder me-2"></i>
+            Media Kit
+          </h2>
+          <div className="row g-4">
+            {mediaKit.map((item, index) => (
+              <div key={index} className="col-md-6 col-lg-3">
+                <div className="media-kit-card">
+                  <div className="kit-icon">
+                    <i className={`bi ${item.icon}`}></i>
+                  </div>
+                  <h3 className="kit-title">{item.title}</h3>
+                  <p className="kit-description">{item.description}</p>
+                  <button className="download-btn">
+                    <i className="bi bi-download me-2"></i>
+                    Download {item.type}
+                  </button>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Media Kit */}
-            <section className="media-kit-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-folder me-2"></i>
-                        Media Kit
-                    </h2>
-                    <div className="row g-4">
-                        {mediaKit.map((item, index) => (
-                            <div key={index} className="col-md-6 col-lg-3">
-                                <div className="media-kit-card">
-                                    <div className="kit-icon">
-                                        <i className={`bi ${item.icon}`}></i>
-                                    </div>
-                                    <h3 className="kit-title">{item.title}</h3>
-                                    <p className="kit-description">{item.description}</p>
-                                    <button className="download-btn">
-                                        <i className="bi bi-download me-2"></i>
-                                        Download {item.type}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+      {/* Contact Section */}
+      <section className="contact-section">
+        <div className="container">
+          <div className="contact-card">
+            <h2 className="contact-title">Media Inquiries</h2>
+            <p className="contact-description">
+              For press inquiries, interviews, or additional information, please contact our media relations team.
+            </p>
+            <div className="contact-info">
+              <div className="contact-item">
+                <i className="bi bi-envelope"></i>
+                <span>press@funnystudy.com</span>
+              </div>
+              <div className="contact-item">
+                <i className="bi bi-telephone"></i>
+                <span>+1 (555) 123-4567</span>
+              </div>
+            </div>
+            <Link to="/contact" className="contact-btn">
+              <i className="bi bi-chat-dots me-2"></i>
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
 
-            {/* Contact Section */}
-            <section className="contact-section">
-                <div className="container">
-                    <div className="contact-card">
-                        <h2 className="contact-title">Media Inquiries</h2>
-                        <p className="contact-description">
-                            For press inquiries, interviews, or additional information, please contact our media relations team.
-                        </p>
-                        <div className="contact-info">
-                            <div className="contact-item">
-                                <i className="bi bi-envelope"></i>
-                                <span>press@funnystudy.com</span>
-                            </div>
-                            <div className="contact-item">
-                                <i className="bi bi-telephone"></i>
-                                <span>+1 (555) 123-4567</span>
-                            </div>
-                        </div>
-                        <Link to="/contact" className="contact-btn">
-                            <i className="bi bi-chat-dots me-2"></i>
-                            Contact Us
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            <style jsx>{`
+      <style jsx>{`
         .press-page {
           background: #f5f7fa;
           min-height: 100vh;
@@ -514,8 +514,8 @@ const Press = () => {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Press;

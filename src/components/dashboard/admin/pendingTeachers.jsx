@@ -53,7 +53,7 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
     try {
       setProcessing(true);
       await adminService.updateTeacherStatus(teacherId, status);
-      toast.success(`Teacher ${status} successfully`);
+      toast.success(`Tutor ${status} successfully`);
 
       // Remove teacher from list if approved or rejected
       setTeachers((prev) => prev.filter((t) => t.id !== teacherId));
@@ -66,7 +66,7 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
       setActionModal({ show: false, teacher: null, action: null });
     } catch (error) {
       console.error("Error updating teacher status:", error);
-      toast.error(`Failed to ${status} teacher`);
+      toast.error(`Failed to ${status} Tutor`);
     } finally {
       setProcessing(false);
     }
@@ -120,13 +120,12 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
           if (!processing) {
             e.currentTarget.style.backgroundColor = config.hoverColor;
             e.currentTarget.style.transform = "translateY(-1px)";
-            e.currentTarget.style.boxShadow = `0 4px 8px rgba(${
-              action === "approve"
-                ? "16, 185, 129"
-                : action === "reject"
+            e.currentTarget.style.boxShadow = `0 4px 8px rgba(${action === "approve"
+              ? "16, 185, 129"
+              : action === "reject"
                 ? "239, 68, 68"
                 : "245, 158, 11"
-            }, 0.3)`;
+              }, 0.3)`;
           }
         }}
         onMouseLeave={(e) => {
@@ -255,9 +254,9 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
 
   const getActionMessage = (action) => {
     const messages = {
-      approve: "Are you sure you want to approve this teacher?",
-      reject: "Are you sure you want to reject this teacher?",
-      pending: "Keep this teacher as pending?",
+      approve: "Are you sure you want to approve this Tutor?",
+      reject: "Are you sure you want to reject this Tutor?",
+      pending: "Keep this Tutor as pending?",
     };
     return messages[action] || "";
   };
@@ -267,14 +266,14 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>
           <i className="bi bi-clock-history me-2"></i>
-          Pending Teacher Approvals
+          Pending Tutor Approvals
         </h4>
         <span className="badge bg-warning">{totalTeachers} pending</span>
       </div>
       <AdminSearchInput
         value={searchTerm}
         onChange={setSearchTerm}
-        placeholder="Search by teacher, subject, headline, description or city..."
+        placeholder="Search by Tutor, subject, headline, description or city..."
       />
       <DataTable
         data={teachers}
@@ -344,7 +343,7 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
                   <p>{getActionMessage(actionModal.action)}</p>
                   {actionModal.teacher && (
                     <div className="alert alert-info">
-                      <strong>Teacher:</strong> {actionModal.teacher.name}
+                      <strong>Tutor:</strong> {actionModal.teacher.name}
                       <br />
                       <strong>Email:</strong> {actionModal.teacher.email}
                     </div>
@@ -395,8 +394,8 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
                         actionModal.action === "approve"
                           ? "approved"
                           : actionModal.action === "reject"
-                          ? "rejected"
-                          : "pending"
+                            ? "rejected"
+                            : "pending"
                       )
                     }
                     disabled={processing}
@@ -405,8 +404,8 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
                         actionModal.action === "approve"
                           ? "#10b981"
                           : actionModal.action === "reject"
-                          ? "#ef4444"
-                          : "#f59e0b",
+                            ? "#ef4444"
+                            : "#f59e0b",
                       color: "#ffffff",
                       border: "none",
                       borderRadius: "8px",
@@ -421,8 +420,8 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
                           actionModal.action === "approve"
                             ? "#059669"
                             : actionModal.action === "reject"
-                            ? "#dc2626"
-                            : "#d97706";
+                              ? "#dc2626"
+                              : "#d97706";
                         e.currentTarget.style.backgroundColor = hoverColor;
                         e.currentTarget.style.transform = "translateY(-1px)";
                       }
@@ -433,8 +432,8 @@ const PendingTeachers = ({ refreshTrigger, onStatusUpdate }) => {
                           actionModal.action === "approve"
                             ? "#10b981"
                             : actionModal.action === "reject"
-                            ? "#ef4444"
-                            : "#f59e0b";
+                              ? "#ef4444"
+                              : "#f59e0b";
                         e.currentTarget.style.backgroundColor = originalColor;
                         e.currentTarget.style.transform = "translateY(0)";
                       }

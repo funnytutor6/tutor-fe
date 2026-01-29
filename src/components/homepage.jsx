@@ -150,9 +150,9 @@ const EduLink = () => {
     {
       id: 2,
       author: "James Wilson",
-      role: "Math Teacher",
+      role: "Math Tutor",
       content:
-        "As a teacher, Funny Study Learning has allowed me to connect with motivated students and share my passion for mathematics. The platform is intuitive and professional.",
+        "As a Tutor, Funny Study Learning has allowed me to connect with motivated students and share my passion for mathematics. The platform is intuitive and professional.",
       image: "https://i.namu.wiki/i/U_Pf78u_x9bkrVouMaswozqpvby9SFMu_Tnz_rhgDOsqXBjePVgYsZp9ySMjiq7e1p33A1_rOA4OdEFl4CGWtA.webp",
     },
     {
@@ -261,7 +261,7 @@ const EduLink = () => {
               <h1 className="display-3 fw-bold text-white mb-4 lh-1">
                 Connect with the
                 <span className="d-block position-relative">
-                  Perfect Teacher
+                  Perfect Tutor
                   <svg
                     className="position-absolute bottom-0 start-0"
                     width="100%"
@@ -410,7 +410,7 @@ const EduLink = () => {
                   {/* Image */}
                   <img
                     src="https://www.twigscience.com/wp-content/uploads/2022/05/GettyImages-974018398-RF-scaled.jpg"
-                    alt="Students and teacher collaborating"
+                    alt="Students and Tutor collaborating"
                     className="img-fluid shadow-lg position-relative"
                     style={{
                       borderRadius: "24px",

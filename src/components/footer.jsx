@@ -26,7 +26,7 @@ const Footer = () => {
       title: "For Teachers",
       links: [
         { name: "Create Profile", path: "/register/teacher" },
-        { name: "Teacher Dashboard", path: "/dashboard/teacher" },
+        { name: "Tutor Dashboard", path: "/dashboard/teacher" },
         { name: "Teaching Resources", path: "/teacher-resources" },
         { name: "Pricing Plans", path: "/pricing" },
       ],
@@ -151,7 +151,7 @@ const Footer = () => {
   }, [message]);
 
   const location = useLocation();
-  
+
   // Track if footer link was clicked
   const [shouldScrollOnPathChange, setShouldScrollOnPathChange] = React.useState(false);
 
@@ -193,8 +193,8 @@ const Footer = () => {
             {/* Brand Column */}
             <div className="col-lg-4">
               <div className="footer-brand">
-                <Link 
-                  to="/" 
+                <Link
+                  to="/"
                   className="d-flex align-items-center mb-3 "
                   onClick={handleLinkClick}
                 >
@@ -247,8 +247,8 @@ const Footer = () => {
                 <ul className="footer-links">
                   {section.links.map((link, linkIndex) => (
                     <li key={linkIndex}>
-                      <Link 
-                        to={link.path} 
+                      <Link
+                        to={link.path}
                         className="footer-link"
                         onClick={handleLinkClick}
                       >

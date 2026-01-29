@@ -36,7 +36,7 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
       setTotalPages(response?.data?.totalPages || 0);
     } catch (error) {
       console.error("Error fetching teacher posts:", error);
-      toast.error("Failed to load teacher posts");
+      toast.error("Failed to load Tutor posts");
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +46,7 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
   const columns = useMemo(
     () => [
       {
-        header: "Teacher",
+        header: "Tutor",
         accessorKey: "teacherName",
         cell: ({ row }) => {
           const name = row.original.teacherName || "Unknown";
@@ -168,7 +168,7 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4 className="mb-0">
           <i className="bi bi-briefcase me-2"></i>
-          All Teacher Posts
+          All Tutor Posts
         </h4>
         <span className="badge bg-primary">{totalPosts} posts</span>
       </div>
@@ -176,7 +176,7 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
       <AdminSearchInput
         value={searchTerm}
         onChange={setSearchTerm}
-        placeholder="Search by teacher, subject, headline, description or city..."
+        placeholder="Search by Tutor, subject, headline, description or city..."
       />
 
       <DataTable

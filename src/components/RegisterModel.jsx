@@ -11,7 +11,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
   const handleSelection = (userType) => {
     setSelectedType(userType);
     setIsAnimating(true);
-    
+
     // Add animation delay before navigation
     setTimeout(() => {
       if (userType === 'student') {
@@ -28,7 +28,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: 0,
@@ -45,7 +45,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
       }}
       onClick={onClose}
     >
-      <div 
+      <div
         style={{
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           borderRadius: '25px',
@@ -104,7 +104,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
           borderRadius: '50%',
           animation: 'float 6s ease-in-out infinite'
         }}></div>
-        
+
         <div style={{
           position: 'absolute',
           bottom: '-30px',
@@ -133,7 +133,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
           }}>
             <i className="bi bi-mortarboard-fill"></i>
           </div>
-          
+
           <h2 style={{
             color: 'white',
             fontWeight: '700',
@@ -143,7 +143,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
           }}>
             Join Our Community
           </h2>
-          
+
           <p style={{
             color: 'rgba(255, 255, 255, 0.9)',
             fontSize: '1.1rem',
@@ -208,7 +208,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
             }}>
               <i className="bi bi-person-workspace"></i>
             </div>
-            
+
             <h4 style={{
               color: 'white',
               fontWeight: '600',
@@ -217,7 +217,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
             }}>
               I'm a Student
             </h4>
-            
+
             <p style={{
               color: 'rgba(255, 255, 255, 0.85)',
               fontSize: '0.9rem',
@@ -229,8 +229,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
 
             {/* Features List */}
             <div style={{ marginTop: '1rem', textAlign: 'left' }}>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -239,8 +239,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
                 <i className="bi bi-check-circle-fill me-2" style={{ color: '#10b981' }}></i>
                 Browse qualified teachers
               </div>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -249,8 +249,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
                 <i className="bi bi-check-circle-fill me-2" style={{ color: '#10b981' }}></i>
                 Post learning requests
               </div>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center'
@@ -308,16 +308,16 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
             }}>
               <i className="bi bi-mortarboard"></i>
             </div>
-            
+
             <h4 style={{
               color: 'white',
               fontWeight: '600',
               marginBottom: '0.75rem',
               fontSize: '1.3rem'
             }}>
-              I'm a Teacher
+              I'm a Tutor
             </h4>
-            
+
             <p style={{
               color: 'rgba(255, 255, 255, 0.85)',
               fontSize: '0.9rem',
@@ -329,8 +329,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
 
             {/* Features List */}
             <div style={{ marginTop: '1rem', textAlign: 'left' }}>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -339,8 +339,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
                 <i className="bi bi-check-circle-fill me-2" style={{ color: '#3b82f6' }}></i>
                 Create teacher profile
               </div>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -349,8 +349,8 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
                 <i className="bi bi-check-circle-fill me-2" style={{ color: '#3b82f6' }}></i>
                 Connect with students
               </div>
-              <div style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
+              <div style={{
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontSize: '0.8rem',
                 display: 'flex',
                 alignItems: 'center'
@@ -466,7 +466,7 @@ const ExampleUsage = () => {
   return (
     <div>
       {/* Your existing Get Started button */}
-      <button 
+      <button
         className="btn btn-light btn-lg rounded-pill px-4 fw-semibold"
         style={{
           boxShadow: '0 4px 15px rgba(255,255,255,0.2)',
@@ -487,7 +487,7 @@ const ExampleUsage = () => {
       </button>
 
       {/* Registration Selection Modal */}
-      <RegistrationSelectionModal 
+      <RegistrationSelectionModal
         isOpen={showRegistrationModal}
         onClose={handleCloseModal}
       />

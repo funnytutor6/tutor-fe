@@ -85,7 +85,7 @@ const TeacherDashboard = () => {
 
   // Profile data
   const profileData = {
-    name: user?.name || "Teacher Name",
+    name: user?.name || "Tutor Name",
     email: user?.email || "teacher@example.com",
     subjects: ["Mathematics", "Physics"],
     experience: "10 years",
@@ -102,8 +102,8 @@ const TeacherDashboard = () => {
             alt="Profile"
             className="profile-image"
           />
-          <h5>{user?.name || "Teacher Name"}</h5>
-          <p className="text-muted">Teacher</p>
+          <h5>{user?.name || "Tutor Name"}</h5>
+          <p className="text-muted">Tutor</p>
         </div>
 
         <ul className="nav flex-column">
@@ -189,11 +189,10 @@ const TeacherDashboard = () => {
                           <td>{request.requestDate}</td>
                           <td>
                             <span
-                              className={`badge bg-${
-                                request.status === "pending"
-                                  ? "warning"
-                                  : "success"
-                              }`}
+                              className={`badge bg-${request.status === "pending"
+                                ? "warning"
+                                : "success"
+                                }`}
                             >
                               {request.status}
                             </span>

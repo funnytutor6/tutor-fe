@@ -240,7 +240,7 @@ const AdminDashboard = () => {
         },
         {
           id: "teacher-posts",
-          label: "Teacher Posts",
+          label: "Tutor Posts",
           icon: "briefcase",
           badge: teacherPostsCount,
         },

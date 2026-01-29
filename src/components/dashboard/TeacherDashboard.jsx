@@ -46,6 +46,16 @@ const TeacherDashboard = () => {
     pendingRequests: 0,
     purchasedRequests: 0,
   });
+
+  // Profile data state
+  const [profileData, setProfileData] = useState({
+    name: user?.name || "Tutor Name",
+    email: user?.email || "teacher@example.com",
+    phoneNumber: user?.phoneNumber || "Not provided",
+    cityOrTown: user?.cityOrTown || "Not provided",
+    about: user?.about || "",
+    profilePhoto: user?.profilePhoto || null,
+  });
   const [showRequestDetails, setShowRequestDetails] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
@@ -101,6 +111,7 @@ const TeacherDashboard = () => {
     price: "",
     priceType: "hourly",
   });
+  const [useCustomSubject, setUseCustomSubject] = useState(false);
   const [descriptionErrors, setDescriptionErrors] = useState([]);
 
   // Profile form state
@@ -109,6 +120,7 @@ const TeacherDashboard = () => {
     email: user?.email || "",
     phoneNumber: user?.phoneNumber || "",
     cityOrTown: user?.cityOrTown || "",
+    about: profileData?.about || "",
     profilePhoto: null,
     profilePhotoUrl: null,
   });
@@ -139,6 +151,19 @@ const TeacherDashboard = () => {
     // Check if user is logged in and is a teacher
     if (!user || user.role !== "teacher") {
       navigate("/login/teacher");
+      return;
+    }
+
+    // Initialize profile data with user data
+    if (user) {
+      setProfileData({
+        name: user?.name || "Tutor Name",
+        email: user?.email || "teacher@example.com",
+        phoneNumber: user?.phoneNumber || "Not provided",
+        cityOrTown: user?.cityOrTown || "Not provided",
+        about: user?.about || "",
+        profilePhoto: user?.profilePhoto || null,
+      });
     }
   }, [user, navigate]);
 
@@ -217,8 +242,50 @@ const TeacherDashboard = () => {
   useEffect(() => {
     if (activeTab === "profile" || activeTab === "premium") {
       fetchPremiumStatus();
+      loadProfileData();
     }
   }, [activeTab, user]);
+
+  const loadProfileData = async () => {
+    const teacherId = user?.teacherId || user?.id;
+
+    if (!teacherId) {
+      console.error("No teacher ID found");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await teacherService.getTeacherById(teacherId);
+      const teacherData =
+        response?.data?.teacher || response?.teacher || response;
+
+      if (teacherData) {
+        setProfileData({
+          name: teacherData?.name || user?.name || "Tutor Name",
+          email: teacherData?.email || user?.email || "teacher@example.com",
+          phoneNumber: teacherData?.phoneNumber || user?.phoneNumber || "Not provided",
+          cityOrTown: teacherData?.cityOrTown || user?.cityOrTown || "Not provided",
+          about: teacherData?.about || user?.about || "",
+          profilePhoto: teacherData?.profilePhoto || user?.profilePhoto || null,
+        });
+      }
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      toast.error("Failed to load profile data");
+      // Fallback to user data from context
+      setProfileData({
+        name: user?.name || "Tutor Name",
+        email: user?.email || "teacher@example.com",
+        phoneNumber: user?.phoneNumber || "Not provided",
+        cityOrTown: user?.cityOrTown || "Not provided",
+        about: user?.about || "",
+        profilePhoto: user?.profilePhoto || null,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPremiumStatus = async () => {
     try {
@@ -328,6 +395,7 @@ const TeacherDashboard = () => {
     }
     if (user?.id || user?.teacherId) {
       fetchTeacherMetrics();
+      loadProfileData();
     }
   }, [user?.email, user?.id, user?.teacherId]);
 
@@ -593,7 +661,7 @@ const TeacherDashboard = () => {
 
       if (!teacherEmail) {
         console.error("Teacher email not found");
-        toast.error("Teacher email not found");
+        toast.error("Tutor email not found");
         return;
       }
 
@@ -964,9 +1032,28 @@ const TeacherDashboard = () => {
   const handleEditPost = (post) => {
     setEditingPost(post);
     const description = post.description || "";
+    const subject = post.subject || "";
+
+    // Check if subject is a custom one (not in predefined list)
+    const predefinedSubjects = [
+      "Mathematics",
+      "Physics",
+      "Chemistry",
+      "Biology",
+      "English",
+      "History",
+      "Geography",
+      "Computer Science",
+      "Economics",
+      "Business Studies",
+      "Art",
+      "Music",
+    ];
+    const isCustomSubject = subject && !predefinedSubjects.includes(subject);
+
     setPostForm({
       headline: post.headline || "",
-      subject: post.subject || "",
+      subject: subject,
       location: post.location || "",
       description: description,
       lessonType: post.lessonType || "in-person",
@@ -975,6 +1062,9 @@ const TeacherDashboard = () => {
       price: post.price ? post.price.toString() : "",
       priceType: post.priceType || "hourly",
     });
+
+    // Set custom subject checkbox if it's a custom subject
+    setUseCustomSubject(isCustomSubject);
 
     // Validate description when editing
     if (description) {
@@ -1001,6 +1091,7 @@ const TeacherDashboard = () => {
     });
     setDescriptionErrors([]);
     setEditingPost(null);
+    setUseCustomSubject(false);
   };
 
   // Handle profile image change with Cloudinary upload
@@ -1050,10 +1141,10 @@ const TeacherDashboard = () => {
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form fields
     const errors = {};
-    
+
     // Validate name (required)
     const trimmedName = profileForm.name?.trim();
     if (!trimmedName || trimmedName.length === 0) {
@@ -1061,7 +1152,7 @@ const TeacherDashboard = () => {
     } else if (trimmedName.length < 2) {
       errors.name = "Name must be at least 2 characters";
     }
-    
+
     // Validate email (required)
     const trimmedEmail = profileForm.email?.trim();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -1070,7 +1161,7 @@ const TeacherDashboard = () => {
     } else if (!emailRegex.test(trimmedEmail)) {
       errors.email = "Please enter a valid email address";
     }
-    
+
     // Validate phone number (optional, but if provided must be valid)
     const trimmedPhone = profileForm.phoneNumber?.trim();
     if (trimmedPhone && trimmedPhone.length > 0) {
@@ -1081,20 +1172,58 @@ const TeacherDashboard = () => {
         errors.phoneNumber = "Please enter a valid phone number (7-15 digits)";
       }
     }
-    
+
     // Validate city/town (optional, but if provided must not be empty)
     const trimmedCity = profileForm.cityOrTown?.trim();
     if (trimmedCity && trimmedCity.length > 0 && trimmedCity.length < 2) {
       errors.cityOrTown = "City/Town must be at least 2 characters";
     }
-    
+
+    // Validate 'about' field (optional, but if provided must not contain contact info)
+    const trimmedAbout = profileForm.about?.trim();
+    if (trimmedAbout && trimmedAbout.length > 0) {
+      // Check for URLs/links
+      const urlPattern = /https?:\/\/|www\.|\.com|\.org|\.net|\.edu|\.gov|\.co\.|\.io|\.app|\.dev/i;
+      if (urlPattern.test(trimmedAbout)) {
+        errors.about = "About section cannot contain links or URLs";
+      }
+
+      // Check for email addresses
+      const emailPattern = /@|email|e-mail/i;
+      if (emailPattern.test(trimmedAbout)) {
+        errors.about = "About section cannot contain email addresses";
+      }
+
+      // Check for phone numbers (various formats)
+      const phonePattern = /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\d{10,}|phone|mobile|call|whatsapp|telegram|contact\s*me|reach\s*me/i;
+      if (phonePattern.test(trimmedAbout)) {
+        errors.about = "About section cannot contain phone numbers or contact methods";
+      }
+
+      // Check for social media handles
+      const socialPattern = /instagram|facebook|twitter|linkedin|snapchat|tiktok|youtube|@[a-zA-Z0-9_]+/i;
+      if (socialPattern.test(trimmedAbout)) {
+        errors.about = "About section cannot contain social media information";
+      }
+
+      // Check minimum length
+      if (trimmedAbout.length < 20) {
+        errors.about = "About section must be at least 20 characters";
+      }
+
+      // Check maximum length
+      if (trimmedAbout.length > 500) {
+        errors.about = "About section cannot exceed 500 characters";
+      }
+    }
+
     // If there are validation errors, show them and return
     if (Object.keys(errors).length > 0) {
       const errorMessages = Object.values(errors).join(". ");
       toast.error(errorMessages, { id: "profile-submit" });
       return;
     }
-    
+
     try {
       setLoading(true);
       const loadingToast = toast.loading("Updating profile...", {
@@ -1107,6 +1236,7 @@ const TeacherDashboard = () => {
         email: trimmedEmail,
         phoneNumber: trimmedPhone || "",
         cityOrTown: trimmedCity || "",
+        about: trimmedAbout || "",
       };
 
       // Only include profilePhotoUrl if a new image was uploaded
@@ -1138,7 +1268,8 @@ const TeacherDashboard = () => {
       toast.success("Profile updated successfully!", { id: "profile-submit" });
       setShowProfileModal(false);
       setImagePreview(null);
-      window.location.reload();
+      // Reload profile data from API
+      await loadProfileData();
     } catch (error) {
       toast.error(error.response?.data?.error || "Failed to update profile", {
         id: "profile-submit",
@@ -1191,16 +1322,6 @@ const TeacherDashboard = () => {
     }
   };
 
-  const profileData = {
-    name: user?.name || "Teacher Name",
-    email: user?.email || "teacher@example.com",
-    subjects: ["Mathematics", "Physics"],
-    experience: "10 years",
-    rating: 4.8,
-    totalStudents: 50,
-    phoneNumber: user?.phoneNumber || "Not provided",
-    cityOrTown: user?.cityOrTown || "Not provided",
-  };
 
   return (
     <div className="dashboard-container">
@@ -1220,8 +1341,8 @@ const TeacherDashboard = () => {
               </div>
             )}
           </div>
-          <h5>{user?.name || "Teacher Name"}</h5>
-          <p className="text-muted">Teacher</p>
+          <h5>{user?.name || "Tutor Name"}</h5>
+          <p className="text-muted">Tutor</p>
           {teacherPremiumStatus?.hasPremium && teacherPremiumStatus?.isPaid && (
             <span
               style={{
@@ -1355,10 +1476,11 @@ const TeacherDashboard = () => {
                 className="btn btn-primary"
                 onClick={() => {
                   setProfileForm({
-                    name: user?.name || "",
-                    email: user?.email || "",
-                    phoneNumber: user?.phoneNumber || "",
-                    cityOrTown: user?.cityOrTown || "",
+                    name: profileData?.name || user?.name || "",
+                    email: profileData?.email || user?.email || "",
+                    phoneNumber: profileData?.phoneNumber || user?.phoneNumber || "",
+                    cityOrTown: profileData?.cityOrTown || user?.cityOrTown || "",
+                    about: profileData?.about || user?.about || "",
                     profilePhoto: null,
                     profilePhotoUrl: null,
                   });
@@ -2067,7 +2189,7 @@ const TeacherDashboard = () => {
                           <ul className="pricing-features">
                             <li>
                               <i className="bi bi-check-circle-fill me-2"></i>
-                              Verified Teacher Badge
+                              Verified Tutor Badge
                             </li>
                             <li>
                               <i className="bi bi-check-circle-fill me-2"></i>
@@ -2679,6 +2801,25 @@ const TeacherDashboard = () => {
 
                       <div className="info-section mt-4">
                         <h6 className="section-title">
+                          <i className="bi bi-person-badge me-2"></i>
+                          About Me
+                        </h6>
+                        {profileData.about ? (
+                          <div className="about-content">
+                            <p className="text-muted" style={{ whiteSpace: "pre-wrap", lineHeight: "1.6" }}>
+                              {profileData.about}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="alert alert-info mb-0">
+                            <i className="bi bi-info-circle me-2"></i>
+                            No about information provided. Click "Edit Profile" to add information about yourself.
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="info-section mt-4">
+                        <h6 className="section-title">
                           <i className="bi bi-graph-up me-2"></i>
                           Teaching Statistics
                         </h6>
@@ -3037,37 +3178,90 @@ const TeacherDashboard = () => {
                       />
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Subject *</label>
-                      <select
-                        className="form-select"
-                        value={postForm.subject}
-                        onChange={(e) =>
-                          setPostForm((prev) => ({
-                            ...prev,
-                            subject: e.target.value,
-                          }))
-                        }
-                        required
-                      >
-                        <option value="">Select Subject</option>
-                        <option value="Mathematics">Mathematics</option>
-                        <option value="Physics">Physics</option>
-                        <option value="Chemistry">Chemistry</option>
-                        <option value="Biology">Biology</option>
-                        <option value="English">English</option>
-                        <option value="History">History</option>
-                        <option value="Geography">Geography</option>
-                        <option value="Computer Science">
-                          Computer Science
-                        </option>
-                        <option value="Economics">Economics</option>
-                        <option value="Business Studies">
-                          Business Studies
-                        </option>
-                        <option value="Art">Art</option>
-                        <option value="Music">Music</option>
-                        <option value="Other">Other</option>
-                      </select>
+                      <label className="form-label">Subject select or type new *</label>
+                      {!useCustomSubject ? (
+                        <>
+                          <select
+                            className="form-select"
+                            value={postForm.subject}
+                            onChange={(e) =>
+                              setPostForm((prev) => ({
+                                ...prev,
+                                subject: e.target.value,
+                              }))
+                            }
+                            required
+                          >
+                            <option value="">Select Subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="English">English</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Computer Science">
+                              Computer Science
+                            </option>
+                            <option value="Economics">Economics</option>
+                            <option value="Business Studies">
+                              Business Studies
+                            </option>
+                            <option value="Art">Art</option>
+                            <option value="Music">Music</option>
+                          </select>
+                          <div className="form-check mt-2">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="customSubjectCheck"
+                              checked={useCustomSubject}
+                              onChange={(e) => {
+                                setUseCustomSubject(e.target.checked);
+                                if (e.target.checked) {
+                                  setPostForm((prev) => ({ ...prev, subject: "" }));
+                                }
+                              }}
+                            />
+                            <label className="form-check-label" htmlFor="customSubjectCheck">
+                              Type a custom subject
+                            </label>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={postForm.subject}
+                            onChange={(e) =>
+                              setPostForm((prev) => ({
+                                ...prev,
+                                subject: e.target.value,
+                              }))
+                            }
+                            placeholder="Type your subject"
+                            required
+                          />
+                          <div className="form-check mt-2">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="customSubjectCheck"
+                              checked={useCustomSubject}
+                              onChange={(e) => {
+                                setUseCustomSubject(e.target.checked);
+                                if (!e.target.checked) {
+                                  setPostForm((prev) => ({ ...prev, subject: "" }));
+                                }
+                              }}
+                            />
+                            <label className="form-check-label" htmlFor="customSubjectCheck">
+                              Select from list instead
+                            </label>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -3364,6 +3558,36 @@ const TeacherDashboard = () => {
                         placeholder="Enter your city or town"
                       />
                     </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">
+                      About Me
+                      <span className="text-muted ms-2">(Optional)</span>
+                    </label>
+                    <textarea
+                      className="form-control"
+                      rows="4"
+                      value={profileForm.about}
+                      onChange={(e) =>
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          about: e.target.value,
+                        }))
+                      }
+                      placeholder="Tell students about yourself, your teaching experience, and your approach to education..."
+                      maxLength="500"
+                    />
+                    <small className="form-text text-muted d-block mt-1">
+                      <i className="bi bi-info-circle me-1"></i>
+                      Describe your teaching style and experience. Cannot include
+                      links, emails, phone numbers, or social media handles.
+                      {profileForm.about && (
+                        <span className="float-end">
+                          {profileForm.about.length}/500 characters
+                        </span>
+                      )}
+                    </small>
                   </div>
 
                   <div className="mb-3">

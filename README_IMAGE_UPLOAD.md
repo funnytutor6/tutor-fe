@@ -222,7 +222,7 @@ const teacher = await axios.get(`${API_BASE_URL}/teachers/${teacherId}`);
 const profilePhotoUrl = teacher.data.teacher.profilePhoto;
 
 // Display the image
-<img src={profilePhotoUrl} alt="Teacher profile" className="profile-image" />;
+<img src={profilePhotoUrl} alt="Tutor profile" className="profile-image" />;
 ```
 
 ### With Default Fallback

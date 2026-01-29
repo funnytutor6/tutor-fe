@@ -2,195 +2,195 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Resources = () => {
-    const resourceCategories = [
-        {
-            title: 'Study Guides',
-            icon: 'bi-journal-text',
-            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            resources: [
-                { name: 'Exam Preparation Tips', type: 'PDF', size: '2.3 MB' },
-                { name: 'Note-Taking Strategies', type: 'PDF', size: '1.8 MB' },
-                { name: 'Time Management Guide', type: 'PDF', size: '1.5 MB' },
-                { name: 'Memory Techniques', type: 'PDF', size: '2.1 MB' }
-            ]
-        },
-        {
-            title: 'Video Tutorials',
-            icon: 'bi-camera-video',
-            gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-            resources: [
-                { name: 'Effective Study Methods', type: 'Video', duration: '15 min' },
-                { name: 'Online Learning Best Practices', type: 'Video', duration: '12 min' },
-                { name: 'Goal Setting for Students', type: 'Video', duration: '10 min' },
-                { name: 'Stress Management Tips', type: 'Video', duration: '8 min' }
-            ]
-        },
-        {
-            title: 'Templates & Tools',
-            icon: 'bi-tools',
-            gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            resources: [
-                { name: 'Study Schedule Template', type: 'XLSX', size: '45 KB' },
-                { name: 'Goal Tracker', type: 'XLSX', size: '38 KB' },
-                { name: 'Assignment Planner', type: 'PDF', size: '850 KB' },
-                { name: 'Progress Report Template', type: 'DOCX', size: '120 KB' }
-            ]
-        },
-        {
-            title: 'Learning Materials',
-            icon: 'bi-book',
-            gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            resources: [
-                { name: 'Subject-wise Syllabus', type: 'PDF', size: '3.2 MB' },
-                { name: 'Practice Questions Bank', type: 'PDF', size: '5.8 MB' },
-                { name: 'Reference Books List', type: 'PDF', size: '980 KB' },
-                { name: 'Online Resources Guide', type: 'PDF', size: '1.2 MB' }
-            ]
-        }
-    ];
+  const resourceCategories = [
+    {
+      title: 'Study Guides',
+      icon: 'bi-journal-text',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      resources: [
+        { name: 'Exam Preparation Tips', type: 'PDF', size: '2.3 MB' },
+        { name: 'Note-Taking Strategies', type: 'PDF', size: '1.8 MB' },
+        { name: 'Time Management Guide', type: 'PDF', size: '1.5 MB' },
+        { name: 'Memory Techniques', type: 'PDF', size: '2.1 MB' }
+      ]
+    },
+    {
+      title: 'Video Tutorials',
+      icon: 'bi-camera-video',
+      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      resources: [
+        { name: 'Effective Study Methods', type: 'Video', duration: '15 min' },
+        { name: 'Online Learning Best Practices', type: 'Video', duration: '12 min' },
+        { name: 'Goal Setting for Students', type: 'Video', duration: '10 min' },
+        { name: 'Stress Management Tips', type: 'Video', duration: '8 min' }
+      ]
+    },
+    {
+      title: 'Templates & Tools',
+      icon: 'bi-tools',
+      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      resources: [
+        { name: 'Study Schedule Template', type: 'XLSX', size: '45 KB' },
+        { name: 'Goal Tracker', type: 'XLSX', size: '38 KB' },
+        { name: 'Assignment Planner', type: 'PDF', size: '850 KB' },
+        { name: 'Progress Report Template', type: 'DOCX', size: '120 KB' }
+      ]
+    },
+    {
+      title: 'Learning Materials',
+      icon: 'bi-book',
+      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      resources: [
+        { name: 'Subject-wise Syllabus', type: 'PDF', size: '3.2 MB' },
+        { name: 'Practice Questions Bank', type: 'PDF', size: '5.8 MB' },
+        { name: 'Reference Books List', type: 'PDF', size: '980 KB' },
+        { name: 'Online Resources Guide', type: 'PDF', size: '1.2 MB' }
+      ]
+    }
+  ];
 
-    const featuredResources = [
-        {
-            title: 'Ultimate Study Guide 2026',
-            description: 'Comprehensive guide covering all major subjects with proven study techniques',
-            image: 'bi-mortarboard',
-            downloads: '15.2K',
-            rating: 4.9
-        },
-        {
-            title: 'Interactive Learning Toolkit',
-            description: 'Collection of interactive tools and exercises for enhanced learning',
-            image: 'bi-puzzle',
-            downloads: '12.8K',
-            rating: 4.8
-        },
-        {
-            title: 'Exam Success Blueprint',
-            description: 'Step-by-step blueprint to ace your exams with confidence',
-            image: 'bi-award',
-            downloads: '18.5K',
-            rating: 4.9
-        }
-    ];
+  const featuredResources = [
+    {
+      title: 'Ultimate Study Guide 2026',
+      description: 'Comprehensive guide covering all major subjects with proven study techniques',
+      image: 'bi-mortarboard',
+      downloads: '15.2K',
+      rating: 4.9
+    },
+    {
+      title: 'Interactive Learning Toolkit',
+      description: 'Collection of interactive tools and exercises for enhanced learning',
+      image: 'bi-puzzle',
+      downloads: '12.8K',
+      rating: 4.8
+    },
+    {
+      title: 'Exam Success Blueprint',
+      description: 'Step-by-step blueprint to ace your exams with confidence',
+      image: 'bi-award',
+      downloads: '18.5K',
+      rating: 4.9
+    }
+  ];
 
-    return (
-        <div className="resources-page">
-            {/* Hero Section */}
-            <section className="hero-section">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-8 mx-auto text-center">
-                            <h1 className="hero-title">
-                                <i className="bi bi-collection me-3"></i>
-                                Learning Resources
-                            </h1>
-                            <p className="hero-description">
-                                Access our comprehensive collection of study materials, guides, and tools to enhance your learning experience.
-                            </p>
+  return (
+    <div className="resources-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-8 mx-auto text-center">
+              <h1 className="hero-title">
+                <i className="bi bi-collection me-3"></i>
+                Learning Resources
+              </h1>
+              <p className="hero-description">
+                Access our comprehensive collection of study materials, guides, and tools to enhance your learning experience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Resources */}
+      <section className="featured-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            <i className="bi bi-star-fill me-2"></i>
+            Featured Resources
+          </h2>
+          <div className="row g-4">
+            {featuredResources.map((resource, index) => (
+              <div key={index} className="col-md-4">
+                <div className="featured-card">
+                  <div className="featured-icon">
+                    <i className={`bi ${resource.image}`}></i>
+                  </div>
+                  <h3 className="featured-title">{resource.title}</h3>
+                  <p className="featured-description">{resource.description}</p>
+                  <div className="featured-stats">
+                    <span className="stat">
+                      <i className="bi bi-download me-1"></i>
+                      {resource.downloads}
+                    </span>
+                    <span className="stat">
+                      <i className="bi bi-star-fill me-1"></i>
+                      {resource.rating}
+                    </span>
+                  </div>
+                  <button className="download-btn">
+                    <i className="bi bi-download me-2"></i>
+                    Download Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Resource Categories */}
+      <section className="categories-section">
+        <div className="container">
+          <h2 className="section-title text-center mb-5">
+            Browse by Category
+          </h2>
+          <div className="row g-4">
+            {resourceCategories.map((category, index) => (
+              <div key={index} className="col-lg-6">
+                <div className="category-card">
+                  <div className="category-header">
+                    <div
+                      className="category-icon-wrapper"
+                      style={{ background: category.gradient }}
+                    >
+                      <i className={`bi ${category.icon}`}></i>
+                    </div>
+                    <h3 className="category-title">{category.title}</h3>
+                  </div>
+                  <div className="resources-list">
+                    {category.resources.map((resource, idx) => (
+                      <div key={idx} className="resource-item">
+                        <div className="resource-info">
+                          <i className="bi bi-file-earmark-text me-2"></i>
+                          <span className="resource-name">{resource.name}</span>
                         </div>
-                    </div>
+                        <div className="resource-meta">
+                          <span className="resource-type">{resource.type}</span>
+                          <span className="resource-size">
+                            {resource.size || resource.duration}
+                          </span>
+                          <button className="download-icon-btn">
+                            <i className="bi bi-download"></i>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Featured Resources */}
-            <section className="featured-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        <i className="bi bi-star-fill me-2"></i>
-                        Featured Resources
-                    </h2>
-                    <div className="row g-4">
-                        {featuredResources.map((resource, index) => (
-                            <div key={index} className="col-md-4">
-                                <div className="featured-card">
-                                    <div className="featured-icon">
-                                        <i className={`bi ${resource.image}`}></i>
-                                    </div>
-                                    <h3 className="featured-title">{resource.title}</h3>
-                                    <p className="featured-description">{resource.description}</p>
-                                    <div className="featured-stats">
-                                        <span className="stat">
-                                            <i className="bi bi-download me-1"></i>
-                                            {resource.downloads}
-                                        </span>
-                                        <span className="stat">
-                                            <i className="bi bi-star-fill me-1"></i>
-                                            {resource.rating}
-                                        </span>
-                                    </div>
-                                    <button className="download-btn">
-                                        <i className="bi bi-download me-2"></i>
-                                        Download Now
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="container">
+          <div className="cta-card">
+            <h2 className="cta-title">Looking for Personalized Learning?</h2>
+            <p className="cta-description">
+              Connect with expert teachers for one-on-one guidance and customized learning plans.
+            </p>
+            <Link to="/find-teachers" className="cta-btn">
+              <i className="bi bi-person-plus me-2"></i>
+              Find a Tutor
+            </Link>
+          </div>
+        </div>
+      </section>
 
-            {/* Resource Categories */}
-            <section className="categories-section">
-                <div className="container">
-                    <h2 className="section-title text-center mb-5">
-                        Browse by Category
-                    </h2>
-                    <div className="row g-4">
-                        {resourceCategories.map((category, index) => (
-                            <div key={index} className="col-lg-6">
-                                <div className="category-card">
-                                    <div className="category-header">
-                                        <div
-                                            className="category-icon-wrapper"
-                                            style={{ background: category.gradient }}
-                                        >
-                                            <i className={`bi ${category.icon}`}></i>
-                                        </div>
-                                        <h3 className="category-title">{category.title}</h3>
-                                    </div>
-                                    <div className="resources-list">
-                                        {category.resources.map((resource, idx) => (
-                                            <div key={idx} className="resource-item">
-                                                <div className="resource-info">
-                                                    <i className="bi bi-file-earmark-text me-2"></i>
-                                                    <span className="resource-name">{resource.name}</span>
-                                                </div>
-                                                <div className="resource-meta">
-                                                    <span className="resource-type">{resource.type}</span>
-                                                    <span className="resource-size">
-                                                        {resource.size || resource.duration}
-                                                    </span>
-                                                    <button className="download-icon-btn">
-                                                        <i className="bi bi-download"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="cta-section">
-                <div className="container">
-                    <div className="cta-card">
-                        <h2 className="cta-title">Looking for Personalized Learning?</h2>
-                        <p className="cta-description">
-                            Connect with expert teachers for one-on-one guidance and customized learning plans.
-                        </p>
-                        <Link to="/find-teachers" className="cta-btn">
-                            <i className="bi bi-person-plus me-2"></i>
-                            Find a Teacher
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            <style jsx>{`
+      <style jsx>{`
         .resources-page {
           background: #f5f7fa;
           min-height: 100vh;
@@ -482,8 +482,8 @@ const Resources = () => {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Resources;

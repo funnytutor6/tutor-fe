@@ -123,7 +123,7 @@ const TeacherSubscriptionDetailsModal = ({
           <div className="modal-header">
             <h5 className="modal-title">
               <i className="bi bi-person-workspace me-2"></i>
-              Teacher Subscription Details
+              Tutor Subscription Details
             </h5>
             <button
               type="button"
@@ -132,12 +132,12 @@ const TeacherSubscriptionDetailsModal = ({
             ></button>
           </div>
           <div className="modal-body">
-            {/* Teacher Information */}
+            {/* Tutor Information */}
             <div className="card mb-4">
               <div className="card-header bg-primary text-white">
                 <h6 className="mb-0">
                   <i className="bi bi-person me-2"></i>
-                  Teacher Information
+                  Tutor Information
                 </h6>
               </div>
               <div className="card-body">
@@ -149,9 +149,8 @@ const TeacherSubscriptionDetailsModal = ({
                     <p>
                       <strong>Payment Status:</strong>{" "}
                       <span
-                        className={`badge ${
-                          subscription.ispaid ? "bg-success" : "bg-danger"
-                        }`}
+                        className={`badge ${subscription.ispaid ? "bg-success" : "bg-danger"
+                          }`}
                       >
                         {subscription.ispaid ? "PAID" : "UNPAID"}
                       </span>
@@ -301,13 +300,12 @@ const TeacherSubscriptionDetailsModal = ({
                             </td>
                             <td>
                               <span
-                                className={`badge ${
-                                  invoice.status === "paid"
-                                    ? "bg-success"
-                                    : invoice.status === "open"
+                                className={`badge ${invoice.status === "paid"
+                                  ? "bg-success"
+                                  : invoice.status === "open"
                                     ? "bg-warning"
                                     : "bg-danger"
-                                }`}
+                                  }`}
                               >
                                 {invoice.status?.toUpperCase() || "N/A"}
                               </span>
@@ -315,10 +313,10 @@ const TeacherSubscriptionDetailsModal = ({
                             <td>
                               {invoice.periodStart && invoice.periodEnd
                                 ? `${new Date(
-                                    invoice.periodStart
-                                  ).toLocaleDateString()} - ${new Date(
-                                    invoice.periodEnd
-                                  ).toLocaleDateString()}`
+                                  invoice.periodStart
+                                ).toLocaleDateString()} - ${new Date(
+                                  invoice.periodEnd
+                                ).toLocaleDateString()}`
                                 : "N/A"}
                             </td>
                             <td>

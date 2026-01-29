@@ -216,7 +216,7 @@ const FindTeachers = () => {
       setPosts(response.data?.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
-      setError("Failed to load teacher posts");
+      setError("Failed to load Tutor posts");
     } finally {
       setLoading(false);
     }
@@ -323,6 +323,7 @@ const FindTeachers = () => {
       const response = await api.get(`/api/posts/teachers/public/${post.id}`);
 
       let isConnected = false;
+      console.log("response", response);
 
       if (currentUser && userType === "student") {
         const teacherPosts = filteredPosts.filter(
@@ -355,7 +356,7 @@ const FindTeachers = () => {
             id: 1,
             title: "Sample Lesson 1",
             url: teacherData.videoLinks?.link1,
-            description: "Teacher introduction and teaching methodology",
+            description: "Tutor introduction and teaching methodology",
           });
         }
 
@@ -383,7 +384,7 @@ const FindTeachers = () => {
       }
     } catch (error) {
       console.error("Error fetching teacher profile:", error);
-      toast.error("Failed to load teacher profile");
+      toast.error("Failed to load Tutor profile");
     }
   };
 
@@ -411,7 +412,7 @@ const FindTeachers = () => {
     if (requestStatus?.hasRequested) {
       const statusText = {
         pending: "Your request is pending approval",
-        purchased: "Teacher has your contact info and should contact you soon",
+        purchased: "Tutor has your contact info and should contact you soon",
         rejected: "This request was declined",
       };
       const message =
@@ -454,7 +455,7 @@ const FindTeachers = () => {
       );
 
       toast.success(
-        "Connection request sent successfully! The teacher will be notified."
+        "Connection request sent successfully! The Tutor will be notified."
       );
       setShowRequestModal(false);
       setRequestMessage("");
@@ -571,7 +572,7 @@ const FindTeachers = () => {
           <div className="row justify-content-center">
             <div className="col-lg-8 text-center">
               <h1 className="display-4 fw-bold mb-4">
-                Find Your Perfect Teacher
+                Find Your Perfect Tutor
               </h1>
               <p className="lead mb-5">
                 Discover experienced teachers offering personalized lessons.
@@ -598,7 +599,7 @@ const FindTeachers = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search by keyword, subject, teacher..."
+                      placeholder="Search by keyword, subject, Tutor..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -750,7 +751,7 @@ const FindTeachers = () => {
               >
                 <span className="visually-hidden">Loading...</span>
               </div>
-              <p className="mt-3">Loading teacher posts...</p>
+              <p className="mt-3">Loading Tutor posts...</p>
             </div>
           ) : error ? (
             <div className="alert alert-danger text-center">
@@ -843,11 +844,10 @@ const FindTeachers = () => {
                                 {[...Array(5)].map((_, i) => (
                                   <i
                                     key={i}
-                                    className={`bi bi-star${
-                                      i < Math.floor(post.averageRating)
-                                        ? "-fill"
-                                        : ""
-                                    }`}
+                                    className={`bi bi-star${i < Math.floor(post.averageRating)
+                                      ? "-fill"
+                                      : ""
+                                      }`}
                                   ></i>
                                 ))}
                               </div>
@@ -899,7 +899,7 @@ const FindTeachers = () => {
               <div className="modal-header">
                 <h5 className="modal-title">
                   <i className="bi bi-person-badge me-2"></i>
-                  Teacher Profile
+                  Tutor Profile
                 </h5>
                 <button
                   type="button"
@@ -916,21 +916,19 @@ const FindTeachers = () => {
                 <ul className="nav nav-pills mb-4" role="tablist">
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${
-                        activeVideoTab === "info" ? "active" : ""
-                      }`}
+                      className={`nav-link ${activeVideoTab === "info" ? "active" : ""
+                        }`}
                       onClick={() => setActiveVideoTab("info")}
                       type="button"
                     >
                       <i className="bi bi-info-circle me-2"></i>
-                      Teacher Info
+                      Tutor Info
                     </button>
                   </li>
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${
-                        activeVideoTab === "videos" ? "active" : ""
-                      }`}
+                      className={`nav-link ${activeVideoTab === "videos" ? "active" : ""
+                        }`}
                       onClick={() => setActiveVideoTab("videos")}
                       type="button"
                     >
@@ -987,7 +985,7 @@ const FindTeachers = () => {
                             </h6>
                             <div className="info-grid">
                               {selectedTeacher.isConnected ||
-                              currentUser?.hasPremium ? (
+                                (currentUser?.hasPremium && currentUser?.role === "student") ? (
                                 <>
                                   <div className="info-item">
                                     <label>Email:</label>
@@ -1081,13 +1079,28 @@ const FindTeachers = () => {
                             </div>
                           </div>
 
+                          {/* About Section */}
+                          {selectedTeacher.about && (
+                            <div className="info-section mt-4">
+                              <h6 className="section-title">
+                                <i className="bi bi-person-lines-fill me-2"></i>
+                                About
+                              </h6>
+                              <div className="about-content">
+                                <p className="mb-0" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+                                  {selectedTeacher.about}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
                           {!selectedTeacher.isConnected && (
                             <div className="alert alert-info mt-3">
                               <i className="bi bi-info-circle me-2"></i>
                               <strong>Connect to view contact details:</strong>
                               <p className="mb-0 mt-1">
                                 Send a connection request to access this
-                                teacher's phone number and email address.
+                                Tutor's phone number and email address.
                               </p>
                             </div>
                           )}
@@ -1120,7 +1133,7 @@ const FindTeachers = () => {
                             </h5>
                             <p className="text-muted">
                               Watch these sample videos to get a preview of this
-                              teacher's teaching style and methodology.
+                              Tutor's teaching style and methodology.
                             </p>
                           </div>
                           <div className="row">
@@ -1171,7 +1184,7 @@ const FindTeachers = () => {
                             No Sample Videos Available
                           </h5>
                           <p className="text-muted">
-                            This teacher hasn't uploaded any sample videos yet.
+                            This Tutor hasn't uploaded any sample videos yet.
                             You can still connect with them to learn more about
                             their teaching methods.
                           </p>
@@ -1415,7 +1428,7 @@ const FindTeachers = () => {
                   <div className="mb-3">
                     <label className="form-label">
                       <i className="bi bi-chat-text me-2"></i>
-                      Message to Teacher (Optional)
+                      Message to Tutor (Optional)
                     </label>
                     <textarea
                       className={`form-control ${requestMessageError ? "is-invalid" : ""}`}
@@ -1476,7 +1489,7 @@ const FindTeachers = () => {
                         if (validationError) {
                           setRequestMessage("");
                           setRequestMessageError(validationError);
-                          
+
                           // Clear error after 3 seconds
                           setTimeout(() => {
                             setRequestMessageError("");
@@ -1512,9 +1525,9 @@ const FindTeachers = () => {
                     <i className="bi bi-info-circle me-2"></i>
                     <strong>How it works:</strong>
                     <ul className="mb-0 mt-2">
-                      <li>Your request will be sent to the teacher</li>
+                      <li>Your request will be sent to the Tutor</li>
                       <li>
-                        You'll be notified when the teacher views your contact
+                        You'll be notified when the Tutor views your contact
                         info
                       </li>
                     </ul>
@@ -1892,6 +1905,18 @@ const FindTeachers = () => {
 
         .info-item span {
           color: #1e293b;
+        }
+
+        .about-content {
+          background: #f8fafc;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          border-left: 3px solid #2563eb;
+        }
+
+        .about-content p {
+          color: #475569;
+          font-size: 0.95rem;
         }
 
         /* Video Styles */

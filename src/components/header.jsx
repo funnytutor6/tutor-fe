@@ -53,9 +53,8 @@ const Header = () => {
   return (
     <>
       <header
-        className={`header position-fixed w-100 top-0 transition-all ${
-          isScrolled ? "scrolled" : ""
-        }`}
+        className={`header position-fixed w-100 top-0 transition-all ${isScrolled ? "scrolled" : ""
+          }`}
         style={{
           zIndex: 1050,
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -145,9 +144,8 @@ const Header = () => {
 
             {/* Enhanced Mobile Toggle */}
             <button
-              className={`navbar-toggler border-0 p-2 ${
-                isMenuOpen ? "active" : ""
-              }`}
+              className={`navbar-toggler border-0 p-2 ${isMenuOpen ? "active" : ""
+                }`}
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               style={{
@@ -241,8 +239,8 @@ const Header = () => {
                             ? "#fff"
                             : "#495057"
                           : isActive(item.path)
-                          ? "#fff"
-                          : "rgba(255, 255, 255, 0.9)",
+                            ? "#fff"
+                            : "rgba(255, 255, 255, 0.9)",
                         fontWeight: isActive(item.path) ? "600" : "500",
                         transition: "all 0.3s ease",
                         background: isActive(item.path)
@@ -254,8 +252,8 @@ const Header = () => {
                           isActive(item.path) && isScrolled
                             ? "none"
                             : isActive(item.path)
-                            ? "1px solid rgba(255, 255, 255, 0.3)"
-                            : "none",
+                              ? "1px solid rgba(255, 255, 255, 0.3)"
+                              : "none",
                       }}
                       onMouseEnter={(e) => {
                         if (!isActive(item.path)) {
@@ -331,9 +329,8 @@ const Header = () => {
                       )}
                       <span className="fw-medium">{user.name}</span>
                       <i
-                        className={`bi bi-chevron-${
-                          showDropdown ? "up" : "down"
-                        } small`}
+                        className={`bi bi-chevron-${showDropdown ? "up" : "down"
+                          } small`}
                       ></i>
                     </button>
                     {showDropdown && (
@@ -352,8 +349,8 @@ const Header = () => {
                             user.role === "teacher"
                               ? "/dashboard/teacher"
                               : user.role === "admin"
-                              ? "/admin"
-                              : "/dashboard/student"
+                                ? "/admin"
+                                : "/dashboard/student"
                           }
                           style={{ margin: "4px 8px" }}
                         >
@@ -435,7 +432,7 @@ const Header = () => {
                             style={{ margin: "4px 8px" }}
                           >
                             <i className="bi bi-person-workspace text-primary"></i>
-                            Teacher
+                            Tutor
                           </Link>
                         </div>
                       )}
@@ -513,7 +510,7 @@ const Header = () => {
                             style={{ margin: "4px 8px" }}
                           >
                             <i className="bi bi-person-workspace text-primary"></i>
-                            Teacher
+                            Tutor
                           </Link>
                         </div>
                       )}

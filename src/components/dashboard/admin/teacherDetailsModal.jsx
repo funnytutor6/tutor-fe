@@ -161,10 +161,10 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                     className="modal-title mb-0"
                     style={{ fontSize: "1.5rem", fontWeight: "600" }}
                   >
-                    Teacher Profile
+                    Tutor Profile
                   </h5>
                   <small style={{ opacity: 0.9 }}>
-                    Complete teacher information and status
+                    Complete Tutor information and status
                   </small>
                 </div>
               </div>
@@ -280,9 +280,8 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                     label="Location"
                     value={
                       teacher.cityOrTown || teacher.country
-                        ? `${teacher.cityOrTown || ""}${
-                            teacher.cityOrTown && teacher.country ? ", " : ""
-                          }${teacher.country || ""}`
+                        ? `${teacher.cityOrTown || ""}${teacher.cityOrTown && teacher.country ? ", " : ""
+                        }${teacher.country || ""}`
                         : null
                     }
                     color="#f59e0b"
@@ -310,14 +309,14 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                     value={
                       teacher.created
                         ? new Date(teacher.created).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "short",
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )
                         : null
                     }
                     color="#8b5cf6"
@@ -328,14 +327,14 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                     value={
                       teacher.updated
                         ? new Date(teacher.updated).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "short",
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )
                         : null
                     }
                     color="#ec4899"
@@ -359,12 +358,52 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                       teacher.status === "approved"
                         ? "#10b981"
                         : teacher.status === "rejected"
-                        ? "#ef4444"
-                        : "#f59e0b"
+                          ? "#ef4444"
+                          : "#f59e0b"
                     }
                   />
                 </div>
               </div>
+
+              {/* About Section */}
+              {teacher.about && (
+                <div className="mt-3">
+                  <h6
+                    className="mb-3"
+                    style={{
+                      fontSize: "0.875rem",
+                      fontWeight: "700",
+                      textTransform: "uppercase",
+                      letterSpacing: "1px",
+                      color: "#667eea",
+                    }}
+                  >
+                    <i className="bi bi-person-lines-fill me-2"></i>
+                    About Tutor
+                  </h6>
+                  <div
+                    className="p-3 rounded-3"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+                      border: "1px solid #e9ecef",
+                      borderLeft: "4px solid #667eea",
+                    }}
+                  >
+                    <p
+                      className="mb-0"
+                      style={{
+                        fontSize: "0.95rem",
+                        lineHeight: "1.6",
+                        color: "#475569",
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {teacher.about}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Footer */}
