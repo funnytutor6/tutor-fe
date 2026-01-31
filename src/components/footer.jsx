@@ -181,9 +181,8 @@ const Footer = () => {
       className="footer"
       style={{
         marginLeft:
-          path === "/dashboard/teacher" || path === "/dashboard/student" || path === "/admin@"
-            ? "300px"
-            : "0px",
+          path === "/dashboard/teacher" || path === "/dashboard/student" 
+            ? "300px" : path === "/admin" ? "280px" : "0px",
       }}
     >
       {/* Main Footer Content */}
