@@ -106,10 +106,7 @@ const Terms = () => {
             title: 'SUBSCRIPTIONS',
             icon: 'bi-arrow-repeat',
             content: [
-                {
-                    subtitle: 'Billing and Renewal',
-                    text: 'Your subscription will continue and automatically renew unless canceled. You consent to our charging your payment method on a recurring basis without requiring your prior approval for each recurring charge, until such time as you cancel the applicable order. The length of your billing cycle is monthly.'
-                },
+             
                 {
                     subtitle: 'Free Trial',
                     text: 'We offer a __________-day free trial to new users who register with the Services. The account will be charged according to the user\'s chosen subscription at the end of the free trial.'

@@ -399,7 +399,7 @@ const AdminDashboard = () => {
           style={{ overflowY: "scroll", maxHeight: "calc(84vh - 100px)" }}
         >
           {menuSections.map((section, sectionIndex) => (
-            <div key={sectionIndex}>
+            <div key={sectionIndex} style={{ width: "100%" }}>
               {!sidebarCollapsed && (
                 <div
                   className="text-uppercase text-muted px-3 py-2"

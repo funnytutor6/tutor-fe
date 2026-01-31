@@ -244,7 +244,7 @@ const Reports = () => {
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div className="text-uppercase text-primary fw-bold text-xs mb-1">MRR</div>
+                                    <div className="text-uppercase text-primary fw-bold text-xs mb-1">Monthly Recurring Revenue</div>
                                     <div className="h4 mb-0 fw-bold text-dark">
                                         ${(data.subscriptionStats?.mrr || 0).toFixed(2)}
                                     </div>
