@@ -342,74 +342,23 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                         }
                         color="#f59e0b"
                       />
-                      <div
-                        className="p-3 rounded-3 mb-3"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
-                          border: "1px solid #e9ecef",
-                          transition: "all 0.2s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = "translateY(-2px)";
-                          e.currentTarget.style.boxShadow =
-                            "0 4px 12px rgba(0,0,0,0.1)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = "translateY(0)";
-                          e.currentTarget.style.boxShadow = "none";
-                        }}
-                      >
-                        <div className="d-flex align-items-start">
-                          <div
-                            className="rounded-circle d-flex align-items-center justify-content-center me-3"
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              background: "#3b82f615",
-                              color: "#3b82f6",
-                              flexShrink: 0,
-                            }}
-                          >
-                            <i
-                              className="bi bi-file-text-fill"
-                              style={{ fontSize: "1.2rem" }}
-                            ></i>
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div
-                              className="text-muted mb-2"
-                              style={{
-                                fontSize: "0.75rem",
-                                fontWeight: "600",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.5px",
-                              }}
-                            >
-                              Description
-                            </div>
-                            <div
-                              className="fw-semibold"
-                              style={{
-                                fontSize: "0.95rem",
-                                color: "#333",
-                                lineHeight: "1.6",
-                                maxHeight: "200px",
-                                overflowY: "auto",
-                                paddingRight: "8px",
-                                wordBreak: "break-word",
-                                whiteSpace: "pre-wrap",
-                              }}
-                            >
-                              {postData.post?.description || (
-                                <span className="text-muted fst-italic">
-                                  Not provided
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                       <InfoCard
+                        icon="calendar-check"
+                        label="Post Created"
+                        value={
+                          postData.post?.created
+                            ? new Date(
+                              postData.post.created
+                            ).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
+                            : null
+                        }
+                        color="#8b5cf6"
+                      />
                     </div>
 
                     {/* Location & Contact */}
@@ -467,24 +416,80 @@ const TeacherPostDetailsModal = ({ postId, show, onHide }) => {
                         }
                         color="#3b82f6"
                       />
-                      <InfoCard
-                        icon="calendar-check"
-                        label="Post Created"
-                        value={
-                          postData.post?.created
-                            ? new Date(
-                              postData.post.created
-                            ).toLocaleDateString("en-US", {
-                              weekday: "short",
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })
-                            : null
-                        }
-                        color="#8b5cf6"
-                      />
+                     
                     </div>
+                  </div>
+
+                  {/* Description - full width at bottom (colspan 2) */}
+                  <div className="row">
+                    <div
+                      className="col-12 p-3 rounded-3 mb-0 mt-3"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+                      border: "1px solid #e9ecef",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 12px rgba(0,0,0,0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <div className="d-flex align-items-start">
+                      <div
+                        className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          background: "#3b82f615",
+                          color: "#3b82f6",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <i
+                          className="bi bi-file-text-fill"
+                          style={{ fontSize: "1.2rem" }}
+                        ></i>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          className="text-muted mb-2"
+                          style={{
+                            fontSize: "0.75rem",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                          }}
+                        >
+                          Description
+                        </div>
+                        <div
+                          className="fw-semibold"
+                          style={{
+                            fontSize: "0.95rem",
+                            color: "#333",
+                            lineHeight: "1.6",
+                            maxHeight: "200px",
+                            overflowY: "auto",
+                            paddingRight: "8px",
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {postData.post?.description || (
+                            <span className="text-muted fst-italic">
+                              Not provided
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   </div>
                 </>
               ) : null}

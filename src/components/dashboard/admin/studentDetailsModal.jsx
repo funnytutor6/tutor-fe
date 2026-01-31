@@ -4,7 +4,12 @@ import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const StudentDetailsModal = ({ studentId, show, onHide }) => {
+const StudentDetailsModal = ({
+  studentId,
+  show,
+  onHide,
+  onNavigateToStudentPosts,
+}) => {
   const [loading, setLoading] = useState(false);
   const [studentData, setStudentData] = useState(null);
   const [error, setError] = useState(null);
@@ -298,19 +303,41 @@ const StudentDetailsModal = ({ studentId, show, onHide }) => {
                         </div>
                         <div className="d-flex align-items-center gap-3">
                           {getPremiumBadge(studentData.premium)}
-                          <div
-                            className="d-inline-flex align-items-center px-3 py-2 rounded-pill"
-                            style={{
-                              background:
-                                "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                              color: "white",
-                              fontSize: "0.875rem",
-                              fontWeight: "600",
-                            }}
-                          >
-                            <i className="bi bi-file-post me-2"></i>
-                            {studentData.postCount || 0} Posts
-                          </div>
+                          {typeof onNavigateToStudentPosts === "function" ? (
+                            <button
+                              type="button"
+                              className="d-inline-flex align-items-center px-3 py-2 rounded-pill border-0"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                                color: "white",
+                                fontSize: "0.875rem",
+                                fontWeight: "600",
+                              }}
+                              onClick={() =>
+                                onNavigateToStudentPosts(
+                                  studentData.student?.id ?? studentId
+                                )
+                              }
+                            >
+                              <i className="bi bi-file-post me-2"></i>
+                              {studentData.postCount || 0} Posts
+                            </button>
+                          ) : (
+                            <div
+                              className="d-inline-flex align-items-center px-3 py-2 rounded-pill"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                                color: "white",
+                                fontSize: "0.875rem",
+                                fontWeight: "600",
+                              }}
+                            >
+                              <i className="bi bi-file-post me-2"></i>
+                              {studentData.postCount || 0} Posts
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -411,12 +438,80 @@ const StudentDetailsModal = ({ studentId, show, onHide }) => {
                         }
                         color="#ec4899"
                       />
-                      <InfoCard
-                        icon="file-post"
-                        label="Total Posts"
-                        value={studentData.postCount || 0}
-                        color="#3b82f6"
-                      />
+                      {typeof onNavigateToStudentPosts === "function" ? (
+                        <div
+                          className="p-3 rounded-3 mb-3"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)",
+                            border: "1px solid #e9ecef",
+                            cursor: "pointer",
+                          }}
+                          onClick={() =>
+                            onNavigateToStudentPosts(
+                              studentData.student?.id ?? studentId
+                            )
+                          }
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform =
+                              "translateY(-2px)";
+                            e.currentTarget.style.boxShadow =
+                              "0 4px 12px rgba(0,0,0,0.1)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow = "none";
+                          }}
+                        >
+                          <div className="d-flex align-items-start">
+                            <div
+                              className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                background: "#3b82f615",
+                                color: "#3b82f6",
+                                flexShrink: 0,
+                              }}
+                            >
+                              <i
+                                className="bi bi-file-post"
+                                style={{ fontSize: "1.2rem" }}
+                              ></i>
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div
+                                className="text-muted mb-1"
+                                style={{
+                                  fontSize: "0.75rem",
+                                  fontWeight: "600",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                }}
+                              >
+                                Total Posts
+                              </div>
+                              <div
+                                className="fw-semibold text-primary"
+                                style={{
+                                  fontSize: "0.95rem",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                {studentData.postCount || 0} — Click to view
+                                posts
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <InfoCard
+                          icon="file-post"
+                          label="Total Posts"
+                          value={studentData.postCount || 0}
+                          color="#3b82f6"
+                        />
+                      )}
                       {studentData.premium?.premiumData && (
                         <>
                           {studentData.premium.premiumData.paymentDate && (

@@ -2,7 +2,12 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const TeacherDetailsModal = ({ teacher, show, onHide }) => {
+const TeacherDetailsModal = ({
+  teacher,
+  show,
+  onHide,
+  onNavigateToTeacherPosts,
+}) => {
   if (!teacher) return null;
 
   const getStatusBadge = (status) => {
@@ -241,8 +246,25 @@ const TeacherDetailsModal = ({ teacher, show, onHide }) => {
                     </code>
                   </div>
                 </div>
-                <div className="text-center">
+                <div className="text-center d-flex align-items-center gap-2 flex-wrap justify-content-center">
                   {getStatusBadge(teacher.status)}
+                  {typeof onNavigateToTeacherPosts === "function" && (
+                    <button
+                      type="button"
+                      className="btn btn-sm d-inline-flex align-items-center px-3 py-2 rounded-pill border-0"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                        color: "white",
+                        fontSize: "0.875rem",
+                        fontWeight: "600",
+                      }}
+                      onClick={() => onNavigateToTeacherPosts(teacher.id)}
+                    >
+                      <i className="bi bi-file-text-fill me-2"></i>
+                      {teacher.postCount ?? 0} Posts
+                    </button>
+                  )}
                 </div>
               </div>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ENDPOINTS } from "../../api/endpoints";
 import api from "../../api/axiosConfig";
 import { useAuth } from "../../context/AuthContext";
@@ -18,8 +19,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Reports from "./admin/Reports";
 
+const VALID_SECTIONS = new Set([
+  "dashboard",
+  "all-teachers",
+  "pending",
+  "teachers",
+  "teacher-posts",
+  "all-students",
+  "students",
+  "student-posts",
+  "reports",
+  "emails",
+  "profile",
+]);
+
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [adminDetails, setAdminDetails] = useState({
     name: "",
     email: "",
@@ -50,6 +66,24 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // Filter passed when navigating from teacher/student modal (avoids race with searchParams)
+  const [filterTeacherIdFromNav, setFilterTeacherIdFromNav] = useState(null);
+  const [filterStudentIdFromNav, setFilterStudentIdFromNav] = useState(null);
+
+  // Sync activeSection from URL on mount and when search params change
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (section && VALID_SECTIONS.has(section)) {
+      setActiveSection(section);
+    } else if (!section && window.location.pathname.includes("/admin")) {
+      setSearchParams({ section: "dashboard" }, { replace: true });
+    }
+  }, [searchParams]);
+
+  // Scroll to top when switching sections via menu
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeSection]);
 
   // Fetch data from backend
   useEffect(() => {
@@ -389,7 +423,12 @@ const AdminDashboard = () => {
                   key={item.id}
                   className={`nav-link text-start mb-1 rounded  ${activeSection === item.id ? "text-white" : "text-dark"
                     }`}
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setSearchParams({ section: item.id });
+                    setFilterTeacherIdFromNav(null);
+                    setFilterStudentIdFromNav(null);
+                  }}
                   style={{
                     padding: "12px 16px",
                     border: "none",
@@ -547,7 +586,17 @@ const AdminDashboard = () => {
               {activeSection === "all-students" && (
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <AllStudents refreshTrigger={refreshTrigger} />
+                    <AllStudents
+                      refreshTrigger={refreshTrigger}
+                      onNavigateToStudentPosts={(studentId) => {
+                        setFilterStudentIdFromNav(studentId || null);
+                        setSearchParams({
+                          section: "student-posts",
+                          studentId: studentId || "",
+                        });
+                        setActiveSection("student-posts");
+                      }}
+                    />
                   </div>
                 </div>
               )}
@@ -555,7 +604,14 @@ const AdminDashboard = () => {
               {activeSection === "student-posts" && (
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <AllStudentPosts refreshTrigger={refreshTrigger} />
+                    <AllStudentPosts
+                      refreshTrigger={refreshTrigger}
+                      initialFilterStudentId={
+                        (filterStudentIdFromNav ??
+                          searchParams.get("studentId")) ||
+                        undefined
+                      }
+                    />
                   </div>
                 </div>
               )}
@@ -563,7 +619,14 @@ const AdminDashboard = () => {
               {activeSection === "teacher-posts" && (
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <AllTeacherPosts refreshTrigger={refreshTrigger} />
+                    <AllTeacherPosts
+                      refreshTrigger={refreshTrigger}
+                      initialFilterTeacherId={
+                        (filterTeacherIdFromNav ??
+                          searchParams.get("teacherId")) ||
+                        undefined
+                      }
+                    />
                   </div>
                 </div>
               )}
@@ -571,7 +634,17 @@ const AdminDashboard = () => {
               {activeSection === "all-teachers" && (
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    <AllTeachers refreshTrigger={refreshTrigger} />
+                    <AllTeachers
+                      refreshTrigger={refreshTrigger}
+                      onNavigateToTeacherPosts={(teacherId) => {
+                        setFilterTeacherIdFromNav(teacherId || null);
+                        setSearchParams({
+                          section: "teacher-posts",
+                          teacherId: teacherId || "",
+                        });
+                        setActiveSection("teacher-posts");
+                      }}
+                    />
                   </div>
                 </div>
               )}

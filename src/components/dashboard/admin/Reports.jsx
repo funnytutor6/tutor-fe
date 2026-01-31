@@ -30,7 +30,7 @@ ChartJS.register(
 const Reports = () => {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
-    const [signupView, setSignupView] = useState('daily'); // 'daily' or 'monthly'
+    const [signupView, setSignupView] = useState('daily'); // '7days' | 'daily' | 'monthly'
 
     useEffect(() => {
         fetchReports();
@@ -121,7 +121,12 @@ const Reports = () => {
 
     // 1. Signups Line Chart
     const processSignups = () => {
-        const sourceData = signupView === 'daily' ? data.signups?.daily : data.signups?.monthly;
+        const sourceData =
+            signupView === '7days'
+                ? data.signups?.last7Days
+                : signupView === 'daily'
+                    ? data.signups?.daily
+                    : data.signups?.monthly;
         if (!sourceData) return { labels: [], datasets: [] };
 
         // Get unique dates/months and sort
@@ -307,6 +312,12 @@ const Reports = () => {
                         <div className="card-header py-3 bg-white d-flex justify-content-between align-items-center">
                             <h6 className="m-0 font-weight-bold text-primary">User Growth (Signups)</h6>
                             <div className="btn-group btn-group-sm">
+                                <button
+                                    className={`btn ${signupView === '7days' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                    onClick={() => setSignupView('7days')}
+                                >
+                                    Last 7 Days
+                                </button>
                                 <button
                                     className={`btn ${signupView === 'daily' ? 'btn-primary' : 'btn-outline-primary'}`}
                                     onClick={() => setSignupView('daily')}

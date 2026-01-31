@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { postService } from "../../../api/services/postService";
+import { studentService } from "../../../api/services/studentService";
 import DataTable from "./dataTable";
 import AdminSearchInput from "./adminSearchInput";
 import StudentPostDetailsModal from "./studentPostDetailsModal";
@@ -7,7 +8,10 @@ import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const AllStudentPosts = ({ refreshTrigger }) => {
+const AllStudentPosts = ({
+  refreshTrigger,
+  initialFilterStudentId,
+}) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,18 +21,51 @@ const AllStudentPosts = ({ refreshTrigger }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(
+    initialFilterStudentId || ""
+  );
+  const [studentsForFilter, setStudentsForFilter] = useState([]);
+
+  useEffect(() => {
+    if (
+      initialFilterStudentId !== undefined &&
+      initialFilterStudentId !== null
+    ) {
+      setSelectedStudentId(initialFilterStudentId || "");
+    }
+  }, [initialFilterStudentId]);
+
+  useEffect(() => {
+    const loadStudents = async () => {
+      try {
+        const response = await studentService.getAllStudents({
+          page: 1,
+          pageSize: 100,
+          search: "",
+        });
+        const items = response?.data?.items || response?.items || [];
+        setStudentsForFilter(items);
+      } catch (err) {
+        console.error("Error loading students for filter:", err);
+      }
+    };
+    loadStudents();
+  }, []);
 
   useEffect(() => {
     fetchPosts();
-  }, [refreshTrigger, currentPage, pageSize, searchTerm]);
+  }, [refreshTrigger, currentPage, pageSize, searchTerm, selectedStudentId]);
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
+      const effectiveStudentId =
+        initialFilterStudentId ?? selectedStudentId ?? "";
       const response = await postService.getAllStudentPostsForAdmin({
         page: currentPage,
         pageSize: pageSize,
         search: searchTerm,
+        studentId: effectiveStudentId || undefined,
       });
       const data = response?.data?.items || [];
       setPosts(data);
@@ -166,11 +203,35 @@ const AllStudentPosts = ({ refreshTrigger }) => {
         <span className="badge bg-primary">{totalPosts} posts</span>
       </div>
 
-      <AdminSearchInput
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Search by student, subject, headline, description or city..."
-      />
+      <div className="d-flex align-items-start gap-3 mb-3 flex-wrap">
+        <div className="" style={{ minWidth: "500px" }}>
+          <AdminSearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by student, subject, headline, description or city..."
+          />
+        </div>
+        <div className="">
+          <select
+            className="form-select"
+            value={selectedStudentId}
+            onChange={(e) => {
+              setSelectedStudentId(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{ minWidth: "200px" , height: "47px" ,
+              borderRadius: "10px"} }
+          >
+            <option value="">All Students</option>
+            {studentsForFilter.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name || s.fullName || s.email || s.id}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <DataTable
         data={posts}
         columns={columns}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { postService } from "../../../api/services/postService";
+import { teacherService } from "../../../api/services/teacherService";
 import DataTable from "./dataTable";
 import AdminSearchInput from "./adminSearchInput";
 import TeacherPostDetailsModal from "./teacherPostDetailsModal";
@@ -7,7 +8,10 @@ import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const AllTeacherPosts = ({ refreshTrigger }) => {
+const AllTeacherPosts = ({
+  refreshTrigger,
+  initialFilterTeacherId,
+}) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,18 +21,48 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedTeacherId, setSelectedTeacherId] = useState(
+    initialFilterTeacherId || ""
+  );
+  const [teachersForFilter, setTeachersForFilter] = useState([]);
+
+  useEffect(() => {
+    if (initialFilterTeacherId !== undefined && initialFilterTeacherId !== null) {
+      setSelectedTeacherId(initialFilterTeacherId || "");
+    }
+  }, [initialFilterTeacherId]);
+
+  useEffect(() => {
+    const loadTeachers = async () => {
+      try {
+        const response = await teacherService.getAllTeachersForAdmin({
+          page: 1,
+          pageSize: 100,
+          search: "",
+        });
+        const items = response?.data?.items || response?.items || [];
+        setTeachersForFilter(items);
+      } catch (err) {
+        console.error("Error loading teachers for filter:", err);
+      }
+    };
+    loadTeachers();
+  }, []);
 
   useEffect(() => {
     fetchPosts();
-  }, [refreshTrigger, searchTerm, currentPage, pageSize]);
+  }, [refreshTrigger, searchTerm, currentPage, pageSize, selectedTeacherId]);
 
   const fetchPosts = async () => {
     try {
       setIsLoading(true);
+      const effectiveTeacherId =
+        initialFilterTeacherId ?? selectedTeacherId ?? "";
       const response = await postService.getAllTeacherPostsForAdmin({
         page: currentPage,
         pageSize: pageSize,
         search: searchTerm,
+        teacherId: effectiveTeacherId || undefined,
       });
       const data = response?.data?.items || [];
       setPosts(data);
@@ -173,11 +207,37 @@ const AllTeacherPosts = ({ refreshTrigger }) => {
         <span className="badge bg-primary">{totalPosts} posts</span>
       </div>
 
-      <AdminSearchInput
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Search by Tutor, subject, headline, description or city..."
-      />
+      <div className="d-flex align-items-start gap-3 mb-3 flex-wrap">
+        <div className="" style={{ minWidth: "500px" }}>
+          <AdminSearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search by Tutor, subject, headline, description or city..."
+          />
+        </div>
+        <div className="">
+          <select
+            className="form-select"
+            value={selectedTeacherId}
+            onChange={(e) => {
+              setSelectedTeacherId(e.target.value);
+              setCurrentPage(1);
+            }}
+            style={{
+              minWidth: "200px",
+              height: "47px",
+              borderRadius: "10px",
+            }}
+          >
+            <option value="">All Tutors</option>
+            {teachersForFilter.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name || t.email || t.id}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <DataTable
         data={posts}

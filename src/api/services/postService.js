@@ -45,12 +45,18 @@ export const postService = {
   /**
    * Admin: Get all teacher posts
    */
-  getAllTeacherPostsForAdmin: async ({ page, pageSize, search }) => {
+  getAllTeacherPostsForAdmin: async ({
+    page,
+    pageSize,
+    search,
+    teacherId,
+  }) => {
     const response = await api.get(ENDPOINTS.GET_ALL_TEACHER_POSTS_FOR_ADMIN, {
       params: {
         page,
         pageSize,
         search,
+        ...(teacherId && { teacherId }),
       },
     });
     return response.data;
@@ -101,12 +107,18 @@ export const postService = {
   /**
    * Get all student posts for admin
    */
-  getAllStudentPostsForAdmin: async ({ page, pageSize, search }) => {
+  getAllStudentPostsForAdmin: async ({
+    page,
+    pageSize,
+    search,
+    studentId,
+  }) => {
     const response = await api.get(ENDPOINTS.GET_ALL_STUDENT_POSTS_FOR_ADMIN, {
       params: {
         page,
         pageSize,
         search,
+        ...(studentId && { studentId }),
       },
     });
     return response.data;

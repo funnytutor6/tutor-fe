@@ -8,7 +8,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import AdminSearchInput from "./adminSearchInput.jsx";
 import { teacherService } from "../../../api/services/teacherService.js";
 
-const AllTeachers = ({ refreshTrigger }) => {
+const AllTeachers = ({
+  refreshTrigger,
+  onNavigateToTeacherPosts,
+}) => {
   const [teachers, setTeachers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -214,6 +217,7 @@ const AllTeachers = ({ refreshTrigger }) => {
           setShowModal(false);
           setSelectedTeacher(null);
         }}
+        onNavigateToTeacherPosts={onNavigateToTeacherPosts}
       />
     </div>
   );

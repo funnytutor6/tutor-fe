@@ -7,7 +7,10 @@ import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const AllStudents = ({ refreshTrigger }) => {
+const AllStudents = ({
+  refreshTrigger,
+  onNavigateToStudentPosts,
+}) => {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -202,6 +205,7 @@ const AllStudents = ({ refreshTrigger }) => {
           setShowModal(false);
           setSelectedStudentId(null);
         }}
+        onNavigateToStudentPosts={onNavigateToStudentPosts}
       />
     </div>
   );
