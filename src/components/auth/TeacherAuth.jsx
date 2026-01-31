@@ -505,10 +505,6 @@ const TeacherAuth = () => {
       throw new Error("Password must be at least 6 characters long");
     }
 
-    // Check if profile photo is required and uploaded
-    if (!formData.profilePhotoUrl) {
-      throw new Error("Please upload a profile photo");
-    }
 
     // Validate phone number is provided
     const phoneNumber =
@@ -1065,7 +1061,7 @@ const TeacherAuth = () => {
 
                       <div className="mb-3">
                         <label htmlFor="profilePhoto" className="form-label">
-                          Profile Photo <span className="text-danger">*</span>
+                          Profile Photo <span className="text-danger"></span>
                         </label>
 
                         {/* Image preview */}
