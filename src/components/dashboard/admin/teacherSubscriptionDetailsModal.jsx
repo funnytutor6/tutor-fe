@@ -228,12 +228,12 @@ const TeacherSubscriptionDetailsModal = ({
                         ).toLocaleDateString()}
                       </p>
                     )}
-                    {subscription.cancelAtPeriodEnd && (
+                    {subscription.cancelAtPeriodEnd ? (
                       <p>
                         <strong>Cancel At Period End:</strong>{" "}
                         <span className="badge bg-warning">Yes</span>
                       </p>
-                    )}
+                    ) : null}
                     {subscription.canceledAt && (
                       <p>
                         <strong>Canceled At:</strong>{" "}
