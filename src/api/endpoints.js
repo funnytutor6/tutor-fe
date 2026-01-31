@@ -118,5 +118,5 @@ export const ENDPOINTS = {
   REACTIVATE_STUDENT_SUBSCRIPTION: "/api/subscriptions/student/reactivate",
   CREATE_STUDENT_CUSTOMER_PORTAL: "/api/subscriptions/student/customer-portal",
   CREATE_CUSTOMER_PORTAL: "/api/subscriptions/customer-portal",
-  GET_STUDENT_INVOICE_HISTORY: "/api/subscriptions/student/invoice-history",
+  GET_STUDENT_INVOICE_HISTORY: (email) => `/api/subscriptions/student/invoice-history?email=${email}`,
 };

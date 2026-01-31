@@ -70,7 +70,6 @@ const StudentDashboard = () => {
     premiumData: null,
   });
 
-  console.log("studentPremiumStatus", studentPremiumStatus);
 
   const [invoiceHistory, setInvoiceHistory] = useState([]);
   const [loadingInvoices, setLoadingInvoices] = useState(false);

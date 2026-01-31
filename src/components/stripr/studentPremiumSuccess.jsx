@@ -29,8 +29,8 @@ const StudentPremiumSuccess = () => {
       // Check student premium status using your MySQL API
       const premiumResponse = await api.get(`/check-student-premium-status`);
 
-      if (premiumResponse.data.hasPremium && premiumResponse.data.isPaid) {
-        setPremiumData(premiumResponse.data.premiumData);
+      if (premiumResponse.data?.data?.hasPremium && premiumResponse.data?.data?.isPaid) {
+        setPremiumData(premiumResponse.data.data.premiumData);
         setSuccess(true);
         setLoading(false);
         updateUserPremiumStatus();

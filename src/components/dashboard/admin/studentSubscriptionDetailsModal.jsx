@@ -23,7 +23,7 @@ const StudentSubscriptionDetailsModal = ({
     try {
       setLoadingInvoices(true);
       const response = await subscriptionService.getStudentInvoiceHistory(
-        subscription.email
+        subscription?.email
       );
       const invoices = response?.data || response;
       setInvoiceHistory(Array.isArray(invoices) ? invoices : []);
@@ -240,12 +240,12 @@ const StudentSubscriptionDetailsModal = ({
                         <span className="badge bg-warning">Yes</span>
                       </p>
                     )}
-                    {subscription.canceledAt && (
+                    {subscription.canceledAt ? (
                       <p>
                         <strong>Canceled At:</strong>{" "}
                         {new Date(subscription.canceledAt).toLocaleDateString()}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                 </div>
                 {subscription.paymentAmount && (

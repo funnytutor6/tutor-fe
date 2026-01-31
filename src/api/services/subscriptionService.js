@@ -67,8 +67,8 @@ export const subscriptionService = {
   /**
    * Get student invoice history
    */
-  getStudentInvoiceHistory: async () => {
-    const response = await api.get(ENDPOINTS.GET_STUDENT_INVOICE_HISTORY);
+  getStudentInvoiceHistory: async (email) => {
+    const response = await api.get(ENDPOINTS.GET_STUDENT_INVOICE_HISTORY(email));
     return response.data;
   },
 
