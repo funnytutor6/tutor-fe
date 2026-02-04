@@ -338,7 +338,7 @@ const Footer = () => {
             </div>
             <div className="col-md-6">
               <div className="footer-bottom-links footer-bottom-link">
-                Developed By Fortxcore
+                <a href="www.fortxcore.com" className="footer-bottom-links footer-bottom-link">Developed By Fortxcore</a>
               </div>
             </div>
           </div>
