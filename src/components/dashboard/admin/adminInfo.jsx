@@ -5,7 +5,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 const AdminInfo = ({ adminDetails, stats, onNavigate }) => {
   const statCards = [
     {
-      title: "Total Users",
+      title: "Total Students",
       value: stats.totalUsers || 0,
       icon: "bi-people-fill",
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
