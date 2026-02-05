@@ -44,28 +44,28 @@ const OtpVerification = ({
   };
 
   // Check OTP status on mount and when phone number changes
-  useEffect(() => {
-    if (userId && userType && phoneNumber) {
-      checkOTPStatus();
-      // Also send OTP if this is first load and no active OTP
-      const sendInitialOTP = async () => {
-        try {
-          const status = await otpService.getOTPStatus(
-            userId,
-            userType,
-            phoneNumber
-          );
-          // If no active OTP, send one automatically
-          if (!status.hasActiveOTP) {
-            await handleSendOTP();
-          }
-        } catch (error) {
-          console.error("Error checking initial OTP status:", error);
-        }
-      };
-      sendInitialOTP();
-    }
-  }, [userId, userType, phoneNumber]);
+  // useEffect(() => {
+  //   if (userId && userType && phoneNumber) {
+  //     checkOTPStatus();
+  //     // Also send OTP if this is first load and no active OTP
+  //     const sendInitialOTP = async () => {
+  //       try {
+  //         const status = await otpService.getOTPStatus(
+  //           userId,
+  //           userType,
+  //           phoneNumber
+  //         );
+  //         // If no active OTP, send one automatically
+  //         if (!status.hasActiveOTP) {
+  //           await handleSendOTP();
+  //         }
+  //       } catch (error) {
+  //         console.error("Error checking initial OTP status:", error);
+  //       }
+  //     };
+  //     sendInitialOTP();
+  //   }
+  // }, [userId, userType, phoneNumber]);
 
   // Countdown timer for cooldown
   useEffect(() => {
