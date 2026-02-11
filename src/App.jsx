@@ -19,6 +19,7 @@ import StudentAuth from "./components/auth/StudentAuth";
 import TeacherAuth from "./components/auth/TeacherAuth";
 import TeacherDashboard from "./components/dashboard/TeacherDashboard";
 import StudentDashboard from "./components/StudentDashboard";
+import TutorReviewPage from "./components/reviews/TutorReviewPage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import VideoPlayer from "./components/videoPlayer";
@@ -87,6 +88,10 @@ const AppLayout = () => {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/success" element={<Success />} />
+          <Route
+            path="/tutor-review/:teacherId"
+            element={<TutorReviewPage />}
+          />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/premium-success" element={<PremiumSuccess />} />
           <Route

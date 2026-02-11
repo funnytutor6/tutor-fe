@@ -6,6 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import api from "../api/axiosConfig";
 import { ENDPOINTS } from "../api/endpoints";
 import { useNavigate } from "react-router-dom";
+import ReviewForm from "./reviews/ReviewForm";
+import ReviewList from "./reviews/ReviewList";
 
 const FindTeachers = () => {
   const navigate = useNavigate();
@@ -39,6 +41,7 @@ const FindTeachers = () => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [activeVideoTab, setActiveVideoTab] = useState("info");
+  const [refreshReviews, setRefreshReviews] = useState(0);
 
   const locationInputRef = useRef(null);
   const autocompleteRef = useRef(null);
@@ -53,7 +56,7 @@ const FindTeachers = () => {
       }
 
       const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
+        'script[src*="maps.googleapis.com"]',
       );
       if (existingScript) {
         return;
@@ -100,7 +103,7 @@ const FindTeachers = () => {
                 {
                   types: ["(cities)"],
                   fields: ["name", "formatted_address", "address_components"],
-                }
+                },
               );
 
             autocompleteRef.current.addListener("place_changed", () => {
@@ -112,7 +115,7 @@ const FindTeachers = () => {
                   const cityComponent = place.address_components.find(
                     (component) =>
                       component.types.includes("locality") ||
-                      component.types.includes("administrative_area_level_2")
+                      component.types.includes("administrative_area_level_2"),
                   );
                   if (cityComponent) {
                     cityName = cityComponent.long_name;
@@ -135,7 +138,7 @@ const FindTeachers = () => {
       if (autocompleteRef.current && window.google?.maps?.event) {
         try {
           window.google.maps.event.clearInstanceListeners(
-            autocompleteRef.current
+            autocompleteRef.current,
           );
           autocompleteRef.current = null;
         } catch (error) {
@@ -275,7 +278,7 @@ const FindTeachers = () => {
           .catch((error) => {
             console.error(`Error checking status for post ${post.id}:`, error);
             return { postId: post.id, hasRequested: false, status: null };
-          })
+          }),
       );
 
       const statuses = await Promise.all(statusPromises);
@@ -327,7 +330,7 @@ const FindTeachers = () => {
 
       if (currentUser && userType === "student") {
         const teacherPosts = filteredPosts.filter(
-          (post) => post.teacherId === post.teacherId
+          (post) => post.teacherId === post.teacherId,
         );
         isConnected = teacherPosts.some((post) => {
           const requestStatus = requestStatuses[post.id];
@@ -397,7 +400,7 @@ const FindTeachers = () => {
 
     if (userType === "teacher") {
       toast.error(
-        "Teachers cannot send connection requests. Please log in as a student to connect with other teachers."
+        "Teachers cannot send connection requests. Please log in as a student to connect with other teachers.",
       );
       return;
     }
@@ -451,11 +454,11 @@ const FindTeachers = () => {
 
       const response = await api.post(
         `${ENDPOINTS.SEND_CONNECTION_REQUEST}`,
-        requestData
+        requestData,
       );
 
       toast.success(
-        "Connection request sent successfully! The Tutor will be notified."
+        "Connection request sent successfully! The Tutor will be notified.",
       );
       setShowRequestModal(false);
       setRequestMessage("");
@@ -838,25 +841,29 @@ const FindTeachers = () => {
                         </div>
                         <p className="description">{post.description}</p>
                         <div className="reviews-summary">
-                          {post.averageRating ? (
+                          {post.averageRating > 0 ? (
                             <>
-                              <div className="rating-stars">
+                              <div className="rating-stars me-2">
                                 {[...Array(5)].map((_, i) => (
                                   <i
                                     key={i}
-                                    className={`bi bi-star${i < Math.floor(post.averageRating)
-                                      ? "-fill"
-                                      : ""
-                                      }`}
+                                    className={`bi bi-star${
+                                      i < Math.round(post.averageRating)
+                                        ? "-fill"
+                                        : ""
+                                    } text-warning`}
                                   ></i>
                                 ))}
                               </div>
-                              <span className="reviews-count">
-                                {post.totalReviews} reviews
+                              <span className="reviews-count text-muted small">
+                                ({post.reviewCount}{" "}
+                                {post.reviewCount === 1 ? "review" : "reviews"})
                               </span>
                             </>
                           ) : (
-                            <span className="text-muted">No reviews yet</span>
+                            <span className="text-muted small">
+                              No reviews yet
+                            </span>
                           )}
                         </div>
                       </div>
@@ -916,8 +923,9 @@ const FindTeachers = () => {
                 <ul className="nav nav-pills mb-4" role="tablist">
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${activeVideoTab === "info" ? "active" : ""
-                        }`}
+                      className={`nav-link ${
+                        activeVideoTab === "info" ? "active" : ""
+                      }`}
                       onClick={() => setActiveVideoTab("info")}
                       type="button"
                     >
@@ -927,8 +935,9 @@ const FindTeachers = () => {
                   </li>
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${activeVideoTab === "videos" ? "active" : ""
-                        }`}
+                      className={`nav-link ${
+                        activeVideoTab === "videos" ? "active" : ""
+                      }`}
                       onClick={() => setActiveVideoTab("videos")}
                       type="button"
                     >
@@ -937,6 +946,23 @@ const FindTeachers = () => {
                       {teacherVideos.length > 0 && (
                         <span className="badge bg-primary ms-2">
                           {teacherVideos.length}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                  <li className="nav-item" role="presentation">
+                    <button
+                      className={`nav-link ${
+                        activeVideoTab === "reviews" ? "active" : ""
+                      }`}
+                      onClick={() => setActiveVideoTab("reviews")}
+                      type="button"
+                    >
+                      <i className="bi bi-star-half me-2"></i>
+                      Reviews
+                      {selectedTeacher.reviewCount > 0 && (
+                        <span className="badge bg-primary ms-2">
+                          {selectedTeacher.reviewCount}
                         </span>
                       )}
                     </button>
@@ -985,7 +1011,8 @@ const FindTeachers = () => {
                             </h6>
                             <div className="info-grid">
                               {selectedTeacher.isConnected ||
-                                (currentUser?.hasPremium && currentUser?.role === "student") ? (
+                              (currentUser?.hasPremium &&
+                                currentUser?.role === "student") ? (
                                 <>
                                   <div className="info-item">
                                     <label>Email:</label>
@@ -1038,7 +1065,7 @@ const FindTeachers = () => {
                                     <label>Member Since:</label>
                                     <span>
                                       {new Date(
-                                        selectedTeacher.created
+                                        selectedTeacher.created,
                                       ).toLocaleDateString()}
                                     </span>
                                   </div>
@@ -1070,7 +1097,7 @@ const FindTeachers = () => {
                                     <label>Member Since:</label>
                                     <span>
                                       {new Date(
-                                        selectedTeacher.created
+                                        selectedTeacher.created,
                                       ).toLocaleDateString()}
                                     </span>
                                   </div>
@@ -1087,7 +1114,13 @@ const FindTeachers = () => {
                                 About
                               </h6>
                               <div className="about-content">
-                                <p className="mb-0" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+                                <p
+                                  className="mb-0"
+                                  style={{
+                                    whiteSpace: "pre-wrap",
+                                    lineHeight: "1.6",
+                                  }}
+                                >
                                   {selectedTeacher.about}
                                 </p>
                               </div>
@@ -1099,8 +1132,8 @@ const FindTeachers = () => {
                               <i className="bi bi-info-circle me-2"></i>
                               <strong>Connect to view contact details:</strong>
                               <p className="mb-0 mt-1">
-                                Send a connection request to access this
-                                Tutor's phone number and email address.
+                                Send a connection request to access this Tutor's
+                                phone number and email address.
                               </p>
                             </div>
                           )}
@@ -1190,6 +1223,25 @@ const FindTeachers = () => {
                           </p>
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {/* Reviews Tab */}
+                  {activeVideoTab === "reviews" && (
+                    <div className="reviews-tab">
+                      {userType === "student" && (
+                        <ReviewForm
+                          teacherId={selectedTeacher.teacherId}
+                          onReviewSubmitted={() =>
+                            setRefreshReviews((prev) => prev + 1)
+                          }
+                        />
+                      )}
+
+                      <ReviewList
+                        teacherId={selectedTeacher.teacherId}
+                        refreshTrigger={refreshReviews}
+                      />
                     </div>
                   )}
                 </div>
@@ -1504,7 +1556,10 @@ const FindTeachers = () => {
                       placeholder="Hi! I'm interested in your teaching services. I would like to learn..."
                     />
                     {requestMessageError && (
-                      <div className="invalid-feedback d-block" style={{ marginTop: "0.25rem" }}>
+                      <div
+                        className="invalid-feedback d-block"
+                        style={{ marginTop: "0.25rem" }}
+                      >
                         <i className="bi bi-exclamation-circle me-1"></i>
                         {requestMessageError}
                       </div>
@@ -1673,12 +1728,12 @@ const FindTeachers = () => {
 
         .rating-badge {
           position: absolute;
-          bottom: -8px;
+          bottom: 1px;
           left: 50%;
           transform: translateX(-50%);
           background: #2563eb;
           color: white;
-          padding: 0.25rem 0.5rem;
+          padding: 0.1rem 0.4rem;
           border-radius: 1rem;
           font-size: 0.7rem;
           font-weight: 600;
