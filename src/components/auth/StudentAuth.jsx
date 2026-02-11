@@ -174,7 +174,7 @@ const StudentAuth = () => {
       }
 
       const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
+        'script[src*="maps.googleapis.com"]',
       );
       if (existingScript) {
         return;
@@ -225,7 +225,7 @@ const StudentAuth = () => {
                 {
                   types: ["country"],
                   fields: ["name", "address_components"],
-                }
+                },
               );
 
             countryAutocompleteRef.current.addListener("place_changed", () => {
@@ -251,7 +251,7 @@ const StudentAuth = () => {
       if (countryAutocompleteRef.current && window.google?.maps?.event) {
         try {
           window.google.maps.event.clearInstanceListeners(
-            countryAutocompleteRef.current
+            countryAutocompleteRef.current,
           );
           countryAutocompleteRef.current = null;
         } catch (error) {
@@ -290,7 +290,7 @@ const StudentAuth = () => {
 
         // Find the country that matches this code
         const matchingCountry = Object.entries(countryPhoneCodes).find(
-          ([, phoneCode]) => phoneCode === code
+          ([, phoneCode]) => phoneCode === code,
         );
         if (matchingCountry && matchingCountry[0] !== formData.country) {
           setFormData((prev) => ({
@@ -369,7 +369,7 @@ const StudentAuth = () => {
     try {
       const response = await authService.loginStudent(
         formData.email,
-        formData.password
+        formData.password,
       );
 
       if (!response.success) {
@@ -414,7 +414,7 @@ const StudentAuth = () => {
         try {
           await otpService.sendOTP(userId, userType, phoneNumber);
           toast.success(
-            "OTP sent to your WhatsApp. Please verify to continue."
+            "OTP sent to your WhatsApp. Please verify to continue.",
           );
         } catch (otpError) {
           toast.error("Failed to send OTP. Please try again.");
@@ -434,7 +434,7 @@ const StudentAuth = () => {
       !formData.country
     ) {
       throw new Error(
-        "Please fill in all required fields (Name, Email, Password, Country)"
+        "Please fill in all required fields (Name, Email, Password, Country)",
       );
     }
 
@@ -501,7 +501,7 @@ const StudentAuth = () => {
       if (pendingLogin) {
         const response = await authService.loginStudent(
           pendingLogin.email,
-          pendingLogin.password
+          pendingLogin.password,
         );
 
         if (!response.success) {
@@ -533,7 +533,7 @@ const StudentAuth = () => {
 
       // Otherwise, complete registration after OTP verification
       const response = await authService.completeStudentRegistration(
-        pendingRegistration.studentId
+        pendingRegistration.studentId,
       );
 
       const studentData = response.student;
@@ -558,7 +558,7 @@ const StudentAuth = () => {
     } catch (error) {
       console.error("Error completing registration/login:", error);
       toast.error(
-        error.response?.data?.error || "Failed to complete registration/login"
+        error.response?.data?.error || "Failed to complete registration/login",
       );
     }
   };
@@ -656,7 +656,11 @@ const StudentAuth = () => {
               </div>
 
               {error && (
-                <div className="alert alert-danger" role="alert">
+                <div
+                  className="alert alert-danger"
+                  role="alert"
+                  style={{ color: "black" }}
+                >
                   <i className="bi bi-exclamation-triangle-fill me-2"></i>
                   {error}
                 </div>
@@ -733,7 +737,8 @@ const StudentAuth = () => {
 
                     <div className="mb-3">
                       <label htmlFor="phoneNumber" className="form-label">
-                        Phone Number <span className="text-danger">*</span>
+                        WhatsApp Phone Number{" "}
+                        <span className="text-danger">*</span>
                         {countryCode && (
                           <span className="text-muted ms-2">
                             ({countryCode})
@@ -961,7 +966,11 @@ const StudentAuth = () => {
                 </p>
               </div>
 
-              <div className="alert alert-info mt-3" role="alert">
+              <div
+                className="alert alert-info mt-3"
+                role="alert"
+                style={{ color: "black" }}
+              >
                 <i className="bi bi-info-circle-fill me-2"></i>
                 <small>
                   {isLogin

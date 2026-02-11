@@ -166,7 +166,7 @@ const TeacherAuth = () => {
       }
 
       const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
+        'script[src*="maps.googleapis.com"]',
       );
       if (existingScript) {
         return;
@@ -227,7 +227,7 @@ const TeacherAuth = () => {
                     (component) =>
                       component.types.includes("locality") ||
                       component.types.includes("administrative_area_level_2") ||
-                      component.types.includes("sublocality_level_1")
+                      component.types.includes("sublocality_level_1"),
                   );
                   if (cityComponent) {
                     cityName = cityComponent.long_name;
@@ -235,7 +235,7 @@ const TeacherAuth = () => {
 
                   // Auto-detect country from city selection
                   const countryComponent = place.address_components.find(
-                    (component) => component.types.includes("country")
+                    (component) => component.types.includes("country"),
                   );
                   if (countryComponent) {
                     setFormData((prev) => ({
@@ -266,7 +266,7 @@ const TeacherAuth = () => {
       if (autocompleteRef.current && window.google?.maps?.event) {
         try {
           window.google.maps.event.clearInstanceListeners(
-            autocompleteRef.current
+            autocompleteRef.current,
           );
           autocompleteRef.current = null;
         } catch (error) {
@@ -296,7 +296,7 @@ const TeacherAuth = () => {
                 {
                   types: ["country"],
                   fields: ["name", "address_components"],
-                }
+                },
               );
 
             countryAutocompleteRef.current.addListener("place_changed", () => {
@@ -322,7 +322,7 @@ const TeacherAuth = () => {
       if (countryAutocompleteRef.current && window.google?.maps?.event) {
         try {
           window.google.maps.event.clearInstanceListeners(
-            countryAutocompleteRef.current
+            countryAutocompleteRef.current,
           );
           countryAutocompleteRef.current = null;
         } catch (error) {
@@ -406,7 +406,7 @@ const TeacherAuth = () => {
 
         // Find the country that matches this code
         const matchingCountry = Object.entries(countryPhoneCodes).find(
-          ([, phoneCode]) => phoneCode === code
+          ([, phoneCode]) => phoneCode === code,
         );
         if (matchingCountry && matchingCountry[0] !== formData.country) {
           setFormData((prev) => ({
@@ -439,7 +439,7 @@ const TeacherAuth = () => {
     try {
       const response = await authService.loginTeacher(
         formData.email,
-        formData.password
+        formData.password,
       );
 
       const userData = {
@@ -481,7 +481,7 @@ const TeacherAuth = () => {
         try {
           await otpService.sendOTP(userId, userType, phoneNumber);
           toast.success(
-            "OTP sent to your WhatsApp. Please verify to continue."
+            "OTP sent to your WhatsApp. Please verify to continue.",
           );
         } catch (otpError) {
           toast.error("Failed to send OTP. Please try again.");
@@ -504,7 +504,6 @@ const TeacherAuth = () => {
     if (formData.password.length < 6) {
       throw new Error("Password must be at least 6 characters long");
     }
-
 
     // Validate phone number is provided
     const phoneNumber =
@@ -570,7 +569,7 @@ const TeacherAuth = () => {
       if (pendingLogin) {
         const response = await authService.loginTeacher(
           pendingLogin.email,
-          pendingLogin.password
+          pendingLogin.password,
         );
 
         const userData = {
@@ -598,7 +597,7 @@ const TeacherAuth = () => {
 
       // Otherwise, complete registration after OTP verification
       const response = await authService.completeTeacherRegistration(
-        pendingRegistration.teacherId
+        pendingRegistration.teacherId,
       );
 
       const teacherData = response.teacher;
@@ -624,7 +623,7 @@ const TeacherAuth = () => {
     } catch (error) {
       console.error("Error completing registration/login:", error);
       toast.error(
-        error.response?.data?.error || "Failed to complete registration/login"
+        error.response?.data?.error || "Failed to complete registration/login",
       );
     }
   };
@@ -829,7 +828,11 @@ const TeacherAuth = () => {
                 </div>
 
                 {error && (
-                  <div className="alert alert-danger" role="alert">
+                  <div
+                    className="alert alert-danger"
+                    role="alert"
+                    style={{ color: "black" }}
+                  >
                     <i className="bi bi-exclamation-triangle-fill me-2"></i>
                     {error}
                   </div>
@@ -985,7 +988,8 @@ const TeacherAuth = () => {
 
                       <div className="mb-3">
                         <label htmlFor="phoneNumber" className="form-label">
-                          Phone Number <span className="text-danger">*</span>
+                          WhatsApp Phone Number{" "}
+                          <span className="text-danger">*</span>
                           {countryCode && (
                             <span className="text-muted ms-2">
                               ({countryCode})
@@ -1004,10 +1008,11 @@ const TeacherAuth = () => {
                           )}
                           <input
                             type="tel"
-                            className={`form-control ${countryCode
-                              ? "phone-input-with-code"
-                              : "auth-form-control"
-                              }`}
+                            className={`form-control ${
+                              countryCode
+                                ? "phone-input-with-code"
+                                : "auth-form-control"
+                            }`}
                             id="phoneNumber"
                             name="phoneNumber"
                             value={
@@ -1147,8 +1152,9 @@ const TeacherAuth = () => {
                     ) : (
                       <>
                         <i
-                          className={`bi ${isLogin ? "bi-box-arrow-in-right" : "bi-person-plus"
-                            } me-2`}
+                          className={`bi ${
+                            isLogin ? "bi-box-arrow-in-right" : "bi-person-plus"
+                          } me-2`}
                         ></i>
                         {isLogin ? "Login" : "Create Account"}
                       </>
@@ -1165,7 +1171,7 @@ const TeacherAuth = () => {
                       className="btn btn-link p-0"
                       onClick={() =>
                         navigate(
-                          isLogin ? "/register/teacher" : "/login/teacher"
+                          isLogin ? "/register/teacher" : "/login/teacher",
                         )
                       }
                     >
@@ -1175,7 +1181,11 @@ const TeacherAuth = () => {
                 </div>
 
                 <div className="mt-4">
-                  <div className="alert alert-info" role="alert">
+                  <div
+                    className="alert alert-info"
+                    role="alert"
+                    style={{ color: "black" }}
+                  >
                     <div className="d-flex">
                       <i className="bi bi-lightbulb flex-shrink-0 me-2"></i>
                       <div>

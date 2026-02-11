@@ -70,7 +70,6 @@ const StudentDashboard = () => {
     premiumData: null,
   });
 
-
   const [invoiceHistory, setInvoiceHistory] = useState([]);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [loadingPortal, setLoadingPortal] = useState(false);
@@ -116,7 +115,7 @@ const StudentDashboard = () => {
       }
 
       const existingScript = document.querySelector(
-        'script[src*="maps.googleapis.com"]'
+        'script[src*="maps.googleapis.com"]',
       );
       if (existingScript) {
         return;
@@ -164,7 +163,7 @@ const StudentDashboard = () => {
                 {
                   types: ["(cities)"],
                   fields: ["name", "formatted_address", "address_components"],
-                }
+                },
               );
 
             autocompleteRef.current.addListener("place_changed", () => {
@@ -176,7 +175,7 @@ const StudentDashboard = () => {
                   const cityComponent = place.address_components.find(
                     (component) =>
                       component.types.includes("locality") ||
-                      component.types.includes("administrative_area_level_2")
+                      component.types.includes("administrative_area_level_2"),
                   );
                   if (cityComponent) {
                     cityName = cityComponent.long_name;
@@ -202,7 +201,7 @@ const StudentDashboard = () => {
       if (autocompleteRef.current && window.google?.maps?.event) {
         try {
           window.google.maps.event.clearInstanceListeners(
-            autocompleteRef.current
+            autocompleteRef.current,
           );
           autocompleteRef.current = null;
         } catch (error) {
@@ -322,7 +321,7 @@ const StudentDashboard = () => {
     } catch (error) {
       console.error("Error creating customer portal session:", error);
       toast.error(
-        error.response?.data?.error || "Failed to open payment management"
+        error.response?.data?.error || "Failed to open payment management",
       );
     } finally {
       setLoadingPortal(false);
@@ -344,13 +343,13 @@ const StudentDashboard = () => {
       toast.success(
         cancelAtPeriodEnd
           ? "Subscription will be canceled at the end of the billing period"
-          : "Subscription canceled immediately"
+          : "Subscription canceled immediately",
       );
       await loadStudentPremiumStatus();
     } catch (error) {
       console.error("Error canceling subscription:", error);
       toast.error(
-        error.response?.data?.error || "Failed to cancel subscription"
+        error.response?.data?.error || "Failed to cancel subscription",
       );
     } finally {
       setLoading(false);
@@ -366,7 +365,7 @@ const StudentDashboard = () => {
     } catch (error) {
       console.error("Error reactivating subscription:", error);
       toast.error(
-        error.response?.data?.error || "Failed to reactivate subscription"
+        error.response?.data?.error || "Failed to reactivate subscription",
       );
     } finally {
       setLoading(false);
@@ -585,9 +584,9 @@ const StudentDashboard = () => {
   const validatePremiumForm = () => {
     const errors = {};
 
-    if (!premiumData.subject.trim()) {
-      errors.subject = "Subject is required";
-    }
+    // if (!premiumData.subject.trim()) {
+    //   errors.subject = "Subject is required";
+    // }
 
     if (!premiumData.email.trim()) {
       errors.email = "Email is required";
@@ -599,13 +598,13 @@ const StudentDashboard = () => {
       errors.mobile = "Mobile number is required";
     }
 
-    if (!premiumData.topix.trim()) {
-      errors.topix = "Topic is required";
-    }
+    // if (!premiumData.topix.trim()) {
+    //   errors.topix = "Topic is required";
+    // }
 
-    if (!premiumData.descripton.trim()) {
-      errors.descripton = "Description is required";
-    }
+    // if (!premiumData.descripton.trim()) {
+    //   errors.descripton = "Description is required";
+    // }
 
     setPremiumErrors(errors);
     return Object.keys(errors).length === 0;
@@ -683,7 +682,7 @@ const StudentDashboard = () => {
         });
       } else {
         toast.error(
-          response.error || response.data?.error || "Failed to update profile"
+          response.error || response.data?.error || "Failed to update profile",
         );
       }
     } catch (error) {
@@ -728,7 +727,7 @@ const StudentDashboard = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
       toast.error(
-        "Failed to upload image: " + (error.message || "Unknown error")
+        "Failed to upload image: " + (error.message || "Unknown error"),
       );
       setImagePreview(profileData.profilePhoto || null);
       e.target.value = "";
@@ -750,16 +749,16 @@ const StudentDashboard = () => {
       const body = {
         studentData: {
           email: premiumData.email,
-          subject: premiumData.subject,
+          subject: premiumData?.subject || "",
           mobile: premiumData.mobile,
-          topix: premiumData.topix,
-          descripton: premiumData.descripton,
+          topix: premiumData.topix || "",
+          descripton: premiumData.descripton || "",
         },
       };
 
       const response = await api.post(
         ENDPOINTS.CREATE_STUDENT_PREMIUM_CHECKOUT,
-        body
+        body,
       );
       const result = await stripe.redirectToCheckout({
         sessionId: response?.data?.data?.id,
@@ -937,7 +936,8 @@ const StudentDashboard = () => {
                 padding: "10px 15px",
                 borderRadius: "5px",
                 width: "100%",
-                background: activeTab === "connection-requests" ? "#0d6efd" : "none",
+                background:
+                  activeTab === "connection-requests" ? "#0d6efd" : "none",
                 border: "none",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
@@ -1009,10 +1009,10 @@ const StudentDashboard = () => {
             {activeTab === "profile"
               ? "Profile Management"
               : activeTab === "posts"
-              ? "My Posts"
-              : activeTab === "connection-requests"
-              ? "Connection Requests"
-              : "Subscriptions"}
+                ? "My Posts"
+                : activeTab === "connection-requests"
+                  ? "Connection Requests"
+                  : "Subscriptions"}
           </h1>
         </div>
 
@@ -1360,19 +1360,34 @@ const StudentDashboard = () => {
                     Manage your tutoring requests and learning opportunities
                   </p>
                 </div>
-                <button
-                  className="btn btn-primary"
-                  onClick={handleCreatePost}
-                  disabled={myPosts.length >= 2 && !user?.hasPremium}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <i className="bi bi-plus-circle"></i>
-                  Create New Post
-                </button>
+                {myPosts.length >= 2 && !user?.hasPremium ? (
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => setActiveTab("subscriptions")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    <i className="bi bi-star-fill"></i>
+                    Subscribe to Create More
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleCreatePost}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <i className="bi bi-plus-circle"></i>
+                    Create New Post
+                  </button>
+                )}
               </div>
 
               {/* Error Alert */}
@@ -1485,14 +1500,14 @@ const StudentDashboard = () => {
                                   post.lessonType === "online"
                                     ? "#dbeafe"
                                     : post.lessonType === "in-person"
-                                    ? "#dcfce7"
-                                    : "#fef3c7",
+                                      ? "#dcfce7"
+                                      : "#fef3c7",
                                 color:
                                   post.lessonType === "online"
                                     ? "#1d4ed8"
                                     : post.lessonType === "in-person"
-                                    ? "#16a34a"
-                                    : "#92400e",
+                                      ? "#16a34a"
+                                      : "#92400e",
                               }}
                             >
                               <i
@@ -1500,15 +1515,15 @@ const StudentDashboard = () => {
                                   post.lessonType === "online"
                                     ? "bi-laptop"
                                     : post.lessonType === "in-person"
-                                    ? "bi-geo-alt"
-                                    : "bi-hybrid"
+                                      ? "bi-geo-alt"
+                                      : "bi-hybrid"
                                 } me-1`}
                               ></i>
                               {post.lessonType === "online"
                                 ? "Online"
                                 : post.lessonType === "in-person"
-                                ? "In-Person"
-                                : "Both"}
+                                  ? "In-Person"
+                                  : "Both"}
                             </span>
                             <span
                               style={{
@@ -1537,8 +1552,8 @@ const StudentDashboard = () => {
                                 {post.grade === "student"
                                   ? "K-12"
                                   : post.grade === "university-student"
-                                  ? "University"
-                                  : "Adult Learner"}
+                                    ? "University"
+                                    : "Adult Learner"}
                               </span>
                             )}
                           </div>
@@ -1722,7 +1737,7 @@ const StudentDashboard = () => {
                               {getStatusBadge(
                                 studentPremiumStatus.subscriptionStatus,
                                 studentPremiumStatus.isPaid,
-                                studentPremiumStatus.currentPeriodEnd
+                                studentPremiumStatus.currentPeriodEnd,
                               )}
                             </h5>
                             <p style={{ margin: 0, opacity: 0.8 }}>
@@ -1785,7 +1800,7 @@ const StudentDashboard = () => {
                             </div>
                             <div style={{ fontWeight: "600" }}>
                               {formatDetailedDate(
-                                studentPremiumStatus.paymentDate
+                                studentPremiumStatus.paymentDate,
                               )}
                             </div>
                           </div>
@@ -1809,7 +1824,7 @@ const StudentDashboard = () => {
                             </div>
                             <div style={{ fontWeight: "600" }}>
                               {formatDetailedDate(
-                                studentPremiumStatus.nextPaymentDate
+                                studentPremiumStatus.nextPaymentDate,
                               )}
                             </div>
                             {studentPremiumStatus.daysRemaining !== null &&
@@ -1846,7 +1861,7 @@ const StudentDashboard = () => {
                             </div>
                             <div style={{ fontWeight: "600" }}>
                               {formatDetailedDate(
-                                studentPremiumStatus.currentPeriodStart
+                                studentPremiumStatus.currentPeriodStart,
                               )}
                             </div>
                           </div>
@@ -1870,7 +1885,7 @@ const StudentDashboard = () => {
                             </div>
                             <div style={{ fontWeight: "600" }}>
                               {formatDetailedDate(
-                                studentPremiumStatus.currentPeriodEnd
+                                studentPremiumStatus.currentPeriodEnd,
                               )}
                             </div>
                             {studentPremiumStatus.daysRemaining !== null &&
@@ -1883,7 +1898,7 @@ const StudentDashboard = () => {
                                   }}
                                 >
                                   {calculateDaysRemaining(
-                                    studentPremiumStatus.currentPeriodEnd
+                                    studentPremiumStatus.currentPeriodEnd,
                                   )}{" "}
                                   days left
                                 </div>
@@ -1990,7 +2005,7 @@ const StudentDashboard = () => {
                                   <code>
                                     {studentPremiumStatus.premiumData.stripeSubscriptionId.substring(
                                       0,
-                                      20
+                                      20,
                                     )}
                                     ...
                                   </code>
@@ -2005,7 +2020,7 @@ const StudentDashboard = () => {
                                 {getStatusBadge(
                                   studentPremiumStatus.subscriptionStatus,
                                   studentPremiumStatus.isPaid,
-                                  studentPremiumStatus.currentPeriodEnd
+                                  studentPremiumStatus.currentPeriodEnd,
                                 )}
                               </p>
                               <p>
@@ -2026,20 +2041,20 @@ const StudentDashboard = () => {
                               <p>
                                 <strong>Created:</strong>{" "}
                                 {formatDetailedDate(
-                                  studentPremiumStatus.premiumData.created
+                                  studentPremiumStatus.premiumData.created,
                                 )}
                               </p>
                               <p>
                                 <strong>Last Updated:</strong>{" "}
                                 {formatDetailedDate(
-                                  studentPremiumStatus.premiumData.updated
+                                  studentPremiumStatus.premiumData.updated,
                                 )}
                               </p>
                               {studentPremiumStatus.premiumData.canceledAt && (
                                 <p>
                                   <strong>Canceled At:</strong>{" "}
                                   {formatDetailedDate(
-                                    studentPremiumStatus.premiumData.canceledAt
+                                    studentPremiumStatus.premiumData.canceledAt,
                                   )}
                                 </p>
                               )}
@@ -2103,8 +2118,8 @@ const StudentDashboard = () => {
                                           invoice.status === "paid"
                                             ? "bg-success"
                                             : invoice.status === "open"
-                                            ? "bg-warning"
-                                            : "bg-danger"
+                                              ? "bg-warning"
+                                              : "bg-danger"
                                         }`}
                                       >
                                         {invoice.status?.toUpperCase() || "N/A"}
@@ -2113,9 +2128,9 @@ const StudentDashboard = () => {
                                     <td>
                                       {invoice.periodStart && invoice.periodEnd
                                         ? `${formatDetailedDate(
-                                            invoice.periodStart
+                                            invoice.periodStart,
                                           )} - ${formatDetailedDate(
-                                            invoice.periodEnd
+                                            invoice.periodEnd,
                                           )}`
                                         : "N/A"}
                                     </td>
@@ -2669,13 +2684,13 @@ const StudentDashboard = () => {
                     </small>
                   </div>
                   <p style={{ color: "#6c757d", margin: 0 }}>
-                    Cancel anytime • 2 free lessons monthly
+                    Cancel anytime •
                   </p>
                 </div>
 
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className="form-label">Subject *</label>
                       <select
                         className={`form-control ${
@@ -2701,7 +2716,7 @@ const StudentDashboard = () => {
                           {premiumErrors.subject}
                         </div>
                       )}
-                    </div>
+                    </div> */}
 
                     <div className="mb-3">
                       <label className="form-label">Email *</label>
@@ -2722,30 +2737,10 @@ const StudentDashboard = () => {
                         </div>
                       )}
                     </div>
-
-                    <div className="mb-3">
-                      <label className="form-label">Mobile Number *</label>
-                      <input
-                        type="text"
-                        className={`form-control ${
-                          premiumErrors.mobile ? "is-invalid" : ""
-                        }`}
-                        name="mobile"
-                        value={premiumData.mobile}
-                        onChange={handlePremiumInputChange}
-                        readOnly={true}
-                        placeholder="Enter your mobile number"
-                      />
-                      {premiumErrors.mobile && (
-                        <div className="invalid-feedback">
-                          {premiumErrors.mobile}
-                        </div>
-                      )}
-                    </div>
                   </div>
 
                   <div className="col-md-6">
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className="form-label">Topic *</label>
                       <input
                         type="text"
@@ -2762,9 +2757,9 @@ const StudentDashboard = () => {
                           {premiumErrors.topix}
                         </div>
                       )}
-                    </div>
+                    </div> */}
 
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <label className="form-label">Description *</label>
                       <textarea
                         className={`form-control ${
@@ -2779,6 +2774,25 @@ const StudentDashboard = () => {
                       {premiumErrors.descripton && (
                         <div className="invalid-feedback">
                           {premiumErrors.descripton}
+                        </div>
+                      )}
+                    </div> */}
+                    <div className="mb-3">
+                      <label className="form-label">Mobile Number *</label>
+                      <input
+                        type="text"
+                        className={`form-control ${
+                          premiumErrors.mobile ? "is-invalid" : ""
+                        }`}
+                        name="mobile"
+                        value={premiumData.mobile}
+                        onChange={handlePremiumInputChange}
+                        readOnly={true}
+                        placeholder="Enter your mobile number"
+                      />
+                      {premiumErrors.mobile && (
+                        <div className="invalid-feedback">
+                          {premiumErrors.mobile}
                         </div>
                       )}
                     </div>

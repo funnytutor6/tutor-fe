@@ -44,7 +44,7 @@ const AdminAuth = () => {
     // Call API to login admin
     const response = await authService.adminLogin(
       formData.email,
-      formData.password
+      formData.password,
     );
 
     if (response.success && response.admin) {
@@ -116,7 +116,11 @@ const AdminAuth = () => {
               </div>
 
               {error && (
-                <div className="alert alert-danger" role="alert">
+                <div
+                  className="alert alert-danger"
+                  role="alert"
+                  style={{ color: "black" }}
+                >
                   <i className="bi bi-exclamation-triangle-fill me-2"></i>
                   {error}
                 </div>
@@ -183,7 +187,11 @@ const AdminAuth = () => {
                 </button>
               </form>
 
-              <div className="alert alert-info mt-3" role="alert">
+              <div
+                className="alert alert-info mt-3"
+                role="alert"
+                style={{ color: "black" }}
+              >
                 <i className="bi bi-info-circle-fill me-2"></i>
                 <small>
                   Use your admin credentials to access the administration panel.

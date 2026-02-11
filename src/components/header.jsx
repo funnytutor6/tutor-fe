@@ -53,8 +53,9 @@ const Header = () => {
   return (
     <>
       <header
-        className={`header position-fixed w-100 top-0 transition-all ${isScrolled ? "scrolled" : ""
-          }`}
+        className={`header position-fixed w-100 top-0 transition-all ${
+          isScrolled ? "scrolled" : ""
+        }`}
         style={{
           zIndex: 1050,
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -144,8 +145,9 @@ const Header = () => {
 
             {/* Enhanced Mobile Toggle */}
             <button
-              className={`navbar-toggler border-0 p-2 ${isMenuOpen ? "active" : ""
-                }`}
+              className={`navbar-toggler border-0 p-2 ${
+                isMenuOpen ? "active" : ""
+              }`}
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               style={{
@@ -216,7 +218,7 @@ const Header = () => {
                   { path: "/", label: "Home", icon: "house-fill" },
                   {
                     path: "/find-teachers",
-                    label: "Find Teachers",
+                    label: "Find Tutors",
                     icon: "search",
                   },
                   {
@@ -230,7 +232,7 @@ const Header = () => {
                   <li key={item.path} className="nav-item mx-1">
                     <Link
                       className={`nav-link position-relative px-3 py-2 rounded-pill transition-all ${isActive(
-                        item.path
+                        item.path,
                       )}`}
                       to={item.path}
                       style={{
@@ -329,8 +331,9 @@ const Header = () => {
                       )}
                       <span className="fw-medium">{user.name}</span>
                       <i
-                        className={`bi bi-chevron-${showDropdown ? "up" : "down"
-                          } small`}
+                        className={`bi bi-chevron-${
+                          showDropdown ? "up" : "down"
+                        } small`}
                       ></i>
                     </button>
                     {showDropdown && (

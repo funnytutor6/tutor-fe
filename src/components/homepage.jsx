@@ -77,7 +77,7 @@ const EduLink = () => {
   // Navigation links
   const navLinks = [
     { id: "home", name: "Home", href: "#" },
-    { id: "teachers", name: "Find Teachers", href: "#" },
+    { id: "teachers", name: "Find Tutors", href: "#" },
     { id: "students", name: "For Students", href: "#" },
     { id: "about", name: "About Us", href: "#" },
     { id: "contact", name: "Contact", href: "#" },
@@ -145,7 +145,8 @@ const EduLink = () => {
       role: "Student, Psychology",
       content:
         "Funny Study Learning completely transformed my learning experience. I found a perfect tutor who helped me improve my grades dramatically in just two months!",
-      image: "https://m.media-amazon.com/images/M/MV5BNjEyZGMzODktY2JmYi00ZGEwLTg0YjItODVhZDlkYTMyN2YwXkEyXkFqcGc@._V1_.jpg",
+      image:
+        "https://m.media-amazon.com/images/M/MV5BNjEyZGMzODktY2JmYi00ZGEwLTg0YjItODVhZDlkYTMyN2YwXkEyXkFqcGc@._V1_.jpg",
     },
     {
       id: 2,
@@ -153,7 +154,8 @@ const EduLink = () => {
       role: "Math Tutor",
       content:
         "As a Tutor, Funny Study Learning has allowed me to connect with motivated students and share my passion for mathematics. The platform is intuitive and professional.",
-      image: "https://i.namu.wiki/i/U_Pf78u_x9bkrVouMaswozqpvby9SFMu_Tnz_rhgDOsqXBjePVgYsZp9ySMjiq7e1p33A1_rOA4OdEFl4CGWtA.webp",
+      image:
+        "https://i.namu.wiki/i/U_Pf78u_x9bkrVouMaswozqpvby9SFMu_Tnz_rhgDOsqXBjePVgYsZp9ySMjiq7e1p33A1_rOA4OdEFl4CGWtA.webp",
     },
     {
       id: 3,
@@ -161,7 +163,8 @@ const EduLink = () => {
       role: "Parent",
       content:
         "Finding a qualified tutor for my daughter was so easy with Funny Study Learning. The verification process gave me confidence, and the results speak for themselves!",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emma_Thompson_Berlinale_2022.jpg/960px-Emma_Thompson_Berlinale_2022.jpg",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emma_Thompson_Berlinale_2022.jpg/960px-Emma_Thompson_Berlinale_2022.jpg",
     },
   ];
 
@@ -285,7 +288,7 @@ const EduLink = () => {
                 className="lead text-white mb-5 opacity-90"
                 style={{ fontSize: "1.25rem", lineHeight: "1.6" }}
               >
-                Funny Study Learning brings students and teachers together for
+                Funny Study Learning brings students and tutors together for
                 personalized learning experiences that inspire academic success
                 and unlock your full potential.
               </p>
@@ -316,7 +319,7 @@ const EduLink = () => {
                 </p>
                 <p className="text-white opacity-90 mb-4 bi bi-check text-success  ">
                   {" "}
-                  Getting in touch with verified teachers & students
+                  Getting in touch with verified tutors & students
                 </p>
 
                 <div className="d-flex flex-wrap gap-3">
@@ -339,7 +342,7 @@ const EduLink = () => {
                     }}
                   >
                     <i className="bi bi-mortarboard me-2"></i>
-                    Find Teachers
+                    Find Tutors
                   </button>
 
                   <button
@@ -455,7 +458,7 @@ const EduLink = () => {
                   </div>
                   <div>
                     <div className="fw-bold text-dark small">Chemistry</div>
-                    <div className="text-muted small">5 Teachers Online</div>
+                    <div className="text-muted small">5 Tutors Online</div>
                   </div>
                 </div>
               </div>
@@ -552,7 +555,7 @@ const EduLink = () => {
             {[
               {
                 number: "10,000+",
-                label: "Expert Teachers",
+                label: "Expert Tutors",
                 icon: "person-check",
               },
               { number: "50,000+", label: "Active Students", icon: "people" },
@@ -659,8 +662,8 @@ const EduLink = () => {
               className="lead text-muted mx-auto"
               style={{ maxWidth: "700px" }}
             >
-              Our platform makes it simple to connect with teachers or students
-              in just a few steps
+              Our platform makes it simple to connect with tutors or students in
+              just a few steps
             </p>
           </div>
 
@@ -682,7 +685,7 @@ const EduLink = () => {
                 </div>
                 <h3 className="fs-4 fw-bold mb-2">Find or Request</h3>
                 <p className="text-muted">
-                  Search for teachers by subject or post a specific request.
+                  Search for tutors by subject or post a specific request.
                   Browse profiles, credentials, and reviews.
                 </p>
                 <div className="position-absolute end-0 top-50 translate-middle-y d-none d-md-block">
@@ -708,7 +711,7 @@ const EduLink = () => {
                 </div>
                 <h3 className="fs-4 fw-bold mb-2">Connect</h3>
                 <p className="text-muted">
-                  Message teachers or students directly, discuss your learning
+                  Message tutors or students directly, discuss your learning
                   goals, and schedule lessons.
                 </p>
                 <div className="position-absolute end-0 top-50 translate-middle-y d-none d-md-block">
@@ -1033,8 +1036,9 @@ const EduLink = () => {
                       "0 20px 40px rgba(0,0,0,0.15)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = `translateY(${index % 2 === 0 ? "0" : "20px"
-                      }) scale(1)`;
+                    e.currentTarget.style.transform = `translateY(${
+                      index % 2 === 0 ? "0" : "20px"
+                    }) scale(1)`;
                     e.currentTarget.style.boxShadow =
                       "0 10px 30px rgba(0,0,0,0.1)";
                   }}
@@ -1108,10 +1112,11 @@ const EduLink = () => {
                           }}
                         >
                           <i
-                            className={`bi ${testimonial.role.includes("Student")
-                              ? "bi-mortarboard"
-                              : "bi-person-workspace"
-                              } text-white`}
+                            className={`bi ${
+                              testimonial.role.includes("Student")
+                                ? "bi-mortarboard"
+                                : "bi-person-workspace"
+                            } text-white`}
                             style={{ fontSize: "10px" }}
                           ></i>
                         </div>

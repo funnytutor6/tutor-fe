@@ -214,14 +214,22 @@ const PasswordResetOTP = ({ email: initialEmail, userType, onBack }) => {
               </div>
 
               {error && (
-                <div className="alert alert-danger" role="alert">
+                <div
+                  className="alert alert-danger"
+                  role="alert"
+                  style={{ color: "black" }}
+                >
                   <i className="bi bi-exclamation-triangle-fill me-2"></i>
                   {error}
                 </div>
               )}
 
               {otpSent && step === "otp" && (
-                <div className="alert alert-success" role="alert">
+                <div
+                  className="alert alert-success"
+                  role="alert"
+                  style={{ color: "black" }}
+                >
                   <i className="bi bi-check-circle-fill me-2"></i>
                   OTP sent successfully! Check your email.
                 </div>

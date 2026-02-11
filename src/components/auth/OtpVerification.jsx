@@ -82,7 +82,7 @@ const OtpVerification = ({
       const status = await otpService.getOTPStatus(
         userId,
         userType,
-        phoneNumber
+        phoneNumber,
       );
       setOtpStatus(status);
 
@@ -260,7 +260,11 @@ const OtpVerification = ({
               </div>
 
               {error && (
-                <div className="alert alert-danger" role="alert">
+                <div
+                  className="alert alert-danger"
+                  role="alert"
+                  style={{ color: "black" }}
+                >
                   <i className="bi bi-exclamation-triangle-fill me-2"></i>
                   {error}
                 </div>
@@ -380,7 +384,11 @@ const OtpVerification = ({
                 </div>
               )}
 
-              <div className="alert alert-info mt-3" role="alert">
+              <div
+                className="alert alert-info mt-3"
+                role="alert"
+                style={{ color: "black" }}
+              >
                 <i className="bi bi-info-circle-fill me-2"></i>
                 <small>
                   The verification code will expire in 10 minutes. Make sure to

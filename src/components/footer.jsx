@@ -16,14 +16,14 @@ const Footer = () => {
     {
       title: "For Students",
       links: [
-        { name: "Find Teachers", path: "/find-teachers" },
+        { name: "Find Tutors", path: "/find-teachers" },
         { name: "Browse Subjects", path: "/subjects" },
         { name: "Student Dashboard", path: "/dashboard/student" },
         { name: "Learning Resources", path: "/resources" },
       ],
     },
     {
-      title: "For Teachers",
+      title: "For Tutors",
       links: [
         { name: "Create Profile", path: "/register/teacher" },
         { name: "Tutor Dashboard", path: "/dashboard/teacher" },
@@ -97,7 +97,7 @@ const Footer = () => {
       // Axios automatically parses JSON, response data is in response.data
       if (response.status === 201 || response.status === 200) {
         setMessage(
-          "🎉 Thank you for subscribing! You'll receive amazing learning tips soon."
+          "🎉 Thank you for subscribing! You'll receive amazing learning tips soon.",
         );
         setMessageType("success");
         setEmail(""); // Clear the input
@@ -126,7 +126,9 @@ const Footer = () => {
       } else if (error.request) {
         // The request was made but no response was received
         console.error("Network error:", error.request);
-        setMessage("Network error. Please check your connection and try again.");
+        setMessage(
+          "Network error. Please check your connection and try again.",
+        );
         setMessageType("error");
       } else {
         // Something happened in setting up the request that triggered an Error
@@ -153,7 +155,8 @@ const Footer = () => {
   const location = useLocation();
 
   // Track if footer link was clicked
-  const [shouldScrollOnPathChange, setShouldScrollOnPathChange] = React.useState(false);
+  const [shouldScrollOnPathChange, setShouldScrollOnPathChange] =
+    React.useState(false);
 
   // Scroll to top after navigation completes
   React.useEffect(() => {
@@ -163,7 +166,7 @@ const Footer = () => {
         window.scrollTo({
           top: 0,
           left: 0,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
         setShouldScrollOnPathChange(false);
       }, 100);
@@ -181,8 +184,11 @@ const Footer = () => {
       className="footer"
       style={{
         marginLeft:
-          path === "/dashboard/teacher" || path === "/dashboard/student" 
-            ? "300px" : path === "/admin" ? "280px" : "0px",
+          path === "/dashboard/teacher" || path === "/dashboard/student"
+            ? "300px"
+            : path === "/admin"
+              ? "280px"
+              : "0px",
       }}
     >
       {/* Main Footer Content */}
@@ -209,7 +215,7 @@ const Footer = () => {
                   </div>
                 </Link>
                 <p className="footer-description">
-                  Where learning meets fun! Connecting passionate teachers with
+                  Where learning meets fun! Connecting passionate Tutors with
                   motivated students worldwide. Join our community and transform
                   education into an enjoyable journey of discovery.
                 </p>
@@ -279,8 +285,9 @@ const Footer = () => {
               {/* Message Display */}
               {message && (
                 <div
-                  className={`alert ${messageType === "success" ? "alert-success" : "alert-danger"
-                    } newsletter-alert`}
+                  className={`alert ${
+                    messageType === "success" ? "alert-success" : "alert-danger"
+                  } newsletter-alert`}
                 >
                   {message}
                 </div>
@@ -338,7 +345,12 @@ const Footer = () => {
             </div>
             <div className="col-md-6">
               <div className="footer-bottom-links footer-bottom-link">
-                <a href="www.fortxcore.com" className="footer-bottom-links footer-bottom-link">Developed By Fortxcore</a>
+                <a
+                  href="www.fortxcore.com"
+                  className="footer-bottom-links footer-bottom-link"
+                >
+                  Developed By Fortxcore
+                </a>
               </div>
             </div>
           </div>
