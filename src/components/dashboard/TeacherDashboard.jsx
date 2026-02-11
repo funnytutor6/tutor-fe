@@ -2376,41 +2376,86 @@ const TeacherDashboard = () => {
 
           {/* Reviews Tab */}
           {activeTab === "reviews" && (
-            <div className="card">
-              <div className="card-body">
-                <div className="row mb-5">
-                  <div className="col-lg-8">
-                    <h5 className="card-title">
-                      <i className="bi bi-star-half me-2"></i>
-                      Manage Reviews
-                    </h5>
-                    <p className="text-muted">
-                      Direct feedback from your students helps you build trust
-                      and attract more learners.
-                    </p>
-                  </div>
-                  <div className="col-lg-4 text-lg-end">
-                    <div className="p-3 bg-light rounded shadow-sm border">
-                      <h6 className="mb-2 small fw-bold text-uppercase text-muted">
-                        Request a Review
-                      </h6>
-                      <p className="small text-muted mb-3">
-                        Copy this link and share it with your students after a
-                        successful lesson.
-                      </p>
-                      <button
-                        className="btn btn-outline-primary btn-sm w-100"
-                        onClick={handleCopyReviewLink}
-                      >
-                        <i className="bi bi-link-45deg me-1"></i>
-                        Copy Review Link
-                      </button>
+            <div className="reviews-tab-wrapper">
+              {/* Hero Header */}
+              <div className="reviews-hero-card">
+                <div className="reviews-hero-bg"></div>
+                <div className="reviews-hero-content">
+                  <div className="row align-items-center">
+                    <div className="col-lg-7">
+                      <div className="d-flex align-items-center mb-3">
+                        <div className="reviews-hero-icon">
+                          <i className="bi bi-star-fill"></i>
+                        </div>
+                        <div className="ms-3">
+                          <h4
+                            className="mb-1 fw-bold"
+                            style={{ color: "#1f2937" }}
+                          >
+                            Student Reviews
+                          </h4>
+                          <p
+                            className="mb-0"
+                            style={{ color: "#6b7280", fontSize: "0.95rem" }}
+                          >
+                            Direct feedback from your students helps you build
+                            trust and attract more learners.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-lg-5">
+                      <div className="review-link-card">
+                        <div className="d-flex align-items-center mb-2">
+                          <i
+                            className="bi bi-send-fill me-2"
+                            style={{ color: "#2563eb" }}
+                          ></i>
+                          <h6
+                            className="mb-0 fw-bold"
+                            style={{ fontSize: "0.85rem", color: "#1f2937" }}
+                          >
+                            Request a Review
+                          </h6>
+                        </div>
+                        <p
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "#6b7280",
+                            marginBottom: "12px",
+                          }}
+                        >
+                          Share this link with students after a successful
+                          lesson.
+                        </p>
+                        <button
+                          className="btn btn-primary btn-sm w-100"
+                          onClick={handleCopyReviewLink}
+                          style={{
+                            background:
+                              "linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)",
+                            border: "none",
+                            borderRadius: "8px",
+                            fontWeight: "600",
+                            fontSize: "0.85rem",
+                            padding: "8px 16px",
+                          }}
+                        >
+                          <i className="bi bi-link-45deg me-1"></i>
+                          Copy Review Link
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="review-container">
-                  <ReviewList teacherId={user?.teacherId || user?.id} />
+              {/* Reviews List */}
+              <div className="card" style={{ marginTop: "24px" }}>
+                <div className="card-body">
+                  <div className="review-container">
+                    <ReviewList teacherId={user?.teacherId || user?.id} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -5037,6 +5082,75 @@ const TeacherDashboard = () => {
 
         .pricing-features i {
           color: #10b981;
+        }
+
+        /* Reviews Tab Styles */
+        .reviews-tab-wrapper {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        .reviews-hero-card {
+          position: relative;
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          border-radius: 15px;
+          border: 1px solid #e2e8f0;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .reviews-hero-bg {
+          position: absolute;
+          top: -50%;
+          right: -10%;
+          width: 300px;
+          height: 300px;
+          background: linear-gradient(
+            135deg,
+            rgba(37, 99, 235, 0.06) 0%,
+            rgba(59, 130, 246, 0.03) 100%
+          );
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .reviews-hero-content {
+          position: relative;
+          padding: 28px 30px;
+          z-index: 1;
+        }
+
+        .reviews-hero-icon {
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.3rem;
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .review-link-card {
+          background: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 16px 20px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          transition: all 0.3s ease;
+        }
+
+        .review-link-card:hover {
+          box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+          border-color: #bfdbfe;
+        }
+
+        @media (max-width: 992px) {
+          .reviews-hero-content .col-lg-5 {
+            margin-top: 16px;
+          }
         }
       `}</style>
     </div>
