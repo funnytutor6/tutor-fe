@@ -8,6 +8,7 @@ import { uploadService } from "../../api/services/uploadService.js";
 import { otpService } from "../../api/services/otpService.js";
 import { validateImageFile } from "../../services/cloudinaryService";
 import OtpVerification from "./OtpVerification.jsx";
+import EmailVerification from "./EmailVerification.jsx";
 import PasswordResetOTP from "./PasswordResetOTP";
 import PasswordInput from "./PasswordInput";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -106,6 +107,8 @@ const StudentAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [emailVerificationData, setEmailVerificationData] = useState(null);
   const [pendingRegistration, setPendingRegistration] = useState(null);
   const [pendingLogin, setPendingLogin] = useState(null); // Store login credentials for retry after OTP
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -393,6 +396,19 @@ const StudentAuth = () => {
       await login(userData);
       return userData;
     } catch (error) {
+      // Check if email verification is required
+      if (error.response?.data?.requiresEmailVerification) {
+        const { userId, email, userName, userType } = error.response.data;
+        setEmailVerificationData({
+          userId,
+          email,
+          userName,
+          userType,
+        });
+        setShowEmailVerification(true);
+        toast("Please verify your email address to continue.");
+        return null;
+      }
       // Check if phone verification is required
       if (error.response?.data?.requiresOTPVerification) {
         const { userId, phoneNumber, userType } = error.response.data;
@@ -461,7 +477,21 @@ const StudentAuth = () => {
 
     const response = await authService.registerStudent(registerData);
 
-    // Check if OTP verification is required
+    // Check if email verification is required
+    if (response.requiresEmailVerification) {
+      // Store registration data and show email verification
+      setEmailVerificationData({
+        userId: response.studentId,
+        email: response.student.email,
+        userName: response.student.name || formData.name,
+        userType: "student",
+      });
+      setShowEmailVerification(true);
+      toast.success("Registration successful! Please verify your email.");
+      return null; // Don't login yet
+    }
+
+    // Check if OTP verification is required (legacy flow)
     if (response.requiresOTPVerification) {
       // Store registration data for later completion
       setPendingRegistration({
@@ -567,7 +597,15 @@ const StudentAuth = () => {
   const handleChangePhone = () => {
     setShowOtpVerification(false);
     setPendingRegistration(null);
-    toast.info("Please update your phone number and try again");
+    toast("Please update your phone number and try again");
+  };
+
+  // Handle email verification success
+  const handleEmailVerificationSuccess = async () => {
+    toast.success("Email verified successfully! You can now log in.");
+    setShowEmailVerification(false);
+    setEmailVerificationData(null);
+    setIsLogin(true); // Switch to login form
   };
 
   const handleSubmit = async (e) => {
@@ -620,6 +658,24 @@ const StudentAuth = () => {
         email={formData.email || ""}
         userType="student"
         onBack={() => setShowForgotPassword(false)}
+      />
+    );
+  }
+
+  // Show email verification if required
+  if (showEmailVerification && emailVerificationData) {
+    return (
+      <EmailVerification
+        userId={emailVerificationData.userId}
+        userType={emailVerificationData.userType}
+        email={emailVerificationData.email}
+        userName={emailVerificationData.userName}
+        onVerificationSuccess={handleEmailVerificationSuccess}
+        onBackToLogin={() => {
+          setShowEmailVerification(false);
+          setEmailVerificationData(null);
+          setIsLogin(true);
+        }}
       />
     );
   }

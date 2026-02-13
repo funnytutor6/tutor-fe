@@ -7,6 +7,7 @@ import { uploadService } from "../../api/services/uploadService.js";
 import { otpService } from "../../api/services/otpService.js";
 import { validateImageFile } from "../../services/cloudinaryService";
 import OtpVerification from "./OtpVerification.jsx";
+import EmailVerification from "./EmailVerification.jsx";
 import PasswordResetOTP from "./PasswordResetOTP";
 import PasswordInput from "./PasswordInput";
 import toast from "react-hot-toast";
@@ -136,6 +137,10 @@ const TeacherAuth = () => {
   const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [pendingRegistration, setPendingRegistration] = useState(null);
   const [pendingLogin, setPendingLogin] = useState(null); // Store login credentials for retry after OTP
+
+  // Email verification states
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [emailVerificationData, setEmailVerificationData] = useState(null);
 
   // Update country code when country changes
   useEffect(() => {
@@ -460,6 +465,19 @@ const TeacherAuth = () => {
       navigate("/dashboard/teacher");
       return response.data;
     } catch (error) {
+      // Check if email verification is required
+      if (error.response?.data?.requiresEmailVerification) {
+        const { userId, email, userName, userType } = error.response.data;
+        setEmailVerificationData({
+          userId,
+          email,
+          userName,
+          userType,
+        });
+        setShowEmailVerification(true);
+        toast("Please verify your email address to continue.");
+        return null;
+      }
       // Check if phone verification is required
       if (error.response?.data?.requiresOTPVerification) {
         const { userId, phoneNumber, userType } = error.response.data;
@@ -528,7 +546,21 @@ const TeacherAuth = () => {
 
     const response = await authService.registerTeacher(registerData);
 
-    // Check if OTP verification is required
+    // Check if email verification is required
+    if (response.requiresEmailVerification) {
+      // Store registration data and show email verification
+      setEmailVerificationData({
+        userId: response.teacherId,
+        email: response.teacher.email,
+        userName: response.teacher.name || formData.name,
+        userType: "teacher",
+      });
+      setShowEmailVerification(true);
+      toast.success("Registration successful! Please verify your email.");
+      return null; // Don't login yet
+    }
+
+    // Check if OTP verification is required (legacy flow)
     if (response.requiresOTPVerification) {
       // Store registration data for later completion
       setPendingRegistration({
@@ -632,7 +664,15 @@ const TeacherAuth = () => {
   const handleChangePhone = () => {
     setShowOtpVerification(false);
     setPendingRegistration(null);
-    toast.info("Please update your phone number and try again");
+    toast("Please update your phone number and try again");
+  };
+
+  // Handle email verification success
+  const handleEmailVerificationSuccess = async () => {
+    toast.success("Email verified successfully! You can now log in.");
+    setShowEmailVerification(false);
+    setEmailVerificationData(null);
+    setIsLogin(true); // Switch to login form
   };
 
   const handleSubmit = async (e) => {
@@ -781,6 +821,24 @@ const TeacherAuth = () => {
       }
     }
   `;
+
+  // Show email verification if required
+  if (showEmailVerification && emailVerificationData) {
+    return (
+      <EmailVerification
+        userId={emailVerificationData.userId}
+        userType={emailVerificationData.userType}
+        email={emailVerificationData.email}
+        userName={emailVerificationData.userName}
+        onVerificationSuccess={handleEmailVerificationSuccess}
+        onBackToLogin={() => {
+          setShowEmailVerification(false);
+          setEmailVerificationData(null);
+          setIsLogin(true);
+        }}
+      />
+    );
+  }
 
   // Show OTP verification if registration was successful
   if (showOtpVerification && pendingRegistration) {

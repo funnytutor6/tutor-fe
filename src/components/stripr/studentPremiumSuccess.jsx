@@ -29,7 +29,10 @@ const StudentPremiumSuccess = () => {
       // Check student premium status using your MySQL API
       const premiumResponse = await api.get(`/check-student-premium-status`);
 
-      if (premiumResponse.data?.data?.hasPremium && premiumResponse.data?.data?.isPaid) {
+      if (
+        premiumResponse.data?.data?.hasPremium &&
+        premiumResponse.data?.data?.isPaid
+      ) {
         setPremiumData(premiumResponse.data.data.premiumData);
         setSuccess(true);
         setLoading(false);
@@ -41,7 +44,7 @@ const StudentPremiumSuccess = () => {
     } catch (error) {
       console.error(
         `Error checking premium status (attempt ${attempt}):`,
-        error
+        error,
       );
       return false;
     }
@@ -50,12 +53,12 @@ const StudentPremiumSuccess = () => {
   const createPremiumRecordDirectly = async (
     sessionId,
     studentEmail,
-    paymentData
+    paymentData,
   ) => {
     try {
       // Get full session details from Stripe
       const sessionResponse = await axios.get(
-        `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
+        `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`,
       );
       const sessionData = sessionResponse.data;
       const metadata = sessionData.metadata || {};
@@ -76,7 +79,7 @@ const StudentPremiumSuccess = () => {
       // Use your MySQL API endpoint to create the record
       const createResponse = await axios.post(
         `${STRIPE_SERVER_URL}/api/collections/findtitor_premium_student/records`,
-        premiumData
+        premiumData,
       );
 
       return createResponse.data;
@@ -101,7 +104,7 @@ const StudentPremiumSuccess = () => {
         {
           sessionId: sessionId,
           type: "student_premium_subscription",
-        }
+        },
       );
 
       return triggerResponse.data.success;
@@ -129,7 +132,7 @@ const StudentPremiumSuccess = () => {
       try {
         // Verify the payment status with Stripe
         const paymentResponse = await axios.get(
-          `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`
+          `${STRIPE_SERVER_URL}/api/check-payment/${sessionId}`,
         );
 
         if (paymentResponse?.data?.data?.paymentStatus !== "paid") {
@@ -173,7 +176,7 @@ const StudentPremiumSuccess = () => {
               const createdRecord = await createPremiumRecordDirectly(
                 sessionId,
                 studentEmail,
-                paymentResponse.data
+                paymentResponse.data,
               );
 
               if (createdRecord) {
@@ -190,14 +193,14 @@ const StudentPremiumSuccess = () => {
 
           // If everything fails, show error with detailed info
           setError(
-            `Premium activation failed despite successful payment. Session ID: ${sessionId}. Please contact support - your payment was processed successfully and we will activate your premium access manually.`
+            `Premium activation failed despite successful payment. Session ID: ${sessionId}. Please contact support - your payment was processed successfully and we will activate your premium access manually.`,
           );
           setLoading(false);
         }
       } catch (error) {
         console.error("❌ Error processing student premium payment:", error);
         setError(
-          error.response?.data?.error || "Failed to process premium payment"
+          error.response?.data?.error || "Failed to process premium payment",
         );
         setLoading(false);
       }
@@ -239,7 +242,7 @@ Please activate my premium subscription immediately as the payment has been proc
 Thank you for your urgent assistance!`);
 
     window.open(
-      `mailto:support@yourcompany.com?subject=${subject}&body=${body}`
+      `mailto:support@yourcompany.com?subject=${subject}&body=${body}`,
     );
   };
 
@@ -254,7 +257,7 @@ Thank you for your urgent assistance!`);
       // Try to create the record manually
       const createdRecord = await createPremiumRecordDirectly(
         sessionId,
-        studentEmail
+        studentEmail,
       );
 
       if (createdRecord) {
@@ -454,21 +457,6 @@ Thank you for your urgent assistance!`);
               )}
 
               <div className="row mb-4">
-                <div className="col-md-4">
-                  <div className="card h-100 border-primary">
-                    <div className="card-body text-center">
-                      <i
-                        className="bi bi-person-workspace text-primary"
-                        style={{ fontSize: "2rem" }}
-                      ></i>
-                      <h5 className="card-title mt-2">2 Free Lessons</h5>
-                      <p className="card-text">
-                        Get 2 free tutoring sessions every month with qualified
-                        teachers.
-                      </p>
-                    </div>
-                  </div>
-                </div>
                 <div className="col-md-4">
                   <div className="card h-100 border-success">
                     <div className="card-body text-center">

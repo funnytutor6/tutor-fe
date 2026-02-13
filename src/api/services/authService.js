@@ -94,4 +94,29 @@ export const authService = {
     });
     return response.data;
   },
+
+  /**
+   * Verify email address with OTP code
+   */
+  verifyEmail: async (userId, userType, email, otpCode) => {
+    const response = await api.post(ENDPOINTS.VERIFY_EMAIL, {
+      userId,
+      userType,
+      email,
+      otpCode,
+    });
+    return response.data;
+  },
+
+  /**
+   * Resend email verification code
+   */
+  resendEmailVerification: async (userId, userType, email) => {
+    const response = await api.post(ENDPOINTS.RESEND_EMAIL_VERIFICATION, {
+      userId,
+      userType,
+      email,
+    });
+    return response.data;
+  },
 };

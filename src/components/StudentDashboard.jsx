@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { showDeleteConfirmToast } from "./common/ConfirmToast";
@@ -18,8 +18,16 @@ const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");
+
+  // Support deep-linking to a specific tab via location state
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -881,7 +889,7 @@ const StudentDashboard = () => {
               }}
             >
               <i className="bi bi-star-fill"></i>
-              Premium Member
+              Premium Student
             </span>
           )}
         </div>
@@ -1948,19 +1956,19 @@ const StudentDashboard = () => {
                           !studentPremiumStatus.cancelAtPeriodEnd && (
                             <>
                               <button
-                                className="btn btn-outline-warning"
+                                className="btn-modern btn-modern-warning"
                                 onClick={() => handleCancelSubscription(true)}
                                 disabled={loading}
                               >
-                                <i className="bi bi-x-circle me-2"></i>
+                                <i className="bi bi-x-circle"></i>
                                 Cancel at Period End
                               </button>
                               <button
-                                className="btn btn-outline-danger"
+                                className="btn-modern btn-modern-danger"
                                 onClick={() => handleCancelSubscription(false)}
                                 disabled={loading}
                               >
-                                <i className="bi bi-x-octagon me-2"></i>
+                                <i className="bi bi-x-octagon"></i>
                                 Cancel Immediately
                               </button>
                             </>
@@ -2191,7 +2199,8 @@ const StudentDashboard = () => {
                         Premium Learning Experience
                       </h3>
                       <p style={{ color: "#6c757d", fontSize: "1.1rem" }}>
-                        Get verified, unlimited posts, and free trial sessions
+                        Get verified, unlimited posts, and Direct Contact
+                        Visibility
                       </p>
                     </div>
 

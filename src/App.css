@@ -48,3 +48,56 @@
     ); /* Adjust for smaller header/footer on mobile */
   }
 }
+/* Modern Dashboard Buttons */
+.btn-modern {
+  padding: 8px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease-in-out !important;
+  border: none !important;
+}
+
+.btn-modern:hover {
+  filter: brightness(1.1) !important;
+}
+
+.btn-modern:active {
+  filter: brightness(0.9) !important;
+}
+
+.btn-modern:disabled {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+/* Specific Solid Colors for Modern Buttons */
+.btn-modern-primary {
+  background-color: #0d6efd !important;
+  color: white !important;
+}
+
+.btn-modern-warning {
+  background-color: #f59e0b !important; /* Richer Amber */
+  color: white !important;
+}
+
+.btn-modern-danger {
+  background-color: #ef4444 !important; /* Modern Red */
+  color: white !important;
+}
+
+.btn-modern-success {
+  background-color: #10b981 !important; /* Modern Emerald */
+  color: white !important;
+}
+
+.btn-modern-outline {
+  background-color: #f8fafc !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}

@@ -24,7 +24,13 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
+    const { name, email, subject, message } = formData;
+    const mailtoUrl = `mailto:Info@funnystudylearing.com?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    )}`;
+    window.location.href = mailtoUrl;
   };
 
   return (
@@ -173,10 +179,10 @@ const Contact = () => {
                 </div>
                 <h3>Message us at:</h3>
                 <p>
-                  +1 (555) 123-4567
-                  <br />
-                  <br />
                   +447949053333
+                  <br />
+                  <br />
+                  +94773670543
                   <br />
                   <br />
                 </p>
@@ -189,11 +195,9 @@ const Contact = () => {
                 </div>
                 <h3>Email Address</h3>
                 <p>
-                  support@edulink.com
+                  Funnystudynetwork@gmail.com
                   <br />
-                  info@edulink.com
-                  <br />
-                  funnystudynetwork@gmail.com
+                  Info@funnystudylearing.com
                   <br />
                   <br />
                 </p>

@@ -31,7 +31,6 @@ const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState("requests");
   const [loading, setLoading] = useState(false);
 
-  console.log("user", user);
   // Connection requests states
   const [requests, setRequests] = useState([]);
   const [requestsCount, setRequestsCount] = useState({
@@ -221,6 +220,86 @@ const TeacherDashboard = () => {
 
     loadGoogleMapsAPI();
   }, []);
+
+  // Initialize Google Places Autocomplete for post location
+  useEffect(() => {
+    if (
+      isGoogleMapsLoaded &&
+      locationInputRef.current &&
+      !locationAutocompleteRef.current &&
+      showPostModal
+    ) {
+      const initTimer = setTimeout(() => {
+        if (
+          locationInputRef.current &&
+          window.google?.maps?.places?.Autocomplete
+        ) {
+          try {
+            locationAutocompleteRef.current =
+              new window.google.maps.places.Autocomplete(
+                locationInputRef.current,
+                {
+                  types: ["(cities)"],
+                  fields: ["name", "formatted_address", "address_components"],
+                },
+              );
+
+            locationAutocompleteRef.current.addListener("place_changed", () => {
+              const place = locationAutocompleteRef.current.getPlace();
+              if (place && (place.name || place.formatted_address)) {
+                let cityName = place.name || place.formatted_address;
+                let townOrDistrict = "";
+
+                if (place.address_components) {
+                  const cityComponent = place.address_components.find(
+                    (component) =>
+                      component.types.includes("locality") ||
+                      component.types.includes("administrative_area_level_2"),
+                  );
+                  if (cityComponent) {
+                    cityName = cityComponent.long_name;
+                  }
+
+                  const townComponent = place.address_components.find(
+                    (component) =>
+                      component.types.includes("sublocality") ||
+                      component.types.includes("sublocality_level_1") ||
+                      component.types.includes("neighborhood"),
+                  );
+                  if (townComponent) {
+                    townOrDistrict = townComponent.long_name;
+                  }
+                }
+
+                setPostForm((prev) => ({
+                  ...prev,
+                  location: cityName,
+                  ...(townOrDistrict ? { townOrDistrict } : {}),
+                }));
+              }
+            });
+          } catch (error) {
+            console.error("Error creating post location autocomplete:", error);
+          }
+        }
+      }, 500);
+
+      return () => clearTimeout(initTimer);
+    }
+
+    return () => {
+      if (locationAutocompleteRef.current && window.google?.maps?.event) {
+        try {
+          window.google.maps.event.clearInstanceListeners(
+            locationAutocompleteRef.current,
+          );
+          locationAutocompleteRef.current = null;
+        } catch (error) {
+          console.error("Error cleaning up post location autocomplete:", error);
+        }
+      }
+    };
+  }, [isGoogleMapsLoaded, showPostModal]);
 
   // Load teacher posts
   useEffect(() => {
@@ -1369,7 +1448,7 @@ const TeacherDashboard = () => {
               }}
             >
               <i className="bi bi-star-fill"></i>
-              Premium Member
+              Premium Tutor
             </span>
           )}
 
@@ -3498,6 +3577,7 @@ const TeacherDashboard = () => {
                         <input
                           type="text"
                           className="form-control"
+                          ref={locationInputRef}
                           value={postForm.location}
                           onChange={(e) =>
                             setPostForm((prev) => ({
@@ -5151,6 +5231,38 @@ const TeacherDashboard = () => {
           .reviews-hero-content .col-lg-5 {
             margin-top: 16px;
           }
+        }
+
+        .pac-container {
+          background-color: white !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          border: 1px solid #dee2e6 !important;
+          margin-top: 2px !important;
+          font-family: inherit !important;
+          z-index: 9999 !important;
+        }
+
+        .pac-item {
+          padding: 12px 15px !important;
+          border-bottom: 1px solid #f1f3f4 !important;
+          cursor: pointer !important;
+          font-size: 14px !important;
+          line-height: 1.5 !important;
+        }
+
+        .pac-item:hover {
+          background-color: #f8f9fa !important;
+        }
+
+        .pac-item-selected,
+        .pac-item:hover {
+          background-color: #e7f1ff !important;
+        }
+
+        .pac-matched {
+          font-weight: 600 !important;
+          color: #2563eb !important;
         }
       `}</style>
     </div>

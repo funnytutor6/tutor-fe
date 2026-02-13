@@ -1258,6 +1258,20 @@ const FindTeachers = () => {
                 >
                   Close
                 </button>
+                {userType === "student" && !currentUser?.hasPremium && (
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => {
+                      setShowProfileModal(false);
+                      navigate("/dashboard/student", {
+                        state: { activeTab: "subscriptions" },
+                      });
+                    }}
+                  >
+                    <i className="bi bi-star-fill me-2"></i>
+                    Subscribe to see tutor information
+                  </button>
+                )}
                 {selectedTeacher.isConnected ? (
                   <div className="d-flex gap-2">
                     <a
@@ -1582,8 +1596,8 @@ const FindTeachers = () => {
                     <ul className="mb-0 mt-2">
                       <li>Your request will be sent to the Tutor</li>
                       <li>
-                        You'll be notified when the Tutor views your contact
-                        info
+                        Once accepted, the Tutor will contact you via email or
+                        phone call
                       </li>
                     </ul>
                   </div>
