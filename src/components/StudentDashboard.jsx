@@ -754,19 +754,8 @@ const StudentDashboard = () => {
 
       const stripe = await loadStripe(STRIPE_PUBLISHABLE_KEY);
 
-      const body = {
-        studentData: {
-          email: premiumData.email,
-          subject: premiumData?.subject || "",
-          mobile: premiumData.mobile,
-          topix: premiumData.topix || "",
-          descripton: premiumData.descripton || "",
-        },
-      };
-
       const response = await api.post(
-        ENDPOINTS.CREATE_STUDENT_PREMIUM_CHECKOUT,
-        body,
+        ENDPOINTS.CREATE_STUDENT_PREMIUM_CHECKOUT
       );
       const result = await stripe.redirectToCheckout({
         sessionId: response?.data?.data?.id,
@@ -1368,34 +1357,34 @@ const StudentDashboard = () => {
                     Manage your tutoring requests and learning opportunities
                   </p>
                 </div>
-                {myPosts.length >= 2 && !user?.hasPremium ? (
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => setActiveTab("subscriptions")}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      fontWeight: "600",
-                    }}
-                  >
-                    <i className="bi bi-star-fill"></i>
-                    Subscribe to Create More
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleCreatePost}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <i className="bi bi-plus-circle"></i>
-                    Create New Post
-                  </button>
-                )}
+                <button
+                  className={`btn ${myPosts.length >= 2 && !user?.hasPremium ? "btn-warning" : "btn-primary"}`}
+                  onClick={() => {
+                    if (myPosts.length >= 2 && !user?.hasPremium) {
+                      setActiveTab("subscriptions");
+                    } else {
+                      handleCreatePost();
+                    }
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    fontWeight: myPosts.length >= 2 && !user?.hasPremium ? 600 : undefined,
+                  }}
+                >
+                  {myPosts.length >= 2 && !user?.hasPremium ? (
+                    <>
+                      <i className="bi bi-star-fill"></i>
+                      Subscribe to Add New Posts
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-plus-circle"></i>
+                      Create New Post
+                    </>
+                  )}
+                </button>
               </div>
 
               {/* Error Alert */}
@@ -2357,7 +2346,7 @@ const StudentDashboard = () => {
                             boxShadow: "0 4px 15px rgba(255, 255, 255, 0.3)",
                             cursor: "pointer",
                           }}
-                          onClick={() => setShowPremiumModal(true)}
+                          onClick={ handlePremiumSubmit}
                           onMouseEnter={(e) => {
                             e.target.style.transform = "translateY(-2px)";
                             e.target.style.boxShadow =
@@ -2370,7 +2359,7 @@ const StudentDashboard = () => {
                           }}
                         >
                           <i className="bi bi-credit-card me-2"></i>
-                          Pay $15 & Get Premium
+                         {premiumLoading ? "Processing..." : "Pay $15 & Get Premium"}
                         </button>
                       </div>
                     </div>

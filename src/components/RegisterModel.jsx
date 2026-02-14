@@ -338,7 +338,7 @@ const RegistrationSelectionModal = ({ isOpen, onClose }) => {
                 marginBottom: '0.5rem'
               }}>
                 <i className="bi bi-check-circle-fill me-2" style={{ color: '#3b82f6' }}></i>
-                Create teacher profile
+                Create tutor profile
               </div>
               <div style={{
                 color: 'rgba(255, 255, 255, 0.9)',

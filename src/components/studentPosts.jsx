@@ -40,6 +40,19 @@ const StudentPosts = () => {
   // Premium status for teachers
   const [teacherPremiumStatus, setTeacherPremiumStatus] = useState(null);
 
+  // Expanded description (see more) per post
+  const [expandedDescriptionIds, setExpandedDescriptionIds] = useState(new Set());
+  const DESCRIPTION_ONE_LINE_CHARS = 70;
+
+  const toggleDescription = (postId) => {
+    setExpandedDescriptionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(postId)) next.delete(postId);
+      else next.add(postId);
+      return next;
+    });
+  };
+
   // Subjects list
   const subjects = [
     "Mathematics",
@@ -316,7 +329,7 @@ const StudentPosts = () => {
       );
       setPurchasedPosts(purchasedPostIds);
     } catch (error) {
-      console.error("Error fetching teacher purchases:", error);
+      console.error("Error fetching tutor purchases:", error);
     }
   };
 
@@ -1146,7 +1159,39 @@ const StudentPosts = () => {
 
                     <div className="post-content">
                       <h5 className="post-headline">{post.headline}</h5>
-                      <p className="post-description">{post.description}</p>
+                      <div className="post-description-wrapper">
+                        {post.description?.length > DESCRIPTION_ONE_LINE_CHARS ? (
+                          expandedDescriptionIds.has(post.id) ? (
+                            <p className="post-description">
+                              {post.description}{" "}
+                              <button
+                                type="button"
+                                className="post-description-toggle"
+                                onClick={() => toggleDescription(post.id)}
+                              >
+                                See less
+                              </button>
+                            </p>
+                          ) : (
+                            <div className="post-description-line">
+                              <p className="post-description post-description-clamped">
+                                {post.description || ""}
+                              </p>
+                              <button
+                                type="button"
+                                className="post-description-toggle"
+                                onClick={() => toggleDescription(post.id)}
+                              >
+                                See more
+                              </button>
+                            </div>
+                          )
+                        ) : (
+                          <p className="post-description">
+                            {post.description || ""}
+                          </p>
+                        )}
+                      </div>
 
                       <div className="post-details">
                         {post.townOrCity && (
@@ -1499,11 +1544,46 @@ const StudentPosts = () => {
           margin-bottom: 0.5rem;
         }
 
+        .post-description-wrapper {
+          margin-bottom: 1rem;
+        }
+
+        .post-description-line {
+          display: flex;
+          align-items: baseline;
+          gap: 0.25rem;
+          min-width: 0;
+        }
+
         .post-description {
           color: #475569;
           font-size: 0.875rem;
-          margin-bottom: 1rem;
           line-height: 1.5;
+          margin: 0;
+        }
+
+        .post-description-clamped {
+          flex: 1;
+          min-width: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .post-description-toggle {
+          background: none;
+          border: none;
+          color: #2563eb;
+          font-size: 0.8125rem;
+          font-weight: 500;
+          padding: 0;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+
+        .post-description-toggle:hover {
+          text-decoration: underline;
         }
 
         .post-details {

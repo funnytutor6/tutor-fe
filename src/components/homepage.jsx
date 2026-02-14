@@ -1254,35 +1254,6 @@ const EduLink = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      {/* <section className="py-5 bg-primary text-white position-relative overflow-hidden">
-        
-        <div className="position-absolute top-0 start-0 end-0 bottom-0 opacity-10">
-          <div className="position-absolute top-0 start-0 end-0 bottom-0" style={{ 
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-            backgroundSize: '60px 60px'
-          }}></div>
-        </div>
-        
-        <div className="container py-5 text-center position-relative">
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
-              <h2 className="display-5 fw-bold mb-4">Ready to Transform Your Learning Experience?</h2>
-              <p className="lead text-white-50 mb-5">
-                Join thousands of students and teachers who are already using EduLink to achieve their educational goals.
-              </p>
-              <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                <button className="btn btn-light btn-lg text-primary fw-medium">
-                  Join as a Student
-                </button>
-                <button className="btn btn-outline-light btn-lg fw-medium">
-                  Join as a Teacher
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       {/* Footer */}
     </div>

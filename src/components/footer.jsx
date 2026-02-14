@@ -27,7 +27,7 @@ const Footer = () => {
       links: [
         { name: "Create Profile", path: "/register/teacher" },
         { name: "Tutor Dashboard", path: "/dashboard/teacher" },
-        { name: "Teaching Resources", path: "/teacher-resources" },
+        // { name: "Teaching Resources", path: "/teacher-resources" },
         { name: "Pricing Plans", path: "/pricing" },
       ],
     },
@@ -651,18 +651,26 @@ const Footer = () => {
           }
 
           .newsletter-form .input-group {
-            flex-direction: column;
+            flex-wrap: nowrap;
+            display: flex;
           }
 
           .newsletter-input {
-            border-radius: 25px;
-            margin-bottom: 1rem;
+            flex: 1 1 0;
+            min-width: 0;
+            padding: 10px 14px;
+            font-size: 0.9rem;
           }
 
           .newsletter-btn {
-            border-radius: 25px;
-            min-width: auto;
-            width: 100%;
+            flex-shrink: 0;
+            padding: 10px 16px;
+            min-width: 100px;
+            font-size: 0.875rem;
+          }
+
+          .newsletter-btn .me-2 {
+            margin-right: 0.35rem !important;
           }
         }
       `}</style>

@@ -145,7 +145,7 @@ const AdminDashboard = () => {
         }));
         setTeacherSubscriptions(formattedTeachers);
       } catch (error) {
-        console.error("Error fetching teacher subscriptions:", error);
+        console.error("Error fetching tutor subscriptions:", error);
         setTeacherSubscriptions([]);
       }
 

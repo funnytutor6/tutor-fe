@@ -386,7 +386,7 @@ const FindTeachers = () => {
         setTeacherVideos([]);
       }
     } catch (error) {
-      console.error("Error fetching teacher profile:", error);
+      console.error("Error fetching tutor profile:", error);
       toast.error("Failed to load Tutor profile");
     }
   };
@@ -1229,14 +1229,14 @@ const FindTeachers = () => {
                   {/* Reviews Tab */}
                   {activeVideoTab === "reviews" && (
                     <div className="reviews-tab">
-                      {userType === "student" && (
+                      {/* {userType === "student" && (
                         <ReviewForm
                           teacherId={selectedTeacher.teacherId}
                           onReviewSubmitted={() =>
                             setRefreshReviews((prev) => prev + 1)
                           }
                         />
-                      )}
+                      )} */}
 
                       <ReviewList
                         teacherId={selectedTeacher.teacherId}

@@ -330,7 +330,7 @@ const TeacherDashboard = () => {
     const teacherId = user?.teacherId || user?.id;
 
     if (!teacherId) {
-      console.error("No teacher ID found");
+      console.error("No tutor ID found");
       return;
     }
 
@@ -373,7 +373,7 @@ const TeacherDashboard = () => {
     try {
       const teacherEmail = user?.email;
       if (!teacherEmail) {
-        console.warn("No teacher email available");
+        console.warn("No tutor email available");
         return;
       }
 
@@ -560,7 +560,7 @@ const TeacherDashboard = () => {
         purchasedRequests: metrics.purchasedRequests || 0,
       });
     } catch (error) {
-      console.error("Error fetching teacher metrics:", error);
+      console.error("Error fetching tutor metrics:", error);
     }
   };
 
@@ -746,7 +746,7 @@ const TeacherDashboard = () => {
       const teacherEmail = user?.email;
 
       if (!teacherEmail) {
-        console.error("Teacher email not found");
+        console.error("Tutor email not found");
         toast.error("Tutor email not found");
         return;
       }
@@ -1559,15 +1559,27 @@ const TeacherDashboard = () => {
           <div className="header-actions">
             {activeTab === "posts" && (
               <button
-                className="btn btn-primary"
+                className={`btn ${!user?.hasPremium && posts.length >= 2 ? "btn-premium" : "btn-primary"}`}
                 onClick={() => {
-                  resetPostForm();
-                  setShowPostModal(true);
+                  if (!user?.hasPremium && posts.length >= 2) {
+                    setActiveTab("premium");
+                  } else {
+                    resetPostForm();
+                    setShowPostModal(true);
+                  }
                 }}
-                disabled={!user?.hasPremium && posts.length >= 2}
               >
-                <i className="bi bi-plus-lg me-2"></i>
-                Create New Post
+                {!user?.hasPremium && posts.length >= 2 ? (
+                  <>
+                    <i className="bi bi-star me-2"></i>
+                    Subscribe to Add New Posts
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-plus-lg me-2"></i>
+                    Create New Post
+                  </>
+                )}
               </button>
             )}
             {activeTab === "profile" && (
@@ -1599,13 +1611,7 @@ const TeacherDashboard = () => {
               ) && (
                 <button
                   className="btn btn-premium"
-                  onClick={() => {
-                    setPremiumData((prev) => ({
-                      ...prev,
-                      mail: user?.email || "",
-                    }));
-                    setShowPremiumModal(true);
-                  }}
+                  onClick={handlePremiumSubmit}
                 >
                   <i className="bi bi-star-fill me-2"></i>
                   Get Premium
@@ -2421,13 +2427,7 @@ const TeacherDashboard = () => {
                           <button
                             type="button"
                             className="btn btn-premium"
-                            onClick={() => {
-                              setPremiumData((prev) => ({
-                                ...prev,
-                                mail: user?.email || "",
-                              }));
-                              setShowPremiumModal(true);
-                            }}
+                            onClick={handlePremiumSubmit}
                             disabled={premiumLoading}
                           >
                             {premiumLoading ? (
@@ -2715,11 +2715,12 @@ const TeacherDashboard = () => {
                                         <i className="bi bi-credit-card me-2"></i>
                                         Purchase Contact ($5.00)
                                       </button>
-                                      <button
+                                    <button
                                         className="btn btn-outline-primary btn-sm"
                                         onClick={() =>
                                           handleViewRequestDetails(request)
                                         }
+                                        disabled={!teacherPremiumStatus?.isPaid}
                                       >
                                         <i className="bi bi-eye me-1"></i>
                                         View Details
@@ -3579,6 +3580,7 @@ const TeacherDashboard = () => {
                           className="form-control"
                           ref={locationInputRef}
                           value={postForm.location}
+                          required
                           onChange={(e) =>
                             setPostForm((prev) => ({
                               ...prev,
