@@ -276,7 +276,7 @@ const VideoPlayer = () => {
                     }}
                   >
                     <i className="bi bi-search me-2"></i>
-                    Find Teachers
+                    Find Tutors
                   </button>
                   <button 
                     className="btn btn-primary btn-lg rounded-pill px-4"

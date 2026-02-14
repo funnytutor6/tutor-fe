@@ -21,12 +21,12 @@ const HelpCenter = () => {
         {
           id: 2,
           question: 'What\'s the difference between student and Tutor accounts?',
-          answer: 'Student accounts can search for teachers, send connection requests, and access learning materials. Tutor accounts can create teaching posts, receive student requests, and manage their teaching profile.'
+          answer: 'Student accounts can search for tutors, send connection requests, and access learning materials. Tutor accounts can create teaching posts, receive student requests, and manage their teaching profile.'
         },
         {
           id: 3,
-          question: 'How do I find teachers?',
-          answer: 'Use the "Find Teachers" page to search by subject, location, price range, and lesson type. You can filter results to find the perfect match for your learning needs.'
+          question: 'How do I find tutors?',
+          answer: 'Use the "Find Tutors" page to search by subject, location, price range, and lesson type. You can filter results to find the perfect match for your learning needs.'
         },
         {
           id: 4,
@@ -73,7 +73,7 @@ const HelpCenter = () => {
         {
           id: 10,
           question: 'How do students find me?',
-          answer: 'Students can find you through the search filters on the "Find Teachers" page. Having a complete profile with sample videos increases your visibility.'
+          answer: 'Students can find you through the search filters on the "Find Tutors" page. Having a complete profile with sample videos increases your visibility.'
         },
         {
           id: 11,
@@ -94,7 +94,7 @@ const HelpCenter = () => {
         {
           id: 13,
           question: 'How do I search for teachers?',
-          answer: 'Use the search filters on the "Find Teachers" page. You can filter by subject, location, price range, lesson type (online/in-person), and more.'
+          answer: 'Use the search filters on the "s" page. You can filter by subject, location, price range, lesson type (online/in-person), and more.'
         },
         {
           id: 14,

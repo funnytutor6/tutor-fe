@@ -103,7 +103,7 @@ const Subjects = () => {
                                         ))}
                                     </ul>
                                     <Link to="/find-teachers" className="explore-btn">
-                                        Find Teachers
+                                        Find Tutors
                                         <i className="bi bi-arrow-right ms-2"></i>
                                     </Link>
                                 </div>
